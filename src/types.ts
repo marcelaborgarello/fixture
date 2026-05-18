@@ -1,0 +1,61 @@
+export interface Team {
+  name: string;
+  code: string;
+  flagCode: string; // Used to lookup the SVG flag
+}
+
+export interface Match {
+  id: number;
+  date: string;
+  time: string;
+  stadium: string;
+  city: string;
+  homeTeam: Team | string;
+  awayTeam: Team | string;
+  homeScore?: string;
+  awayScore?: string;
+}
+
+export interface Group {
+  name: string;
+  teams: Team[];
+  matches: Match[];
+}
+
+export interface PlayoffPhase {
+  name: string;
+  matches: Match[];
+}
+
+export interface DesignConfig {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  textColor: string;
+  cardBgColor: string;
+  borderColor: string;
+  fontFamily: string;
+  borderRadius: number;
+  backgroundType: 'gradient' | 'solid' | 'image';
+  backgroundGradient: string;
+  solidColor: string;
+  backgroundImageUrl: string;
+  glassmorphism: boolean;
+  
+  // Premium customization for Creative Stationery & Freebies
+  brandSignature: string; // E.g., "Diseñado por MiMarca"
+  brandLogoUrl: string; // Base64 brand logo image upload
+  coverTitle: string;
+  coverSubtitle: string;
+  cafecitoUrl: string;
+  excludeCoverFromSheets: boolean; // Option to print cover separately on thicker paper
+  showCutLines: boolean; // Printable cut guidelines
+  
+  // Custom dimensions (in mm)
+  cardWidthMm: number;
+  cardHeightMm: number;
+  
+  // Cover layers
+  showCoverTrophy: boolean; // Toggle central trophy
+  coverIllustrationUrl: string; // Custom uploaded cover main image (e.g. layers)
+}

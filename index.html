@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixture Mundial 2026 - Generador de Tarjetas Premium</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar - Customizer Panel -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path d="M12 2a5 5 0 0 0-5 5v3c0 2 2.2 4 4.5 4.5V18H9v2h6v-2h-2.5v-3.5c2.3-.5 4.5-2.5 4.5-4.5V7a5 5 0 0 0-5-5z"/>
+          </svg>
+          Fixture 2026
+        </h2>
+        <p>Personalizá e imprimí tus tarjetas de 70x100 mm</p>
+      </div>
+
+      <!-- Colors -->
+      <div class="config-section">
+        <h3>Colores del Fixture</h3>
+        <div class="form-group">
+          <label for="color-primary">Color Principal</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-primary" value="#0d5c3a">
+            <span class="color-value" id="val-primary">#0d5c3a</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="color-secondary">Color Secundario</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-secondary" value="#1b8555">
+            <span class="color-value" id="val-secondary">#1b8555</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="color-accent">Color de Acento (Destacados)</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-accent" value="#ffd700">
+            <span class="color-value" id="val-accent">#ffd700</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="color-text">Color de Textos</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-text" value="#ffffff">
+            <span class="color-value" id="val-text">#ffffff</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background Style -->
+      <div class="config-section">
+        <h3>Estilo de Fondo</h3>
+        <div class="form-group">
+          <label>Tipo de Fondo</label>
+          <div class="button-grid">
+            <button class="btn-select active" id="bg-type-gradient" data-type="gradient">Degradado</button>
+            <button class="btn-select" id="bg-type-solid" data-type="solid">Sólido</button>
+          </div>
+        </div>
+        
+        <div class="form-group" id="group-gradient">
+          <label for="color-grad-end">Color de Fin Degradado</label>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-grad-end" value="#093c24">
+            <span class="color-value" id="val-grad-end">#093c24</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Fondo de Imagen Personalizado</label>
+          <label for="file-bg-image" class="file-upload-btn" id="upload-label">
+            Subir Imagen (.PNG, .JPG)
+          </label>
+          <input type="file" id="file-bg-image" accept="image/*" style="display: none;">
+          <div class="upload-preview" id="image-preview" style="display: none;">
+            <img src="" id="preview-img" alt="Background preview">
+            <span id="preview-filename">nombre_archivo.jpg</span>
+            <button class="btn-remove-bg" id="btn-remove-bg-image">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typography & Borders -->
+      <div class="config-section">
+        <h3>Tipografía y Bordes</h3>
+        <div class="form-group">
+          <label for="select-font">Tipografía Premium</label>
+          <select id="select-font" class="select-input">
+            <option value="'Outfit', sans-serif">Outfit (Recomendado)</option>
+            <option value="'Montserrat', sans-serif">Montserrat (Deportivo)</option>
+            <option value="'Bebas Neue', sans-serif">Bebas Neue (Poster Deportivo)</option>
+            <option value="'Playfair Display', serif">Playfair Display (Elegante)</option>
+            <option value="'Cinzel', serif">Cinzel (Trofeo Clásico)</option>
+            <option value="'Inter', sans-serif">Inter (Limpio)</option>
+            <option value="'Roboto', sans-serif">Roboto (Clásico)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="range-radius">Esquinas Redondeadas</label>
+          <div class="range-input-wrapper">
+            <input type="range" id="range-radius" min="0" max="24" value="12">
+            <span class="range-value" id="val-radius">12px</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Efecto Glassmorphism</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-glass">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Sizing -->
+      <div class="config-section">
+        <h3>Tamaño de Tarjetas</h3>
+        <div class="form-group">
+          <label for="select-dimensions">Dimensiones de Tarjetas</label>
+          <select id="select-dimensions" class="select-input">
+            <option value="70x100">70x100 mm (Recomendado - 8 por A4)</option>
+            <option value="80x115">80x115 mm (Mediano - 4 por A4)</option>
+            <option value="90x130">90x130 mm (Souvenir - 4 por A4)</option>
+            <option value="60x90">60x90 mm (Bolsillo - 8 por A4)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Branding and cover customization -->
+      <div class="config-section">
+        <h3>Personalización y Marca</h3>
+        <div class="form-group">
+          <label for="input-cover-title">Título de la Tapa</label>
+          <input type="text" id="input-cover-title" class="select-input" value="WORLD CUP 2026">
+        </div>
+        <div class="form-group">
+          <label for="input-cover-subtitle">Subtítulo de la Tapa</label>
+          <input type="text" id="input-cover-subtitle" class="select-input" value="CALENDARIO DE PARTIDOS">
+        </div>
+
+        <!-- Central cover layer customization -->
+        <div class="form-group">
+          <div class="switch-wrapper" style="margin-bottom: 10px;">
+            <label style="margin-bottom: 0;">Mostrar Trofeo FIFA</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-show-trophy" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Ilustración de Tapa Personalizada</label>
+          <label for="file-cover-illustration" class="file-upload-btn" id="cover-upload-label">
+            Subir Imagen de Tapa
+          </label>
+          <input type="file" id="file-cover-illustration" accept="image/*" style="display: none;">
+          <div class="upload-preview" id="cover-preview" style="display: none;">
+            <img src="" id="cover-preview-img" alt="Cover preview">
+            <span id="cover-preview-filename">archivo_tapa.png</span>
+            <button class="btn-remove-bg" id="btn-remove-cover-illustration">Eliminar</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-brand-sig">Tu Firma / Marca (Pie de Tarjeta)</label>
+          <input type="text" id="input-brand-sig" class="select-input" value="" placeholder="Sin firma / ingresá tu marca">
+        </div>
+
+        <!-- Custom Brand Logo Uploader -->
+        <div class="form-group">
+          <label>Logo de Marca (Miniatura al Pie)</label>
+          <label for="file-brand-logo" class="file-upload-btn" id="logo-upload-label">
+            Subir Logo de Marca (.PNG transparente)
+          </label>
+          <input type="file" id="file-brand-logo" accept="image/*" style="display: none;">
+          <div class="upload-preview" id="logo-preview" style="display: none;">
+            <img src="" id="logo-preview-img" alt="Logo preview">
+            <span id="logo-preview-filename">logo.png</span>
+            <button class="btn-remove-bg" id="btn-remove-brand-logo">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Printing Options -->
+      <div class="config-section">
+        <h3>Opciones de Impresión A4</h3>
+        <div class="form-group">
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Guías y Líneas de Corte</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-cut-lines" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Imprimir Tapa Aparte</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-exclude-cover">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cafecito Integration -->
+      <div class="config-section">
+        <h3>¿Te sirve el Generador?</h3>
+        <div class="form-group">
+          <label for="input-cafecito-url">Tu link de Cafecito (Opcional)</label>
+          <input type="text" id="input-cafecito-url" class="select-input" value="https://cafecito.app/" placeholder="https://cafecito.app/tu_usuario">
+        </div>
+        <div style="margin-top: 12px; display: flex; justify-content: center; width: 100%;">
+          <a href="https://cafecito.app/" target="_blank" class="cafecito-pulse-btn" id="link-cafecito-action">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 6px; vertical-align: middle;">
+              <path d="M2 21h18v-2H2v2zM20 8h-2V5h2v3zm-2-5H4v13c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+            </svg>
+            Invitame un Cafecito
+          </a>
+        </div>
+      </div>
+
+      <!-- Sidebar actions -->
+      <div class="sidebar-actions">
+        <button class="btn-primary" id="btn-download-zip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/>
+          </svg>
+          DESCARGAR TODAS (.ZIP)
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-title-area">
+          <h2>Tarjetas del Mundial 2026 (70 x 100 mm)</h2>
+          <p>Hacé click en los iconos de cada tarjeta para descargar de forma individual o imprimí el fixture completo.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button class="btn-select active" id="btn-print-native" style="padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+            </svg>
+            Imprimir Fixture
+          </button>
+          <div class="download-mode-select">
+            <button class="download-mode-btn active" data-format="zip-all">Todo en ZIP</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Cards Grid Viewer -->
+      <div class="viewer-container">
+        <div class="cards-grid" id="cards-grid">
+          <!-- Dynamically populated card-wrappers -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Loading / Progress Modal -->
+  <div class="modal-overlay" id="modal-progress">
+    <div class="progress-modal">
+      <div class="progress-spinner"></div>
+      <h3 class="progress-title" id="progress-title">Procesando Tarjetas</h3>
+      <p class="progress-text" id="progress-text">Iniciando motor de renderizado...</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Toast Notification -->
+  <div class="toast" id="toast-message">
+    ¡Descarga iniciada con éxito!
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
