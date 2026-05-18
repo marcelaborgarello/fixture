@@ -31,7 +31,7 @@ const currentConfig: DesignConfig = {
   brandLogoUrl: '',
   coverTitle: 'WORLD CUP 2026',
   coverSubtitle: 'CALENDARIO DE PARTIDOS',
-  cafecitoUrl: 'https://cafecito.app/',
+  cafecitoUrl: 'https://cafecito.app/ginialtech',
   excludeCoverFromSheets: false,
   showCutLines: true,
 
@@ -466,20 +466,7 @@ function setupConfigListeners(): void {
     renderAllCards();
   });
 
-  // CAFECITO LINK CUSTOMIZATION
-  const inputCafecitoUrl = document.getElementById('input-cafecito-url') as HTMLInputElement;
-  const linkCafecitoAction = document.getElementById('link-cafecito-action') as HTMLAnchorElement;
 
-  inputCafecitoUrl?.addEventListener('input', (e) => {
-    let url = (e.target as HTMLInputElement).value.trim();
-    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
-    }
-    currentConfig.cafecitoUrl = url || 'https://cafecito.app/';
-    if (linkCafecitoAction) {
-      linkCafecitoAction.href = currentConfig.cafecitoUrl;
-    }
-  });
 }
 
 // Update the gradient formula based on primary and ending color
