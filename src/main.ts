@@ -41,7 +41,18 @@ const currentConfig: DesignConfig = {
 
   // Cover layers
   showCoverTrophy: true,
-  coverIllustrationUrl: ''
+  coverIllustrationUrl: '',
+
+  // Advanced cover design defaults
+  coverBgColor: '#0d5c3a',
+  coverBgImageUrl: '',
+  coverIllustrationScale: 100,
+  coverIllustrationY: 0,
+  coverIllustrationOpacity: 1.0,
+  coverTitleFontFamily: 'inherit',
+  coverTitleColor: '#ffffff',
+  coverTitleSize: 2.2,
+  coverSubtitleColor: '#ffd700'
 };
 
 // List of all cards to be rendered and exported (18 cards total!)
@@ -61,7 +72,16 @@ const getCardsList = (): CardItem[] => [
       currentConfig.brandSignature,
       currentConfig.brandLogoUrl,
       currentConfig.showCoverTrophy,
-      currentConfig.coverIllustrationUrl
+      currentConfig.coverIllustrationUrl,
+      currentConfig.coverBgColor,
+      currentConfig.coverBgImageUrl,
+      currentConfig.coverIllustrationScale,
+      currentConfig.coverIllustrationY,
+      currentConfig.coverIllustrationOpacity,
+      currentConfig.coverTitleFontFamily,
+      currentConfig.coverTitleColor,
+      currentConfig.coverTitleSize,
+      currentConfig.coverSubtitleColor
     ) 
   },
   ...GROUPS.map(g => ({
@@ -387,6 +407,160 @@ function setupConfigListeners(): void {
     coverPreview!.style.display = 'none';
     coverUploadLabel!.textContent = 'Subir Imagen de Tapa';
     renderAllCards();
+  });
+
+  // ==========================================
+  // ADVANCED COVER CUSTOMIZATION LISTENERS
+  // ==========================================
+
+  // Cover Specific Background Color
+  const colorCoverBg = document.getElementById('color-cover-bg') as HTMLInputElement;
+  colorCoverBg?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    currentConfig.coverBgColor = val;
+    document.getElementById('val-cover-bg')!.textContent = val.toUpperCase();
+    renderAllCards();
+  });
+
+  // Cover Specific Background Image Upload
+  const fileCoverBg = document.getElementById('file-cover-bg') as HTMLInputElement;
+  const coverBgPreview = document.getElementById('cover-bg-preview');
+  const coverBgPreviewImg = document.getElementById('cover-bg-preview-img') as HTMLImageElement;
+  const coverBgPreviewFilename = document.getElementById('cover-bg-preview-filename');
+  const btnRemoveCoverBg = document.getElementById('btn-remove-cover-bg');
+  const coverBgUploadLabel = document.getElementById('cover-bg-upload-label');
+
+  fileCoverBg?.addEventListener('change', (e) => {
+    const files = (e.target as HTMLInputElement).files;
+    if (files && files[0]) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        currentConfig.coverBgImageUrl = dataUrl;
+        
+        coverBgPreviewImg.src = dataUrl;
+        coverBgPreviewFilename!.textContent = file.name;
+        coverBgPreview!.style.display = 'flex';
+        coverBgUploadLabel!.textContent = 'Cambiar Fondo Tapa';
+
+        renderAllCards();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  btnRemoveCoverBg?.addEventListener('click', () => {
+    currentConfig.coverBgImageUrl = '';
+    fileCoverBg.value = '';
+    coverBgPreview!.style.display = 'none';
+    coverBgUploadLabel!.textContent = 'Subir Fondo de Tapa';
+    renderAllCards();
+  });
+
+  // Cover Central Illustration Scale/Zoom slider
+  const rangeCoverScale = document.getElementById('range-cover-scale') as HTMLInputElement;
+  rangeCoverScale?.addEventListener('input', (e) => {
+    const val = parseInt((e.target as HTMLInputElement).value);
+    currentConfig.coverIllustrationScale = val;
+    document.getElementById('val-cover-scale')!.textContent = `${val}%`;
+    
+    // Smoothly update style of live element without full rerender if possible
+    const liveImg = document.querySelector('.cover-custom-illustration') as HTMLImageElement;
+    if (liveImg) {
+      const scaleFactor = val / 100;
+      liveImg.style.transform = `translateX(-50%) scale(${scaleFactor})`;
+    } else {
+      renderAllCards();
+    }
+  });
+
+  // Cover Central Illustration Y Position slider
+  const rangeCoverY = document.getElementById('range-cover-y') as HTMLInputElement;
+  rangeCoverY?.addEventListener('input', (e) => {
+    const val = parseInt((e.target as HTMLInputElement).value);
+    currentConfig.coverIllustrationY = val;
+    document.getElementById('val-cover-y')!.textContent = `${val}px`;
+
+    const liveImg = document.querySelector('.cover-custom-illustration') as HTMLImageElement;
+    if (liveImg) {
+      liveImg.style.top = `${val}px`;
+    } else {
+      renderAllCards();
+    }
+  });
+
+  // Cover Central Illustration Opacity slider
+  const rangeCoverOpacity = document.getElementById('range-cover-opacity') as HTMLInputElement;
+  rangeCoverOpacity?.addEventListener('input', (e) => {
+    const val = parseInt((e.target as HTMLInputElement).value);
+    currentConfig.coverIllustrationOpacity = val / 100;
+    document.getElementById('val-cover-opacity')!.textContent = `${val}%`;
+
+    const liveImg = document.querySelector('.cover-custom-illustration') as HTMLImageElement;
+    if (liveImg) {
+      liveImg.style.opacity = String(val / 100);
+    } else {
+      renderAllCards();
+    }
+  });
+
+  // Cover Title Font Family Select
+  const selectCoverTitleFont = document.getElementById('select-cover-title-font') as HTMLSelectElement;
+  selectCoverTitleFont?.addEventListener('change', (e) => {
+    const val = (e.target as HTMLSelectElement).value;
+    currentConfig.coverTitleFontFamily = val === 'inherit' ? undefined : val;
+    renderAllCards();
+  });
+
+  // Cover Title Font Size Slider
+  const rangeCoverTitleSize = document.getElementById('range-cover-title-size') as HTMLInputElement;
+  rangeCoverTitleSize?.addEventListener('input', (e) => {
+    const val = parseFloat((e.target as HTMLInputElement).value);
+    currentConfig.coverTitleSize = val;
+    document.getElementById('val-cover-title-size')!.textContent = `${val}rem`;
+
+    const liveTitle = document.querySelector('.cover-title') as HTMLElement;
+    if (liveTitle) {
+      liveTitle.style.fontSize = `${val}rem`;
+    } else {
+      renderAllCards();
+    }
+  });
+
+  // Cover Title Color Picker
+  const colorCoverTitle = document.getElementById('color-cover-title') as HTMLInputElement;
+  colorCoverTitle?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    currentConfig.coverTitleColor = val;
+    document.getElementById('val-cover-title-color')!.textContent = val.toUpperCase();
+
+    const liveTitle = document.querySelector('.cover-title') as HTMLElement;
+    if (liveTitle) {
+      liveTitle.style.color = val;
+    } else {
+      renderAllCards();
+    }
+  });
+
+  // Cover Subtitle Color Picker
+  const colorCoverSubtitle = document.getElementById('color-cover-subtitle') as HTMLInputElement;
+  colorCoverSubtitle?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    currentConfig.coverSubtitleColor = val;
+    document.getElementById('val-cover-subtitle-color')!.textContent = val.toUpperCase();
+
+    const liveSubtitle = document.querySelector('.cover-subtitle') as HTMLElement;
+    const liveFifaLogo = document.querySelector('.cover-logo-text') as HTMLElement;
+    if (liveSubtitle) {
+      liveSubtitle.style.color = val;
+    }
+    if (liveFifaLogo) {
+      liveFifaLogo.style.color = val;
+    }
+    if (!liveSubtitle || !liveFifaLogo) {
+      renderAllCards();
+    }
   });
 
   // Brand text signature

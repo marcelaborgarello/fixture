@@ -58,4 +58,15 @@ export interface DesignConfig {
   // Cover layers
   showCoverTrophy: boolean; // Toggle central trophy
   coverIllustrationUrl: string; // Custom uploaded cover main image (e.g. layers)
+  
+  // Advanced cover layer customization
+  coverBgColor?: string;
+  coverBgImageUrl?: string;
+  coverIllustrationScale?: number;
+  coverIllustrationY?: number;
+  coverIllustrationOpacity?: number;
+  coverTitleFontFamily?: string;
+  coverTitleColor?: string;
+  coverTitleSize?: number;
+  coverSubtitleColor?: string;
 }

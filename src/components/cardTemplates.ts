@@ -39,13 +39,32 @@ export const renderCoverCardHtml = (
   brandSignature: string = "",
   brandLogoUrl: string = "",
   showCoverTrophy: boolean = true,
-  coverIllustrationUrl: string = ""
+  coverIllustrationUrl: string = "",
+  coverBgColor?: string,
+  coverBgImageUrl?: string,
+  coverIllustrationScale: number = 100,
+  coverIllustrationY: number = 0,
+  coverIllustrationOpacity: number = 1.0,
+  coverTitleFontFamily?: string,
+  coverTitleColor?: string,
+  coverTitleSize?: number,
+  coverSubtitleColor?: string
 ): string => {
   const badgeHtml = renderBranding(brandSignature, brandLogoUrl);
   
+  // Handle custom cover background style override
+  let coverCustomStyle = '';
+  if (coverBgImageUrl) {
+    coverCustomStyle += `background-image: url(${coverBgImageUrl}) !important; background-size: cover !important; background-position: center !important;`;
+  } else if (coverBgColor) {
+    coverCustomStyle += `background-color: ${coverBgColor} !important; background-image: none !important;`;
+  }
+  
   let centralIllustrationHtml = '';
   if (coverIllustrationUrl) {
-    centralIllustrationHtml = `<img src="${coverIllustrationUrl}" class="cover-custom-illustration" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 2;" />`;
+    const scaleFactor = coverIllustrationScale / 100;
+    // Align illustration dynamically using scale and Y offsets
+    centralIllustrationHtml = `<img src="${coverIllustrationUrl}" class="cover-custom-illustration" style="position: absolute; top: ${coverIllustrationY}px; left: 50%; transform: translateX(-50%) scale(${scaleFactor}); width: 90%; height: 90%; object-fit: contain; z-index: 2; opacity: ${coverIllustrationOpacity}; transition: transform 0.2s ease, top 0.2s ease, opacity 0.2s ease;" />`;
   }
   
   let trophyHtml = '';
@@ -69,9 +88,26 @@ export const renderCoverCardHtml = (
       </svg>
     `;
   }
+  
+  // Handle custom text styling overrides
+  let titleStyle = '';
+  if (coverTitleFontFamily) {
+    titleStyle += `font-family: ${coverTitleFontFamily} !important;`;
+  }
+  if (coverTitleColor) {
+    titleStyle += `color: ${coverTitleColor} !important;`;
+  }
+  if (coverTitleSize) {
+    titleStyle += `font-size: ${coverTitleSize}rem !important;`;
+  }
+  
+  let subtitleStyle = '';
+  if (coverSubtitleColor) {
+    subtitleStyle += `color: ${coverSubtitleColor} !important;`;
+  }
 
   return `
-    <div class="card-inner cover-card">
+    <div class="card-inner cover-card" style="${coverCustomStyle}">
       <div class="card-overlay"></div>
       <div class="card-content safe-zone">
         <div class="cover-header">
@@ -80,11 +116,11 @@ export const renderCoverCardHtml = (
             ${centralIllustrationHtml}
             ${trophyHtml}
           </div>
-          <div class="cover-logo-text">FIFA</div>
+          <div class="cover-logo-text" style="${coverSubtitleColor ? `color: ${coverSubtitleColor} !important;` : ''}">FIFA</div>
         </div>
         <div class="cover-footer">
-          <h1 class="cover-title">${title}</h1>
-          <h2 class="cover-subtitle">${subtitle}</h2>
+          <h1 class="cover-title" style="${titleStyle}">${title}</h1>
+          <h2 class="cover-subtitle" style="${subtitleStyle}">${subtitle}</h2>
           ${badgeHtml}
         </div>
       </div>

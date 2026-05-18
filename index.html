@@ -169,6 +169,91 @@
           </div>
         </div>
 
+        <!-- Advanced Cover Layers Panel -->
+        <div class="advanced-cover-panel" style="margin-top: 15px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: rgba(255,255,255,0.03);">
+          <h4 style="margin: 0 0 10px 0; font-size: 0.85rem; color: var(--accent-color); letter-spacing: 0.5px;">EDICIÓN AVANZADA DE TAPA 🛠️</h4>
+          
+          <div class="form-group">
+            <label>Fondo Exclusivo de Tapa</label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <input type="color" id="color-cover-bg" value="#0d5c3a" style="width: 30px; height: 30px; padding: 0; border: none; border-radius: 4px; cursor: pointer;">
+              <span style="font-size: 0.75rem; color: #9ca3af;" id="val-cover-bg">PREDETERMINADO</span>
+            </div>
+            <label for="file-cover-bg" class="file-upload-btn" id="cover-bg-upload-label" style="padding: 6px 10px; font-size: 0.75rem;">
+              Subir Fondo de Tapa
+            </label>
+            <input type="file" id="file-cover-bg" accept="image/*" style="display: none;">
+            <div class="upload-preview" id="cover-bg-preview" style="display: none; margin-top: 5px; padding: 4px;">
+              <img src="" id="cover-bg-preview-img" alt="Cover bg preview" style="height: 25px;">
+              <span id="cover-bg-preview-filename" style="font-size: 0.7rem;">fondo.png</span>
+              <button class="btn-remove-bg" id="btn-remove-cover-bg" style="padding: 2px 6px; font-size: 0.65rem;">Eliminar</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Ajuste de Ilustración Central</label>
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">
+                <span>Zoom / Escala</span>
+                <span id="val-cover-scale">100%</span>
+              </div>
+              <input type="range" id="range-cover-scale" min="50" max="200" value="100" class="select-input" style="height: 6px; padding: 0;">
+            </div>
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">
+                <span>Posición Vertical (Y)</span>
+                <span id="val-cover-y" style="direction: ltr;">0px</span>
+              </div>
+              <input type="range" id="range-cover-y" min="-80" max="80" value="0" class="select-input" style="height: 6px; padding: 0;">
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">
+                <span>Opacidad</span>
+                <span id="val-cover-opacity">100%</span>
+              </div>
+              <input type="range" id="range-cover-opacity" min="0" max="100" value="100" class="select-input" style="height: 6px; padding: 0;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Tipografía y Colores de Textos</label>
+            <div style="margin-bottom: 8px;">
+              <label style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">Fuente de Título</label>
+              <select id="select-cover-title-font" class="select-input" style="padding: 6px; font-size: 0.75rem;">
+                <option value="inherit">Misma del Fixture (General)</option>
+                <option value="'Outfit', sans-serif">Outfit</option>
+                <option value="'Montserrat', sans-serif">Montserrat</option>
+                <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Cinzel', serif">Cinzel</option>
+              </select>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">
+                <span>Tamaño Título</span>
+                <span id="val-cover-title-size">2.2rem</span>
+              </div>
+              <input type="range" id="range-cover-title-size" min="1.2" max="4.0" step="0.1" value="2.2" class="select-input" style="height: 6px; padding: 0;">
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <div style="flex: 1;">
+                <label style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">Color Título</label>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <input type="color" id="color-cover-title" value="#ffffff" style="width: 25px; height: 25px; padding: 0; border: none; border-radius: 4px; cursor: pointer;">
+                  <span style="font-size: 0.65rem; color: #9ca3af;" id="val-cover-title-color">#FFF</span>
+                </div>
+              </div>
+              <div style="flex: 1;">
+                <label style="font-size: 0.7rem; color: #9ca3af; margin-bottom: 2px;">Color Subtítulo</label>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <input type="color" id="color-cover-subtitle" value="#ffd700" style="width: 25px; height: 25px; padding: 0; border: none; border-radius: 4px; cursor: pointer;">
+                  <span style="font-size: 0.65rem; color: #9ca3af;" id="val-cover-subtitle-color">#FFD700</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="input-brand-sig">Tu Firma / Marca (Pie de Tarjeta)</label>
           <input type="text" id="input-brand-sig" class="select-input" value="" placeholder="Sin firma / ingresá tu marca">
