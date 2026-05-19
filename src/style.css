@@ -1,6 +1,10 @@
 /* Premium Design System for FIFA World Cup 2026 Fixture Generator */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@700;900&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Default Design System Tokens (Green World Cup Aesthetic) */
   --font-family: 'Outfit', sans-serif;
@@ -665,8 +669,8 @@ input:checked + .slider:before {
 
 .cover-trophy {
   z-index: 2;
-  width: 110px;
-  height: 150px;
+  width: 130px;
+  height: 175px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1258,6 +1262,245 @@ input:checked + .slider:before {
 }
 
 /* ============================================================== */
+/* FLYER SCREEN LAYOUT STYLES                                     */
+/* ============================================================== */
+.flyer-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-px, 8px);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background-color: var(--card-bg, #0f1622);
+  color: var(--text-primary, #ffffff);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.flyer-content.safe-zone {
+  padding: 16px 20px 12px 20px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+.flyer-columns-container {
+  display: flex;
+  height: calc(100% - 24px);
+  width: 100%;
+  gap: 12px;
+}
+
+.flyer-columns-container.four-columns .flyer-column {
+  width: calc(25% - 9px);
+}
+
+.flyer-columns-container.five-columns .flyer-column {
+  width: calc(20% - 9.6px);
+}
+
+.flyer-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+/* Flyer group stage styling */
+.flyer-group-item {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.flyer-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 2px;
+  margin-bottom: 1px;
+}
+
+.flyer-group-title {
+  font-size: 0.52rem;
+  font-weight: 800;
+  color: var(--accent-color, #ffd700);
+}
+
+.flyer-group-subtitle {
+  font-size: 0.40rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.flyer-group-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+}
+
+.flyer-match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.44rem;
+  line-height: 1.1;
+  color: #e5e7eb;
+}
+
+.flyer-match-teams {
+  width: 48%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flyer-match-score {
+  width: 20%;
+  text-align: center;
+  font-weight: 700;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.2);
+  min-height: 8px;
+  display: inline-block;
+}
+
+.flyer-match-meta {
+  width: 32%;
+  text-align: right;
+  font-size: 0.38rem;
+  color: #9ca3af;
+}
+
+/* Flyer reverso styling */
+.flyer-column-title {
+  font-size: 0.46rem;
+  font-weight: 800;
+  color: var(--accent-color, #ffd700);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.flyer-playoff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
+.flyer-playoff-row {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: 3px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.flyer-playoff-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.38rem;
+  color: #9ca3af;
+  opacity: 0.8;
+}
+
+.flyer-playoff-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.42rem;
+  font-weight: 700;
+}
+
+.flyer-playoff-team {
+  width: 35%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.flyer-playoff-team.home {
+  text-align: left;
+}
+
+.flyer-playoff-team.away {
+  text-align: right;
+}
+
+.flyer-playoff-score-box {
+  width: 8px;
+  height: 8px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.flyer-playoff-vs {
+  font-size: 0.38rem;
+  font-weight: 400;
+  color: #9ca3af;
+  width: 12px;
+  text-align: center;
+}
+
+.flyer-column-cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.flyer-mini-cover-widget {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  flex-grow: 1;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.mini-cover-title {
+  font-size: 0.52rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.flyer-branding-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 4px;
+  font-size: 0.5rem;
+}
+
+/* ============================================================== */
 /* PRINT STYLES (CRITICAL FOR MULTI-SIZE A4 PLANCHAS)            */
 /* ============================================================== */
 @media print {
@@ -1482,8 +1725,8 @@ input:checked + .slider:before {
     top: -4mm !important;
   }
   .cover-trophy {
-    width: 25mm !important;
-    height: 35mm !important;
+    width: 30mm !important;
+    height: 40mm !important;
   }
   .cover-logo-text {
     font-size: 4.5mm !important;
@@ -1507,5 +1750,152 @@ input:checked + .slider:before {
     height: 2.8mm !important;
     max-width: 14mm !important;
     margin-right: 1mm !important;
+  }
+
+  /* ============================================================== */
+  /* PRINT FLYER SPECIFIC STYLES                                   */
+  /* ============================================================== */
+  .flyer-inner {
+    width: 297mm !important;
+    height: 105mm !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .flyer-inner.frente {
+    page-break-inside: avoid !important;
+  }
+
+  .flyer-inner.dorso {
+    page-break-inside: avoid !important;
+  }
+
+  .flyer-content.safe-zone {
+    padding: 5mm 6mm 3mm 6mm !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .flyer-columns-container {
+    gap: 3mm !important;
+    height: calc(100% - 4mm) !important;
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  .flyer-columns-container.four-columns .flyer-column {
+    width: calc(25% - 2.25mm) !important;
+  }
+
+  .flyer-columns-container.five-columns .flyer-column {
+    width: calc(20% - 2.4mm) !important;
+  }
+
+  .flyer-column {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    justify-content: space-between !important;
+    gap: 1.5mm !important;
+  }
+
+  .flyer-group-item {
+    padding: 0.8mm 1.2mm !important;
+    border-radius: 0.8mm !important;
+    border: 0.15mm solid #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+  .flyer-group-header {
+    padding-bottom: 0.3mm !important;
+    margin-bottom: 0.3mm !important;
+  }
+
+  .flyer-group-title {
+    font-size: 1.3mm !important;
+  }
+
+  .flyer-group-subtitle {
+    font-size: 1.0mm !important;
+  }
+
+  .flyer-group-matches {
+    gap: 0.4mm !important;
+  }
+
+  .flyer-match-row {
+    font-size: 1.0mm !important;
+  }
+
+  .flyer-match-score {
+    min-height: 1.8mm !important;
+    border-bottom: 0.12mm solid #000000 !important;
+  }
+
+  .flyer-match-meta {
+    font-size: 0.9mm !important;
+  }
+
+  .flyer-column-title {
+    font-size: 1.2mm !important;
+    padding-bottom: 0.3mm !important;
+    margin-bottom: 0.6mm !important;
+    letter-spacing: 0.1mm !important;
+  }
+
+  .flyer-playoff-list {
+    gap: 0.5mm !important;
+  }
+
+  .flyer-playoff-row {
+    padding: 0.4mm 0.8mm !important;
+    border-radius: 0.6mm !important;
+    border: 0.15mm solid #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+  .flyer-playoff-meta {
+    font-size: 0.9mm !important;
+  }
+
+  .flyer-playoff-teams {
+    font-size: 1.1mm !important;
+  }
+
+  .flyer-playoff-score-box {
+    width: 1.8mm !important;
+    height: 1.8mm !important;
+    border: 0.12mm solid #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+  .flyer-playoff-vs {
+    font-size: 0.8mm !important;
+    width: 2.2mm !important;
+  }
+
+  .flyer-mini-cover-widget {
+    padding: 1.2mm !important;
+    border-radius: 0.8mm !important;
+    gap: 0.8mm !important;
+    border: 0.15mm solid #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+  .mini-cover-title {
+    font-size: 1.3mm !important;
+  }
+
+  .flyer-branding-strip {
+    margin-top: 0.8mm !important;
+    padding-top: 0.6mm !important;
+    font-size: 1.0mm !important;
   }
 }

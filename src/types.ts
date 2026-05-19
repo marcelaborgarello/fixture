@@ -73,4 +73,10 @@ export interface DesignConfig {
   // Toggles for FIFA and 26 graphics
   showCoverYear?: boolean;
   showCoverFifaText?: boolean;
+  
+  // Format mode toggle
+  formatMode?: 'cards' | 'flyer' | 'poster';
+  
+  // Use 3-letter FIFA code for team names (e.g. ARG, MEX)
+  useFifaCode?: boolean;
 }
