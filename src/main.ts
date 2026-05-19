@@ -52,7 +52,9 @@ const currentConfig: DesignConfig = {
   coverTitleFontFamily: 'inherit',
   coverTitleColor: '#ffffff',
   coverTitleSize: 2.2,
-  coverSubtitleColor: '#ffd700'
+  coverSubtitleColor: '#ffd700',
+  showCoverYear: true,
+  showCoverFifaText: true
 };
 
 // List of all cards to be rendered and exported (18 cards total!)
@@ -81,7 +83,9 @@ const getCardsList = (): CardItem[] => [
       currentConfig.coverTitleFontFamily,
       currentConfig.coverTitleColor,
       currentConfig.coverTitleSize,
-      currentConfig.coverSubtitleColor
+      currentConfig.coverSubtitleColor,
+      currentConfig.showCoverYear,
+      currentConfig.showCoverFifaText
     ) 
   },
   ...GROUPS.map(g => ({
@@ -370,6 +374,18 @@ function setupConfigListeners(): void {
   const switchShowTrophy = document.getElementById('switch-show-trophy') as HTMLInputElement;
   switchShowTrophy?.addEventListener('change', (e) => {
     currentConfig.showCoverTrophy = (e.target as HTMLInputElement).checked;
+    renderAllCards();
+  });
+
+  const switchShowYear = document.getElementById('switch-show-year') as HTMLInputElement;
+  switchShowYear?.addEventListener('change', (e) => {
+    currentConfig.showCoverYear = (e.target as HTMLInputElement).checked;
+    renderAllCards();
+  });
+
+  const switchShowFifa = document.getElementById('switch-show-fifa') as HTMLInputElement;
+  switchShowFifa?.addEventListener('change', (e) => {
+    currentConfig.showCoverFifaText = (e.target as HTMLInputElement).checked;
     renderAllCards();
   });
 

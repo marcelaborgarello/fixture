@@ -146,11 +146,25 @@
         </div>
 
         <!-- Central cover layer customization -->
-        <div class="form-group">
-          <div class="switch-wrapper" style="margin-bottom: 10px;">
-            <label style="margin-bottom: 0;">Mostrar Trofeo FIFA</label>
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Mostrar Trofeo de Fondo</label>
             <label class="switch">
               <input type="checkbox" id="switch-show-trophy" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Mostrar '26' Gigante</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-show-year" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="switch-wrapper">
+            <label style="margin-bottom: 0;">Mostrar Texto 'FIFA'</label>
+            <label class="switch">
+              <input type="checkbox" id="switch-show-fifa" checked>
               <span class="slider"></span>
             </label>
           </div>

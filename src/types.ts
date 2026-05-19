@@ -69,4 +69,8 @@ export interface DesignConfig {
   coverTitleColor?: string;
   coverTitleSize?: number;
   coverSubtitleColor?: string;
+  
+  // Toggles for FIFA and 26 graphics
+  showCoverYear?: boolean;
+  showCoverFifaText?: boolean;
 }

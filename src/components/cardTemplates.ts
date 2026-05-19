@@ -48,7 +48,9 @@ export const renderCoverCardHtml = (
   coverTitleFontFamily?: string,
   coverTitleColor?: string,
   coverTitleSize?: number,
-  coverSubtitleColor?: string
+  coverSubtitleColor?: string,
+  showCoverYear: boolean = true,
+  showCoverFifaText: boolean = true
 ): string => {
   const badgeHtml = renderBranding(brandSignature, brandLogoUrl);
   
@@ -111,12 +113,12 @@ export const renderCoverCardHtml = (
       <div class="card-overlay"></div>
       <div class="card-content safe-zone">
         <div class="cover-header">
-          <span class="cover-year-bg">26</span>
+          ${showCoverYear ? `<span class="cover-year-bg">26</span>` : ''}
           <div class="cover-trophy" style="position: relative; width: 110px; height: 150px; display: flex; align-items: center; justify-content: center;">
             ${centralIllustrationHtml}
             ${trophyHtml}
           </div>
-          <div class="cover-logo-text" style="${coverSubtitleColor ? `color: ${coverSubtitleColor} !important;` : ''}">FIFA</div>
+          ${showCoverFifaText ? `<div class="cover-logo-text" style="${coverSubtitleColor ? `color: ${coverSubtitleColor} !important;` : ''}">FIFA</div>` : ''}
         </div>
         <div class="cover-footer">
           <h1 class="cover-title" style="${titleStyle}">${title}</h1>
