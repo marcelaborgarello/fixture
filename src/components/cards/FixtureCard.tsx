@@ -27,6 +27,8 @@ export const FixtureCard: React.FC<FixtureCardProps> = ({
     '--card-height-mm': String(config.cardHeightMm),
     width: 'var(--card-width)',
     height: 'var(--card-height)',
+    borderRadius: `${config.borderRadius ?? 0}px`,
+    fontFamily: config.fontFamily || 'inherit',
     ...style,
   } as React.CSSProperties;
 

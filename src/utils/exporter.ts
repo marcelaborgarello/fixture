@@ -1,90 +1,65 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { toPng, toSvg } from 'html-to-image';
+import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import JSZip from 'jszip';
 
-// Helper to render any React element to a PNG off-screen with correct dimensions and high scaling
-export const renderComponentToPng = async (
-  element: React.ReactElement,
+// Helper to capture a pre-rendered DOM element to PNG by its ID with correct scaling
+export const captureDomElementToPng = async (
+  elementId: string,
   widthMm: number,
   heightMm: number
 ): Promise<string> => {
+  const wrapper = document.getElementById(elementId);
+  if (!wrapper) {
+    throw new Error(`Element with id ${elementId} not found in DOM.`);
+  }
+
+  // Use the card-container inside, or fallback to the wrapper itself
+  const container = wrapper.querySelector('.card-container') as HTMLElement || wrapper;
+  
+  // Calculate pixel size at 4.4px per mm (default)
   const widthPx = Math.round(widthMm * 4.4);
   const heightPx = Math.round(heightMm * 4.4);
 
-  const container = document.createElement('div');
-  container.className = 'cards-grid'; // To inherit style variables and CSS classes
-  container.style.position = 'fixed';
-  container.style.top = '-9999px';
-  container.style.left = '-9999px';
-  container.style.width = `${widthPx}px`;
-  container.style.height = `${heightPx}px`;
-  container.style.padding = '0';
-  container.style.margin = '0';
-  container.style.boxSizing = 'border-box';
-  
-  // Set custom dimensions in CSS vars
-  container.style.setProperty('--card-width-mm', `${widthMm}`);
-  container.style.setProperty('--card-height-mm', `${heightMm}`);
+  // Use toPng to generate the image
+  const dataUrl = await toPng(container, {
+    pixelRatio: 4, // 4x scale for crisp printing
+    width: widthPx,
+    height: heightPx,
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left',
+    }
+  });
 
-  document.body.appendChild(container);
-
-  const root = createRoot(container);
-  root.render(element);
-
-  // Wait for rendering
-  await new Promise((resolve) => setTimeout(resolve, 80));
-
-  try {
-    const dataUrl = await toPng(container, {
-      pixelRatio: 4, // 4x scale for crisp printing
-      width: widthPx,
-      height: heightPx,
-      style: {
-        transform: 'scale(1)',
-        transformOrigin: 'top left',
-      }
-    });
-    return dataUrl;
-  } finally {
-    root.unmount();
-    container.remove();
-  }
+  return dataUrl;
 };
 
 // Export an HTML element as PNG data URL or trigger download
-export const exportToPng = async (element: HTMLElement, filename: string, download = true): Promise<string> => {
-  const dataUrl = await toPng(element, {
+export const exportToPng = async (
+  element: HTMLElement,
+  filename: string,
+  download = true,
+  widthMm?: number,
+  heightMm?: number
+): Promise<string> => {
+  const options: any = {
     pixelRatio: 4, // 4x scale for crisp printing
     style: {
       transform: 'scale(1)',
       transformOrigin: 'top left'
     }
-  });
+  };
+
+  if (widthMm && heightMm) {
+    options.width = Math.round(widthMm * 4.4);
+    options.height = Math.round(heightMm * 4.4);
+  }
+
+  const dataUrl = await toPng(element, options);
 
   if (download) {
     const link = document.createElement('a');
     link.download = `${filename}.png`;
-    link.href = dataUrl;
-    link.click();
-  }
-
-  return dataUrl;
-};
-
-// Export an HTML element as SVG string or trigger download
-export const exportToSvg = async (element: HTMLElement, filename: string, download = true): Promise<string> => {
-  const dataUrl = await toSvg(element, {
-    style: {
-      transform: 'scale(1)',
-      transformOrigin: 'top left'
-    }
-  });
-
-  if (download) {
-    const link = document.createElement('a');
-    link.download = `${filename}.svg`;
     link.href = dataUrl;
     link.click();
   }
@@ -100,16 +75,23 @@ export const exportToPdf = async (
   widthMm = 70,
   heightMm = 100
 ): Promise<jsPDF> => {
-  const pngDataUrl = await toPng(element, {
+  const options: any = {
     pixelRatio: 4, // High resolution for vector sharp rendering in PDF
     style: {
       transform: 'scale(1)',
       transformOrigin: 'top left'
     }
-  });
+  };
+
+  if (widthMm && heightMm) {
+    options.width = Math.round(widthMm * 4.4);
+    options.height = Math.round(heightMm * 4.4);
+  }
+
+  const pngDataUrl = await toPng(element, options);
 
   const pdf = new jsPDF({
-    orientation: 'portrait',
+    orientation: widthMm > heightMm ? 'landscape' : 'portrait',
     unit: 'mm',
     format: [widthMm, heightMm]
   });
@@ -123,9 +105,9 @@ export const exportToPdf = async (
   return pdf;
 };
 
-// Batch export all cards and generate a structured ZIP file in the selected custom size
+// Batch export all cards and generate a structured ZIP file using pre-rendered DOM elements
 export const exportAllToZip = async (
-  cards: { name: string; element: React.ReactElement }[],
+  cards: { name: string; id: string }[],
   progressCallback: (current: number, total: number, phase: string) => void,
   widthMm = 70,
   heightMm = 100,
@@ -142,9 +124,8 @@ export const exportAllToZip = async (
     const indexStr = String(i).padStart(2, '0');
     const filename = `${indexStr}_${item.name.toLowerCase().replace(/\s+/g, '_')}`;
 
-    // Render component off-screen to PNG
-    progressCallback(i + 1, total, `Renderizando ${item.name}...`);
-    const pngDataUrl = await renderComponentToPng(item.element, widthMm, heightMm);
+    progressCallback(i + 1, total, `Capturando ${item.name}...`);
+    const pngDataUrl = await captureDomElementToPng(item.id, widthMm, heightMm);
     const pngBase64 = pngDataUrl.split(',')[1];
 
     if (format === 'all' || format === 'png') {
@@ -168,11 +149,13 @@ export const exportAllToZip = async (
   return zipBlob;
 };
 
-// Generate an imposing double-sided A4 Landscape sheet with 8 cards (2x4 grid)
+// Generate an imposing A4 Landscape sheet with 8 cards (2x4 grid)
+// Supports double-sided (mirrored backs on page 2) or single-sided (fronts only)
 export const exportPliegoA4Pdf = async (
-  cardFrentes: React.ReactElement[],
-  cardDorsos: React.ReactElement[],
+  frontIds: string[],
+  backIds: string[],
   hasCutLines: boolean,
+  doubleSided: boolean,
   widthMm: number,
   heightMm: number,
   progressCallback: (current: number, total: number, phase: string) => void
@@ -186,25 +169,27 @@ export const exportPliegoA4Pdf = async (
   const cols = 4;
   const rows = 2;
   const cardsPerPage = cols * rows; // 8
-  const totalCards = cardFrentes.length;
+  const totalCards = frontIds.length;
   const totalPages = Math.ceil(totalCards / cardsPerPage);
 
   const marginX = (297 - cols * widthMm) / 2;
   const marginY = (210 - rows * heightMm) / 2;
 
-  // Pre-render all fronts and backs off-screen
+  // Pre-render fronts and backs from DOM elements
   const frenteImages: string[] = [];
   const dorsoImages: string[] = [];
 
-  const totalSteps = totalCards * 2;
+  const totalSteps = doubleSided ? totalCards * 2 : totalCards;
   for (let i = 0; i < totalCards; i++) {
     progressCallback(i + 1, totalSteps, `Procesando frente ${i + 1} de ${totalCards}...`);
-    const fImg = await renderComponentToPng(cardFrentes[i], widthMm, heightMm);
+    const fImg = await captureDomElementToPng(frontIds[i], widthMm, heightMm);
     frenteImages.push(fImg);
 
-    progressCallback(totalCards + i + 1, totalSteps, `Procesando dorso ${i + 1} de ${totalCards}...`);
-    const dImg = await renderComponentToPng(cardDorsos[i], widthMm, heightMm);
-    dorsoImages.push(dImg);
+    if (doubleSided) {
+      progressCallback(totalCards + i + 1, totalSteps, `Procesando dorso ${i + 1} de ${totalCards}...`);
+      const dImg = await captureDomElementToPng(backIds[i], widthMm, heightMm);
+      dorsoImages.push(dImg);
+    }
   }
 
   // Draw sheets to the document
@@ -233,24 +218,26 @@ export const exportPliegoA4Pdf = async (
       }
     }
 
-    // PAGE 2: DORSOS (MIRRORED HORIZONTALLY)
-    pdf.addPage();
-    progressCallback(p + 1, totalPages, `Imponiendo dorsos espejados (Hoja ${p + 1}/${totalPages})...`);
-    for (let i = 0; i < cardsPerPage; i++) {
-      const cardIdx = p * cardsPerPage + i;
-      if (cardIdx >= totalCards) break;
+    // PAGE 2: DORSOS (MIRRORED HORIZONTALLY) - Only if doubleSided is active
+    if (doubleSided) {
+      pdf.addPage();
+      progressCallback(p + 1, totalPages, `Imponiendo dorsos espejados (Hoja ${p + 1}/${totalPages})...`);
+      for (let i = 0; i < cardsPerPage; i++) {
+        const cardIdx = p * cardsPerPage + i;
+        if (cardIdx >= totalCards) break;
 
-      const r = Math.floor(i / cols);
-      const c = cols - 1 - (i % cols); // Mirror horizontal column index
-      const x = marginX + c * widthMm;
-      const y = marginY + r * heightMm;
+        const r = Math.floor(i / cols);
+        const c = cols - 1 - (i % cols); // Mirror horizontal column index
+        const x = marginX + c * widthMm;
+        const y = marginY + r * heightMm;
 
-      pdf.addImage(dorsoImages[cardIdx], 'PNG', x, y, widthMm, heightMm);
+        pdf.addImage(dorsoImages[cardIdx], 'PNG', x, y, widthMm, heightMm);
 
-      if (hasCutLines) {
-        pdf.setDrawColor(180, 180, 180);
-        pdf.setLineDashPattern([1, 1], 0);
-        pdf.rect(x, y, widthMm, heightMm, 'S');
+        if (hasCutLines) {
+          pdf.setDrawColor(180, 180, 180);
+          pdf.setLineDashPattern([1, 1], 0);
+          pdf.rect(x, y, widthMm, heightMm, 'S');
+        }
       }
     }
   }
@@ -258,11 +245,13 @@ export const exportPliegoA4Pdf = async (
   return pdf;
 };
 
-// Generate an imposing double-sided A5 Landscape sheet with 2 cards (1x2 grid)
+// Generate an imposing A5 Landscape sheet with 2 cards (1x2 grid)
+// Supports double-sided or single-sided
 export const exportPliegoA5Pdf = async (
-  cardFrentes: React.ReactElement[],
-  cardDorsos: React.ReactElement[],
+  frontIds: string[],
+  backIds: string[],
   hasCutLines: boolean,
+  doubleSided: boolean,
   widthMm: number,
   heightMm: number,
   progressCallback: (current: number, total: number, phase: string) => void
@@ -276,25 +265,27 @@ export const exportPliegoA5Pdf = async (
   const cols = 2;
   const rows = 1;
   const cardsPerPage = cols * rows; // 2
-  const totalCards = cardFrentes.length;
+  const totalCards = frontIds.length;
   const totalPages = Math.ceil(totalCards / cardsPerPage);
 
   const marginX = (210 - cols * widthMm) / 2;
   const marginY = (148.5 - rows * heightMm) / 2;
 
-  // Pre-render fronts and backs off-screen
+  // Pre-render fronts and backs from DOM elements
   const frenteImages: string[] = [];
   const dorsoImages: string[] = [];
 
-  const totalSteps = totalCards * 2;
+  const totalSteps = doubleSided ? totalCards * 2 : totalCards;
   for (let i = 0; i < totalCards; i++) {
     progressCallback(i + 1, totalSteps, `Procesando frente ${i + 1} de ${totalCards}...`);
-    const fImg = await renderComponentToPng(cardFrentes[i], widthMm, heightMm);
+    const fImg = await captureDomElementToPng(frontIds[i], widthMm, heightMm);
     frenteImages.push(fImg);
 
-    progressCallback(totalCards + i + 1, totalSteps, `Procesando dorso ${i + 1} de ${totalCards}...`);
-    const dImg = await renderComponentToPng(cardDorsos[i], widthMm, heightMm);
-    dorsoImages.push(dImg);
+    if (doubleSided) {
+      progressCallback(totalCards + i + 1, totalSteps, `Procesando dorso ${i + 1} de ${totalCards}...`);
+      const dImg = await captureDomElementToPng(backIds[i], widthMm, heightMm);
+      dorsoImages.push(dImg);
+    }
   }
 
   // Draw sheets to the document
@@ -322,23 +313,25 @@ export const exportPliegoA5Pdf = async (
       }
     }
 
-    // PAGE 2: DORSOS (MIRRORED HORIZONTALLY)
-    pdf.addPage();
-    progressCallback(p + 1, totalPages, `Imponiendo dorsos A5 espejados (Hoja ${p + 1}/${totalPages})...`);
-    for (let i = 0; i < cardsPerPage; i++) {
-      const cardIdx = p * cardsPerPage + i;
-      if (cardIdx >= totalCards) break;
+    // PAGE 2: DORSOS (MIRRORED HORIZONTALLY) - Only if doubleSided is active
+    if (doubleSided) {
+      pdf.addPage();
+      progressCallback(p + 1, totalPages, `Imponiendo dorsos A5 espejados (Hoja ${p + 1}/${totalPages})...`);
+      for (let i = 0; i < cardsPerPage; i++) {
+        const cardIdx = p * cardsPerPage + i;
+        if (cardIdx >= totalCards) break;
 
-      const c = cols - 1 - (i % cols); // Mirror horizontal column index
-      const x = marginX + c * widthMm;
-      const y = marginY;
+        const c = cols - 1 - (i % cols); // Mirror horizontal column index
+        const x = marginX + c * widthMm;
+        const y = marginY;
 
-      pdf.addImage(dorsoImages[cardIdx], 'PNG', x, y, widthMm, heightMm);
+        pdf.addImage(dorsoImages[cardIdx], 'PNG', x, y, widthMm, heightMm);
 
-      if (hasCutLines) {
-        pdf.setDrawColor(180, 180, 180);
-        pdf.setLineDashPattern([1, 1], 0);
-        pdf.rect(x, y, widthMm, heightMm, 'S');
+        if (hasCutLines) {
+          pdf.setDrawColor(180, 180, 180);
+          pdf.setLineDashPattern([1, 1], 0);
+          pdf.rect(x, y, widthMm, heightMm, 'S');
+        }
       }
     }
   }
@@ -346,10 +339,10 @@ export const exportPliegoA5Pdf = async (
   return pdf;
 };
 
-// Generate an imposing double flyer page A4 Landscape sheet (2 flyers, top/bottom)
+// Generate a double flyer page A4 Landscape sheet from DOM element IDs
 export const exportFlyerPliegoPdf = async (
-  flyerFrente: React.ReactElement,
-  flyerDorso: React.ReactElement,
+  frenteId: string,
+  dorsoId: string,
   progressCallback: (current: number, total: number, phase: string) => void
 ): Promise<jsPDF> => {
   const pdf = new jsPDF({
@@ -361,11 +354,11 @@ export const exportFlyerPliegoPdf = async (
   const widthMm = 297;
   const heightMm = 105;
 
-  progressCallback(1, 4, 'Renderizando frente del flyer...');
-  const frenteImg = await renderComponentToPng(flyerFrente, widthMm, heightMm);
+  progressCallback(1, 4, 'Capturando frente del flyer...');
+  const frenteImg = await captureDomElementToPng(frenteId, widthMm, heightMm);
 
-  progressCallback(2, 4, 'Renderizando dorso del flyer...');
-  const dorsoImg = await renderComponentToPng(flyerDorso, widthMm, heightMm);
+  progressCallback(2, 4, 'Capturando dorso del flyer...');
+  const dorsoImg = await captureDomElementToPng(dorsoId, widthMm, heightMm);
 
   // --- PAGE 1: FRENTES (TOP & BOTTOM) ---
   progressCallback(3, 4, 'Armando página de frentes del flyer...');

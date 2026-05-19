@@ -9,13 +9,6 @@ interface GroupCardProps {
   config: DesignConfig;
 }
 
-const getTeamNameSizeClass = (name: string, useFifaCode: boolean): string => {
-  if (useFifaCode) return 'text-[10px] font-bold';
-  if (name.length > 12) return 'text-[8px] leading-tight';
-  if (name.length > 8) return 'text-[9px] leading-tight';
-  return 'text-[10px] font-medium';
-};
-
 const formatShortDate = (dateStr: string): string => {
   return dateStr
     .replace(' de junio', '/6')
@@ -31,20 +24,54 @@ const formatShortDate = (dateStr: string): string => {
 
 export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
   const useFifaCode = config.useFifaCode ?? false;
+  const effectiveTitleFont = config.applyCoverTypographyToAllCards
+    ? (config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit' ? config.coverTitleFontFamily : config.titleFontFamily)
+    : config.titleFontFamily;
+  const effectiveTitleColor = config.applyCoverTypographyToAllCards
+    ? (config.coverTitleColor || config.titleTextColor)
+    : config.titleTextColor;
+  const effectiveBodyFont = config.applyCoverTypographyToAllCards
+    ? (config.coverSubtitleFontFamily && config.coverSubtitleFontFamily !== 'inherit' ? config.coverSubtitleFontFamily : config.bodyFontFamily)
+    : config.bodyFontFamily;
+  const effectiveBodyColor = config.applyCoverTypographyToAllCards
+    ? (config.coverSubtitleColor || config.bodyTextColor)
+    : config.bodyTextColor;
+  const matchBackground = config.showMatchRowBackground === false
+    ? 'transparent'
+    : (config.cardBgColor || 'rgba(255, 255, 255, 0.08)');
+  const matchBorder = config.borderColor || 'rgba(255, 255, 255, 0.15)';
 
   // Render header team list
   const teamNamesLine = group.teams
     .map(t => useFifaCode ? t.code : t.name)
     .join(' • ');
 
+  const titleScaleSize = 13 * (config.fontSizeScale || 1.0);
+  const subtitleScaleSize = 7.5 * (config.fontSizeScale || 1.0);
+
   return (
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
       {/* Card Header */}
       <div className="flex flex-col items-center text-center w-full select-none mb-1">
-        <h2 className="text-[13px] font-extrabold tracking-widest text-brand-accent uppercase drop-shadow">
+        <h2
+          style={{
+            fontFamily: effectiveTitleFont || 'inherit',
+            color: effectiveTitleColor || '#ffd700',
+            fontSize: `${titleScaleSize}px`,
+          }}
+          className="font-extrabold tracking-widest uppercase drop-shadow"
+        >
           GRUPO {group.name}
         </h2>
-        <div className="text-[7.5px] font-semibold text-white/50 tracking-wider uppercase truncate max-w-[95%] mt-0.5">
+        <div
+          style={{
+            fontFamily: effectiveBodyFont || 'inherit',
+            color: effectiveBodyColor || '#ffffff',
+            opacity: 0.5,
+            fontSize: `${subtitleScaleSize}px`,
+          }}
+          className="font-semibold tracking-wider uppercase truncate max-w-[95%] mt-0.5"
+        >
           {teamNamesLine}
         </div>
       </div>
@@ -54,24 +81,47 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
         {group.matches.map((match) => {
           const isHomeStr = typeof match.homeTeam === 'string';
           const isAwayStr = typeof match.awayTeam === 'string';
-          
-          const homeName = isHomeStr 
-            ? (match.homeTeam as string) 
+
+          const homeName = isHomeStr
+            ? (match.homeTeam as string)
             : (useFifaCode ? (match.homeTeam as any).code : (match.homeTeam as any).name);
-          const awayName = isAwayStr 
-            ? (match.awayTeam as string) 
+          const awayName = isAwayStr
+            ? (match.awayTeam as string)
             : (useFifaCode ? (match.awayTeam as any).code : (match.awayTeam as any).name);
 
           const homeFlag = isHomeStr ? 'TBD' : (match.homeTeam as any).flagCode;
           const awayFlag = isAwayStr ? 'TBD' : (match.awayTeam as any).flagCode;
 
+          // Compute size classes dynamic sizing with scale
+          const getBaseSize = (name: string, useFifa: boolean) => {
+            if (useFifa) return 10;
+            if (name.length > 12) return 8;
+            if (name.length > 8) return 9;
+            return 10;
+          };
+
+          const homeFontSize = getBaseSize(homeName, useFifaCode) * (config.fontSizeScale || 1.0);
+          const awayFontSize = getBaseSize(awayName, useFifaCode) * (config.fontSizeScale || 1.0);
+
           return (
             <div
               key={match.id}
-              className="flex flex-col justify-center border-b border-white/5 py-[2px] last:border-0 hover:bg-white/5 transition-colors duration-150 px-1 rounded"
+              style={{
+                backgroundColor: matchBackground,
+                borderColor: matchBorder,
+              }}
+              className={`flex flex-col justify-center border-b py-[2px] last:border-0 transition-colors duration-150 px-1 rounded ${config.showMatchRowBackground === false ? '' : 'hover:bg-white/10'}`}
             >
               {/* Match Meta (Date & Venue) */}
-              <div className="flex justify-between items-center text-[7.5px] text-white/40 font-semibold tracking-wider mb-[2px] select-none">
+              <div
+                style={{
+                  fontFamily: effectiveBodyFont || 'inherit',
+                  color: effectiveBodyColor || '#ffffff',
+                  opacity: 0.4,
+                  fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+                }}
+                className="flex justify-between items-center font-semibold tracking-wider mb-[2px] select-none"
+              >
                 <span>
                   {formatShortDate(match.date)} - {match.time.replace(' hs.', '')}
                 </span>
@@ -83,11 +133,15 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
                 {/* Home Team */}
                 <div className="flex items-center justify-end w-[41%] gap-1 text-right overflow-hidden">
                   <span
-                    className={`truncate select-none leading-none ${
-                      isHomeStr
-                        ? 'text-white/40 italic font-normal text-[9px]'
-                        : getTeamNameSizeClass(homeName, useFifaCode)
-                    }`}
+                    style={{
+                      fontFamily: effectiveBodyFont || 'inherit',
+                      color: isHomeStr ? undefined : (effectiveBodyColor || '#ffffff'),
+                      fontSize: `${isHomeStr ? 9 * (config.fontSizeScale || 1.0) : homeFontSize}px`,
+                    }}
+                    className={`truncate select-none leading-none ${isHomeStr
+                      ? 'text-white/40 italic font-normal'
+                      : 'font-medium'
+                      }`}
                   >
                     {homeName}
                   </span>
@@ -96,20 +150,24 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
 
                 {/* Score Boxes (Playable print inputs) */}
                 <div className="flex items-center gap-[2px] px-[2px] shrink-0 select-none">
-                  <div className="w-[12px] h-[14px] bg-black/25 border border-white/10 rounded-[1px]" />
-                  <span className="text-[7px] text-white/30 font-bold shrink-0">-</span>
-                  <div className="w-[12px] h-[14px] bg-black/25 border border-white/10 rounded-[1px]" />
+                  <div style={{ borderRadius: '0px' }} className="w-[16px] h-[14px] bg-white border border-black/25" />
+                  <span style={{ fontSize: `${7 * (config.fontSizeScale || 1.0)}px` }} className="text-white/30 font-bold shrink-0">-</span>
+                  <div style={{ borderRadius: '0px' }} className="w-[16px] h-[14px] bg-white border border-black/25" />
                 </div>
 
                 {/* Away Team */}
                 <div className="flex items-center justify-start w-[41%] gap-1 text-left overflow-hidden">
                   <Flag code={awayFlag} />
                   <span
-                    className={`truncate select-none leading-none ${
-                      isAwayStr
-                        ? 'text-white/40 italic font-normal text-[9px]'
-                        : getTeamNameSizeClass(awayName, useFifaCode)
-                    }`}
+                    style={{
+                      fontFamily: effectiveBodyFont || 'inherit',
+                      color: isAwayStr ? undefined : (effectiveBodyColor || '#ffffff'),
+                      fontSize: `${isAwayStr ? 9 * (config.fontSizeScale || 1.0) : awayFontSize}px`,
+                    }}
+                    className={`truncate select-none leading-none ${isAwayStr
+                      ? 'text-white/40 italic font-normal'
+                      : 'font-medium'
+                      }`}
                   >
                     {awayName}
                   </span>
@@ -124,6 +182,13 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
       <BrandingPlaceholder
         brandSignature={config.brandSignature}
         brandLogoUrl={config.brandLogoUrl}
+        brandLogoScale={config.brandLogoScale}
+        brandInstagram={config.brandInstagram}
+        brandPhone={config.brandPhone}
+        brandAddress={config.brandAddress}
+        brandFontFamily={config.brandFontFamily}
+        brandFontSize={config.brandFontSize}
+        brandTextColor={config.brandTextColor}
       />
     </CardInner>
   );

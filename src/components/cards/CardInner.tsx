@@ -5,22 +5,58 @@ interface CardInnerProps {
   config: DesignConfig;
   children: React.ReactNode;
   className?: string;
+  isCoverOrBack?: boolean;
+  showWatermark?: boolean;
 }
 
-export const CardInner: React.FC<CardInnerProps> = ({ config, children, className = '' }) => {
+export const CardInner: React.FC<CardInnerProps> = ({
+  config,
+  children,
+  className = '',
+  isCoverOrBack = false,
+  showWatermark = false,
+}) => {
   // Determine background style
   const bgStyle: React.CSSProperties = {
-    borderRadius: `${config.borderRadius}px`,
+    borderRadius: `${config.borderRadius ?? 0}px`,
+    fontFamily: config.fontFamily || 'inherit',
+    color: config.textColor || '#ffffff',
   };
 
-  if (config.backgroundType === 'gradient') {
-    bgStyle.background = config.backgroundGradient;
-  } else if (config.backgroundType === 'solid') {
-    bgStyle.background = config.solidColor;
-  } else if (config.backgroundType === 'image' && config.backgroundImageUrl) {
-    bgStyle.backgroundImage = `url(${config.backgroundImageUrl})`;
-    bgStyle.backgroundSize = 'cover';
-    bgStyle.backgroundPosition = 'center';
+  const bgImageLayerStyle: React.CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    pointerEvents: 'none',
+  };
+
+  let hasCustomBgImage = false;
+
+  if (isCoverOrBack && (config.coverBgColor || config.coverBgImageUrl)) {
+    if (config.coverBgColor) {
+      bgStyle.backgroundColor = config.coverBgColor;
+    }
+    if (config.coverBgImageUrl) {
+      hasCustomBgImage = true;
+      bgImageLayerStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
+      bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
+      bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
+      bgImageLayerStyle.backgroundRepeat = 'no-repeat';
+      bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
+    }
+  } else {
+    if (config.backgroundType === 'gradient') {
+      bgStyle.background = config.backgroundGradient;
+    } else if (config.backgroundType === 'solid') {
+      bgStyle.background = config.solidColor;
+    } else if (config.backgroundType === 'image' && config.backgroundImageUrl) {
+      hasCustomBgImage = true;
+      bgImageLayerStyle.backgroundImage = `url(${config.backgroundImageUrl})`;
+      bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
+      bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
+      bgImageLayerStyle.backgroundRepeat = 'no-repeat';
+      bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
+    }
   }
 
   // Handle glassmorphism classes
@@ -31,10 +67,14 @@ export const CardInner: React.FC<CardInnerProps> = ({ config, children, classNam
   return (
     <div
       style={bgStyle}
-      className={`relative w-full h-full flex flex-col justify-between overflow-hidden p-[6%] box-border text-white select-none ${glassClasses} ${className}`}
+      className={`relative w-full h-full flex flex-col justify-between overflow-hidden box-border text-white select-none ${glassClasses} ${className}`}
     >
+      {/* Custom background image layer to allow scaling/opacity/position adjustments */}
+      {hasCustomBgImage && (
+        <div style={bgImageLayerStyle} />
+      )}
       {/* Background Image Layer if set and type is not image */}
-      {config.backgroundImageUrl && config.backgroundType !== 'image' && (
+      {!isCoverOrBack && config.backgroundImageUrl && config.backgroundType !== 'image' && (
         <img
           src={config.backgroundImageUrl}
           alt="background layer"
@@ -42,8 +82,17 @@ export const CardInner: React.FC<CardInnerProps> = ({ config, children, classNam
         />
       )}
 
-      {/* Content wrapper */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between">
+      {/* Watermark 2026 centered absolutely at root level */}
+      {showWatermark && (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0 select-none pointer-events-none">
+          <div className="text-[120px] font-black text-white/[0.04] tracking-tighter leading-none">
+            2026
+          </div>
+        </div>
+      )}
+
+      {/* Content wrapper with internal padding */}
+      <div className="relative z-10 w-full h-full flex flex-col justify-between p-[6%] box-border">
         {children}
       </div>
     </div>

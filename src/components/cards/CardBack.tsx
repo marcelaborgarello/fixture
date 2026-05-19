@@ -9,26 +9,17 @@ interface CardBackProps {
 }
 
 export const CardBack: React.FC<CardBackProps> = ({ config }) => {
-  // Override background style for cover/back if specified
-  const coverBgStyle: React.CSSProperties = {};
-  if (config.coverBgColor) {
-    coverBgStyle.backgroundColor = config.coverBgColor;
-  }
-  if (config.coverBgImageUrl) {
-    coverBgStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
-    coverBgStyle.backgroundSize = 'cover';
-    coverBgStyle.backgroundPosition = 'center';
-  }
+  const effectiveBackTitleFont = config.backTitleFontFamily && config.backTitleFontFamily !== 'inherit'
+    ? config.backTitleFontFamily
+    : config.titleFontFamily;
+  const effectiveBackTitleColor = config.titleTextColor || '#ffffff';
+  const effectiveBackSubtitleFont = config.backSubtitleFontFamily && config.backSubtitleFontFamily !== 'inherit'
+    ? config.backSubtitleFontFamily
+    : config.bodyFontFamily;
+  const effectiveBackSubtitleColor = config.backSubtitleTextColor || config.bodyTextColor || '#ffd700';
 
   return (
-    <CardInner config={config} className="relative select-none text-center flex flex-col justify-between items-center h-full w-full">
-      {/* Dynamic cover background override */}
-      {(config.coverBgColor || config.coverBgImageUrl) && (
-        <div
-          style={coverBgStyle}
-          className="absolute inset-0 z-0 pointer-events-none"
-        />
-      )}
+    <CardInner config={config} isCoverOrBack={true} className="relative select-none text-center flex flex-col justify-between items-center h-full w-full">
 
       <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-4 my-auto">
         {/* Center Contents */}
@@ -40,12 +31,23 @@ export const CardBack: React.FC<CardBackProps> = ({ config }) => {
               className="w-[50px] h-[70px] object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] pointer-events-none mb-1"
             />
           )}
-          <div className="text-[12px] font-black text-white tracking-widest uppercase">
+          <div
+            style={{
+              fontFamily: effectiveBackTitleFont || 'inherit',
+              color: effectiveBackTitleColor,
+              fontSize: `${12 * (config.fontSizeScale || 1.0)}px`,
+            }}
+            className="font-black tracking-widest uppercase"
+          >
             WORLD CUP 2026
           </div>
           <div
-            style={{ color: config.coverSubtitleColor || '#ffd700' }}
-            className="text-[7.5px] font-extrabold tracking-[0.2em] uppercase"
+            style={{
+              fontFamily: effectiveBackSubtitleFont || 'inherit',
+              color: effectiveBackSubtitleColor,
+              fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+            }}
+            className="font-extrabold tracking-[0.2em] uppercase"
           >
             Fixture Oficial
           </div>
@@ -55,6 +57,13 @@ export const CardBack: React.FC<CardBackProps> = ({ config }) => {
         <BrandingPlaceholder
           brandSignature={config.brandSignature}
           brandLogoUrl={config.brandLogoUrl}
+          brandLogoScale={config.brandLogoScale}
+          brandInstagram={config.brandInstagram}
+          brandPhone={config.brandPhone}
+          brandAddress={config.brandAddress}
+          brandFontFamily={config.brandFontFamily}
+          brandFontSize={config.brandFontSize}
+          brandTextColor={config.brandTextColor}
         />
       </div>
     </CardInner>

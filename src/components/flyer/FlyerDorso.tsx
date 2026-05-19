@@ -11,26 +11,47 @@ interface FlyerDorsoProps {
 }
 
 export const FlyerDorso: React.FC<FlyerDorsoProps> = ({ phases, config, isMirrored = false }) => {
-  // BG styling logic
+  // BG styling logic for the whole flyer sheet
   const bgStyle: React.CSSProperties = {};
+  let hasCustomBgImage = false;
+  const bgImageLayerStyle: React.CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    pointerEvents: 'none',
+  };
+
   if (config.backgroundType === 'gradient') {
-    bgStyle.backgroundImage = config.backgroundGradient;
+    bgStyle.background = config.backgroundGradient;
   } else if (config.backgroundType === 'solid') {
     bgStyle.backgroundColor = config.solidColor;
   } else if (config.backgroundType === 'image' && config.backgroundImageUrl) {
-    bgStyle.backgroundImage = `url(${config.backgroundImageUrl})`;
-    bgStyle.backgroundSize = 'cover';
-    bgStyle.backgroundPosition = 'center';
+    hasCustomBgImage = true;
+    bgImageLayerStyle.backgroundImage = `url(${config.backgroundImageUrl})`;
+    bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
+    bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
+    bgImageLayerStyle.backgroundRepeat = 'no-repeat';
+    bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
   }
 
-  // Cover specific background override if set
+  // Cover column BG styling override (applied ONLY to the cover column, not the whole sheet)
+  const colCoverBgStyle: React.CSSProperties = {};
+  let hasColCoverBgImage = false;
+  const colCoverBgImageStyle: React.CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+    pointerEvents: 'none',
+  };
+
   if (config.coverBgImageUrl) {
-    bgStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
-    bgStyle.backgroundSize = 'cover';
-    bgStyle.backgroundPosition = 'center';
+    hasColCoverBgImage = true;
+    colCoverBgImageStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
+    colCoverBgImageStyle.backgroundSize = 'cover';
+    colCoverBgImageStyle.backgroundPosition = 'center';
+    colCoverBgImageStyle.backgroundRepeat = 'no-repeat';
   } else if (config.coverBgColor) {
-    bgStyle.backgroundColor = config.coverBgColor;
-    bgStyle.backgroundImage = 'none';
+    colCoverBgStyle.backgroundColor = config.coverBgColor;
   }
 
   const r32Matches = phases[0]?.matches || [];
@@ -38,124 +59,152 @@ export const FlyerDorso: React.FC<FlyerDorsoProps> = ({ phases, config, isMirror
   const qfMatches = phases[2]?.matches || [];
   const finalPhaseMatches = phases[3]?.matches || []; // Semis, 3er puesto, final
 
-  // Construct column elements
+  // Construct column elements (Exactly 4 columns)
   const columns: React.ReactNode[] = [];
 
-  // Column 1: Dieciseisavos - Parte A (Partidos 1-8)
+  // Column 1: Tapa (Cover / Branding / Trophy)
   columns.push(
-    <div key="col-1" className="flex flex-col h-full justify-between overflow-hidden">
-      <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-1">
-        1/16 Final - Grupo A
-      </div>
-      <div className="grid grid-cols-1 gap-1 flex-grow overflow-hidden">
-        {r32Matches.slice(0, 8).map(m => (
-          <FlyerPlayoffMatch key={m.id} match={m} />
-        ))}
-      </div>
-    </div>
-  );
+    <div
+      key="col-cover"
+      style={{ borderRadius: '0px', ...colCoverBgStyle }}
+      className="flex flex-col h-full justify-between items-center text-center p-2.5 select-none relative overflow-hidden bg-black/20 border border-white/5"
+    >
+      {/* Background Cover Image Layer */}
+      {hasColCoverBgImage && (
+        <div style={colCoverBgImageStyle} />
+      )}
 
-  // Column 2: Dieciseisavos - Parte B (Partidos 9-16)
-  columns.push(
-    <div key="col-2" className="flex flex-col h-full justify-between overflow-hidden">
-      <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-1">
-        1/16 Final - Grupo B
-      </div>
-      <div className="grid grid-cols-1 gap-1 flex-grow overflow-hidden">
-        {r32Matches.slice(8, 16).map(m => (
-          <FlyerPlayoffMatch key={m.id} match={m} />
-        ))}
-      </div>
-    </div>
-  );
-
-  // Column 3: Octavos de Final (Partidos 1-8)
-  columns.push(
-    <div key="col-3" className="flex flex-col h-full justify-between overflow-hidden">
-      <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-1">
-        Octavos de Final
-      </div>
-      <div className="grid grid-cols-1 gap-1 flex-grow overflow-hidden">
-        {r16Matches.map(m => (
-          <FlyerPlayoffMatch key={m.id} match={m} />
-        ))}
-      </div>
-    </div>
-  );
-
-  // Column 4: Cuartos (Partidos 1-4) + Semifinales (Partidos 1-2)
-  columns.push(
-    <div key="col-4" className="flex flex-col h-full justify-between overflow-hidden">
-      <div>
-        <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-0.5">
-          Cuartos de Final
-        </div>
-        <div className="grid grid-cols-1 gap-1 mb-1">
-          {qfMatches.map(m => (
-            <FlyerPlayoffMatch key={m.id} match={m} />
-          ))}
-        </div>
-      </div>
-      <div>
-        <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-0.5">
-          Semifinales
-        </div>
-        <div className="grid grid-cols-1 gap-1">
-          {finalPhaseMatches.slice(0, 2).map(m => (
-            <FlyerPlayoffMatch key={m.id} match={m} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  // Column 5: 3er Puesto + Final + Mini Cover Widget (Logo de tapa / Copa)
-  const thirdPlaceMatch = finalPhaseMatches[2];
-  const finalMatch = finalPhaseMatches[3];
-
-  columns.push(
-    <div key="col-5" className="flex flex-col h-full justify-between overflow-hidden">
-      <div>
-        <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-0.5">
-          3er y 4to Puesto
-        </div>
-        <div className="grid grid-cols-1 gap-1 mb-1">
-          {thirdPlaceMatch && <FlyerPlayoffMatch match={thirdPlaceMatch} />}
-        </div>
-        <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-0.5">
-          Final
-        </div>
-        <div className="grid grid-cols-1 gap-1">
-          {finalMatch && <FlyerPlayoffMatch match={finalMatch} />}
-        </div>
+      {/* Background big text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
+        <span className="text-[120px] font-black text-white/[0.03] tracking-tighter leading-none">26</span>
       </div>
 
-      {/* Mini Cover branding space */}
-      <div className="bg-white/5 border border-brand-accent/20 rounded p-1.5 flex flex-col items-center justify-center text-center select-none mt-1">
+      <div className="relative z-10 w-full flex-grow flex flex-col items-center justify-center py-2">
         {config.showCoverTrophy && (
           <img
             src={config.coverIllustrationUrl || trophyImg}
-
             style={{
-              opacity: config.coverIllustrationOpacity,
-              transform: `scale(${(config.coverIllustrationScale ?? 100) / 100}) translateY(${(config.coverIllustrationY ?? 0) * 0.1}px)`,
+              opacity: config.coverIllustrationOpacity ?? 1.0,
+              transform: `scale(${((config.coverIllustrationScale ?? 100) / 100) * 1.15}) translate(${((config.coverIllustrationX ?? 0) * 0.1)}px, ${(config.coverIllustrationY ?? 0) * 0.1}px)`,
             }}
-            className="h-6 object-contain mb-0.5 pointer-events-none filter drop-shadow"
+            className="h-[52px] object-contain mb-2 pointer-events-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)]"
             alt="Trophy"
           />
         )}
-        <span className="text-[7.5px] font-black text-white tracking-widest uppercase">
-          {config.coverTitle || 'WORLD CUP 26'}
-        </span>
+        <div className="text-[9px] font-black text-white tracking-[0.2em] uppercase leading-tight" style={{ fontFamily: config.titleFontFamily || 'inherit', color: config.titleTextColor || '#ffffff', fontSize: `${9 * (config.fontSizeScale || 1.0)}px` }}>
+          {config.coverTitle || 'WORLD CUP'}
+        </div>
+        <div
+          style={{ color: config.coverSubtitleColor || '#ffd700', fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px` }}
+          className="font-black tracking-[0.25em] uppercase mt-1"
+        >
+          FASE FINAL
+        </div>
+      </div>
+
+      <div className="relative z-10 w-full border-t border-white/5 pt-1.5 pb-0.5">
         <BrandingPlaceholder
           brandSignature={config.brandSignature}
           brandLogoUrl={config.brandLogoUrl}
+          brandLogoScale={config.brandLogoScale}
+          brandInstagram={config.brandInstagram}
+          brandPhone={config.brandPhone}
+          brandAddress={config.brandAddress}
+          brandFontFamily={config.brandFontFamily}
+          brandFontSize={config.brandFontSize}
+          brandTextColor={config.brandTextColor}
         />
       </div>
     </div>
   );
 
-  // Mirror column list if requested
+  // Column 2: Dieciseisavos de Final (All 16 matches - super compact single line)
+  columns.push(
+    <div key="col-r32" className="flex flex-col h-full justify-between overflow-hidden px-3">
+      <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-0.5 shrink-0" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px` }}>
+        Dieciseisavos de Final (1/16)
+      </div>
+      <div className="grid grid-cols-1 gap-[2px] flex-grow overflow-hidden pr-0.5">
+        {r32Matches.map((m, idx) => (
+          <FlyerPlayoffMatch key={m.id || idx} match={m} config={config} compact={true} />
+        ))}
+      </div>
+    </div>
+  );
+
+  // Column 3: Octavos de Final (All 8 matches - standard list format)
+  columns.push(
+    <div key="col-r16" className="flex flex-col h-full justify-between overflow-hidden px-3">
+      <div className="text-[6.5px] font-black text-brand-accent tracking-wider text-center uppercase border-b border-white/10 pb-[2px] mb-1 shrink-0" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px` }}>
+        Octavos de Final (1/8)
+      </div>
+      <div className="grid grid-cols-1 gap-1 flex-grow overflow-hidden">
+        {r16Matches.map((m, idx) => (
+          <FlyerPlayoffMatch key={m.id || idx} match={m} config={config} compact={false} />
+        ))}
+      </div>
+    </div>
+  );
+
+  // Column 4: Cuartos de Final (4) + Semifinales (2) + Tercer Puesto (1) + Final (1) + Campeón
+  const thirdPlaceMatch = finalPhaseMatches[2];
+  const finalMatch = finalPhaseMatches[3];
+
+  columns.push(
+    <div key="col-finals" className="flex flex-col h-full justify-between overflow-hidden px-3">
+      <div className="flex-grow flex flex-col justify-between overflow-hidden gap-y-1">
+        {/* Cuartos */}
+        <div>
+          <div className="text-[6px] font-black text-brand-accent/80 tracking-wide text-center uppercase border-b border-white/5 pb-[1px] mb-0.5" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${6 * (config.fontSizeScale || 1.0)}px` }}>
+            Cuartos de Final
+          </div>
+          <div className="grid grid-cols-1 gap-[2px]">
+            {qfMatches.map((m, idx) => (
+              <FlyerPlayoffMatch key={m.id || idx} match={m} config={config} compact={true} />
+            ))}
+          </div>
+        </div>
+
+        {/* Semis */}
+        <div>
+          <div className="text-[6px] font-black text-brand-accent/80 tracking-wide text-center uppercase border-b border-white/5 pb-[1px] mb-0.5" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${6 * (config.fontSizeScale || 1.0)}px` }}>
+            Semifinales
+          </div>
+          <div className="grid grid-cols-1 gap-[2px]">
+            {finalPhaseMatches.slice(0, 2).map((m, idx) => (
+              <FlyerPlayoffMatch key={m.id || idx} match={m} config={config} compact={true} />
+            ))}
+          </div>
+        </div>
+
+        {/* Final & Tercer Puesto */}
+        <div className="grid grid-cols-2 gap-1">
+          <div>
+            <div className="text-[5.5px] font-black text-brand-accent/70 tracking-tight text-center uppercase border-b border-white/5 pb-[1px] mb-0.5" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${5.5 * (config.fontSizeScale || 1.0)}px` }}>
+              3er Puesto
+            </div>
+            {thirdPlaceMatch && <FlyerPlayoffMatch match={thirdPlaceMatch} config={config} compact={true} />}
+          </div>
+          <div>
+            <div className="text-[5.5px] font-black text-brand-accent/70 tracking-tight text-center uppercase border-b border-white/5 pb-[1px] mb-0.5" style={{ fontFamily: config.titleFontFamily || 'inherit', fontSize: `${5.5 * (config.fontSizeScale || 1.0)}px` }}>
+              Final
+            </div>
+            {finalMatch && <FlyerPlayoffMatch match={finalMatch} config={config} compact={true} />}
+          </div>
+        </div>
+      </div>
+
+      {/* World Champion Podium Box */}
+      <div style={{ borderRadius: '0px' }} className="bg-[#ffd700]/10 border border-[#ffd700]/30 p-1 flex items-center justify-center gap-1.5 select-none mt-1 shrink-0">
+        <span className="text-[6.5px] font-extrabold text-[#ffd700] tracking-wider uppercase" style={{ fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px` }}>
+          Campeón del Mundo:
+        </span>
+        <div style={{ borderRadius: '0px' }} className="flex-grow h-[14px] bg-white border border-black/25" />
+      </div>
+    </div>
+  );
+
+  // Mirror columns horizontally for double-sided print page
   if (isMirrored) {
     columns.reverse();
   }
@@ -165,20 +214,30 @@ export const FlyerDorso: React.FC<FlyerDorsoProps> = ({ phases, config, isMirror
       style={{
         width: '297mm',
         height: '105mm',
-        borderRadius: `${config.borderRadius}px`,
+        borderRadius: '0px', // Forced straight corners!
         fontFamily: config.fontFamily,
+        paddingTop: '6mm',
+        paddingBottom: '4mm',
+        paddingLeft: '0mm', // Exact 25% columns
+        paddingRight: '0mm', // Exact 25% columns
         ...bgStyle,
       }}
-      className="relative overflow-hidden box-border select-none flex flex-col justify-between p-3 text-white border border-white/10 flyer-container"
+      className="relative overflow-hidden box-border select-none flex flex-col justify-between text-white border border-white/10 flyer-container"
     >
+      {/* Background Image Layer */}
+      {hasCustomBgImage && (
+        <div style={bgImageLayerStyle} />
+      )}
+
       {/* Dark overlay decorator for high contrast */}
       <div className="absolute inset-0 bg-gradient-to-tr from-black/85 via-black/40 to-black/75 z-0 pointer-events-none" />
 
-      {/* Main Grid Content */}
-      <div className="relative z-10 grid grid-cols-5 gap-2.5 flex-grow h-full overflow-hidden">
+      {/* Main Grid Content - gap-0 for absolute mathematical symmetry */}
+      <div className="relative z-10 grid grid-cols-4 gap-0 flex-grow h-full overflow-hidden">
         {columns}
       </div>
     </div>
   );
 };
+
 export default FlyerDorso;

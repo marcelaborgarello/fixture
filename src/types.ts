@@ -36,12 +36,12 @@ export interface DesignConfig {
   borderColor: string;
   fontFamily: string;
   borderRadius: number;
-  backgroundType: 'gradient' | 'solid' | 'image';
+  backgroundType: "gradient" | "solid" | "image";
   backgroundGradient: string;
   solidColor: string;
   backgroundImageUrl: string;
   glassmorphism: boolean;
-  
+
   // Premium customization for Creative Stationery & Freebies
   brandSignature: string; // E.g., "Diseñado por MiMarca"
   brandLogoUrl: string; // Base64 brand logo image upload
@@ -50,15 +50,15 @@ export interface DesignConfig {
   cafecitoUrl: string;
   excludeCoverFromSheets: boolean; // Option to print cover separately on thicker paper
   showCutLines: boolean; // Printable cut guidelines
-  
+
   // Custom dimensions (in mm)
   cardWidthMm: number;
   cardHeightMm: number;
-  
+
   // Cover layers
   showCoverTrophy: boolean; // Toggle central trophy
   coverIllustrationUrl: string; // Custom uploaded cover main image (e.g. layers)
-  
+
   // Advanced cover layer customization
   coverBgColor?: string;
   coverBgImageUrl?: string;
@@ -69,14 +69,51 @@ export interface DesignConfig {
   coverTitleColor?: string;
   coverTitleSize?: number;
   coverSubtitleColor?: string;
-  
+  coverSubtitleFontFamily?: string;
+  applyCoverTypographyToAllCards?: boolean;
+
   // Toggles for FIFA and 26 graphics
   showCoverYear?: boolean;
   showCoverFifaText?: boolean;
-  
+
   // Format mode toggle
-  formatMode?: 'cards' | 'flyer' | 'poster';
-  
+  formatMode?: "cards" | "flyer" | "poster" | "folding";
+
   // Use 3-letter FIFA code for team names (e.g. ARG, MEX)
   useFifaCode?: boolean;
+
+  // Pliego configuration
+  pliegoDoubleSided?: boolean;
+
+  // Business branding options
+  brandLogoScale?: number;
+  brandInstagram?: string;
+  brandPhone?: string;
+  brandAddress?: string;
+  brandFontFamily?: string;
+  brandFontSize?: number;
+  brandTextColor?: string;
+
+  // Advanced typography options
+  titleFontFamily?: string;
+  bodyFontFamily?: string;
+  titleTextColor?: string;
+  bodyTextColor?: string;
+  fontSizeScale?: number;
+  showMatchRowBackground?: boolean;
+
+  // Reverso card typography overrides
+  backTitleFontFamily?: string;
+  backSubtitleFontFamily?: string;
+  backSubtitleTextColor?: string;
+  backBodyFontFamily?: string;
+
+  // Advanced background image controls
+  bgImageScale?: number;
+  bgImageX?: number;
+  bgImageY?: number;
+  bgImageOpacity?: number;
+
+  // Trophy horizontal displacement
+  coverIllustrationX?: number;
 }
