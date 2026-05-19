@@ -25,26 +25,26 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
   const semifinalMatches = phase.matches.slice(0, 2);
   const thirdPlaceMatch = phase.matches[2];
   const finalMatch = phase.matches[3];
-  const effectiveTitleFont = config.applyCoverTypographyToAllCards
-    ? (config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit' ? config.coverTitleFontFamily : config.titleFontFamily)
-    : config.titleFontFamily;
-  const effectiveTitleColor = config.applyCoverTypographyToAllCards
-    ? (config.coverTitleColor || config.titleTextColor)
-    : config.titleTextColor;
-  const effectiveBodyFont = config.applyCoverTypographyToAllCards
-    ? (config.coverSubtitleFontFamily && config.coverSubtitleFontFamily !== 'inherit' ? config.coverSubtitleFontFamily : config.bodyFontFamily)
-    : config.bodyFontFamily;
-  const effectiveBodyColor = config.applyCoverTypographyToAllCards
-    ? (config.coverSubtitleColor || config.bodyTextColor)
-    : config.bodyTextColor;
+  // const effectiveTitleFont = config.applyCoverTypographyToAllCards
+  //   ? (config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit' ? config.coverTitleFontFamily : config.titleFontFamily)
+  //   : config.titleFontFamily;
+  // const effectiveTitleColor = config.applyCoverTypographyToAllCards
+  //   ? (config.coverTitleColor || config.titleTextColor)
+  //   : config.titleTextColor;
+  // const effectiveBodyFont = config.applyCoverTypographyToAllCards
+  //   ? (config.coverSubtitleFontFamily && config.coverSubtitleFontFamily !== 'inherit' ? config.coverSubtitleFontFamily : config.bodyFontFamily)
+  //   : config.bodyFontFamily;
+  // const effectiveBodyColor = config.applyCoverTypographyToAllCards
+  //   ? (config.coverSubtitleColor || config.bodyTextColor)
+  //   : config.bodyTextColor;
   const matchBackground = config.showMatchRowBackground === false
     ? 'transparent'
     : (config.cardBgColor || 'rgba(255, 255, 255, 0.08)');
   const matchBorder = config.borderColor || 'rgba(255, 255, 255, 0.15)';
-  const matchMetaFontSize = Math.min(8, 7 * (config.fontSizeScale || 1.0));
+  // const matchMetaFontSize = Math.min(8, 7 * (config.fontSizeScale || 1.0));
   const matchLabelFontSize = Math.min(9, 8 * (config.fontSizeScale || 1.0));
 
-  const renderPlayoffMatchRow = (match: any, labelSize = "max-w-[35px]") => {
+  const renderPlayoffMatchRow = (match: any) => {
     if (!match) return null;
     const homePlaceholder = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
     const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
@@ -138,7 +138,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
             3ER Y 4TO PUESTO
           </h3>
           <div className="w-full">
-            {thirdPlaceMatch && renderPlayoffMatchRow(thirdPlaceMatch, "max-w-[120px]")}
+            {thirdPlaceMatch && renderPlayoffMatchRow(thirdPlaceMatch)}
           </div>
         </div>
 
@@ -155,7 +155,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
             FINAL
           </h3>
           <div className="w-full">
-            {finalMatch && renderPlayoffMatchRow(finalMatch, "max-w-[120px]")}
+            {finalMatch && renderPlayoffMatchRow(finalMatch)}
           </div>
         </div>
 
