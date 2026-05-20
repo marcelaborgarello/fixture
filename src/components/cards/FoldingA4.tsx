@@ -46,10 +46,15 @@ export const FoldingA4: React.FC<FoldingA4Props> = ({ groups, phases, config }) 
     }
   }
 
-  const r32Matches = phases[0]?.matches || [];
-  const r16Matches = phases[1]?.matches || [];
-  const qfMatches = phases[2]?.matches || [];
-  const finalPhaseMatches = phases[3]?.matches || [];
+  // phases[0] = Dieciseisavos Parte 1 (8 partidos)
+  // phases[1] = Dieciseisavos Parte 2 (8 partidos) → se combinan en r32
+  // phases[2] = Octavos de Final
+  // phases[3] = Cuartos de Final
+  // phases[4] = Fase Final (Semis + 3er puesto + Final)
+  const r32Matches = [...(phases[0]?.matches || []), ...(phases[1]?.matches || [])];
+  const r16Matches = phases[2]?.matches || [];
+  const qfMatches = phases[3]?.matches || [];
+  const finalPhaseMatches = phases[4]?.matches || [];
   const thirdPlaceMatch = finalPhaseMatches[2];
   const finalMatch = finalPhaseMatches[3];
 
@@ -79,7 +84,7 @@ export const FoldingA4: React.FC<FoldingA4Props> = ({ groups, phases, config }) 
 
       {/* Folding grid (4 cols x 2 rows) */}
       <div className="relative z-10 grid grid-cols-4 grid-rows-2 gap-x-4 gap-y-3 h-full w-full overflow-hidden">
-        
+
         {/* ROW 1, COL 1: Tapa (Cover / Branding / Trophy) */}
         <div style={{ borderRadius: '0px' }} className="flex flex-col h-full justify-between items-center text-center p-1.5 bg-black/25 border border-white/5 relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">

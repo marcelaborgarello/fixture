@@ -38,16 +38,10 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
   const effectiveBodyColor = config.applyCoverTypographyToAllCards
     ? (config.coverSubtitleColor || config.bodyTextColor)
     : config.bodyTextColor;
-  const matchBackground = config.showMatchRowBackground === false
-    ? 'transparent'
-    : 'rgba(255, 255, 255, 0.04)';
-  const matchBorder = config.showMatchRowBackground === false
-    ? 'rgba(255, 255, 255, 0.1)'
-    : 'rgba(255, 255, 255, 0.12)';
+
   const scale = config.fontSizeScale || 1.0;
   const matchMetaFontSize = Math.min(isCompactPhase ? 6.8 : 7.4, (isCompactPhase ? 6.8 : 7.5) * scale);
-  const matchLabelFontSize = Math.min(isCompactPhase ? 7.8 : 8.5, (isCompactPhase ? 7.5 : 8) * scale);
-  const matchVsFontSize = Math.min(isCompactPhase ? 6 : 7, (isCompactPhase ? 6 : 6.5) * scale);
+
 
   return (
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
@@ -66,7 +60,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
       </div>
 
       {/* Playoff Matches Area */}
-      <div className="flex-grow flex flex-col justify-start my-1 w-full overflow-hidden">
+      <div className="flex-1 flex flex-col justify-evenly py-2 w-full overflow-hidden px-[4px]">
         <div className={`${gridClass} w-full`}>
           {phase.matches.map((match) => {
             const homePlaceholder = typeof match.homeTeam === 'string'
@@ -77,15 +71,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
               : (match.awayTeam as any).code;
 
             return (
-              <div
-                key={match.id}
-                style={{
-                  borderRadius: '0px',
-                  backgroundColor: matchBackground,
-                  borderColor: matchBorder,
-                }}
-                className={`flex flex-col border px-1 py-0.5 transition-colors select-none ${config.showMatchRowBackground === false ? '' : 'hover:bg-white/10'}`}
-              >
+              <div key={match.id} className="flex flex-col mb-1 w-full">
                 {/* Meta details */}
                 <div
                   style={{
@@ -94,67 +80,46 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                     fontSize: `${matchMetaFontSize}px`,
                     lineHeight: 1.1,
                   }}
-                  className="flex justify-between items-center opacity-70 tracking-widest"
+                  className="flex justify-between items-center opacity-70 tracking-widest px-1"
                 >
                   <span className="font-semibold uppercase truncate max-w-[45%]">{match.time}</span>
                   <span className="truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
                 </div>
-
-                {/* Match inputs row */}
-                <div className="flex items-center justify-between gap-2 mt-0.5 w-full">
-                  <span
-                    style={{
-                      fontFamily: effectiveBodyFont || 'inherit',
-                      color: effectiveBodyColor || '#ffffff',
-                      fontSize: `${matchLabelFontSize}px`,
-                    }}
-                    className="text-left uppercase tracking-tighter truncate max-w-[40%]"
-                  >
-                    {homePlaceholder}
-                  </span>
-
-                  <span
-                    style={{
-                      fontFamily: effectiveBodyFont || 'inherit',
-                      color: effectiveBodyColor || '#ffffff',
-                      fontSize: `${matchVsFontSize}px`,
-                    }}
-                    className="font-black uppercase"
-                  >
-                    vs
-                  </span>
-
-                  <span
-                    style={{
-                      fontFamily: effectiveBodyFont || 'inherit',
-                      color: effectiveBodyColor || '#ffffff',
-                      fontSize: `${matchLabelFontSize}px`,
-                    }}
-                    className="truncate uppercase tracking-tighter text-right max-w-[40%]"
-                  >
-                    {awayPlaceholder}
-                  </span>
+                
+                {/* Match traditional print row */}
+                <div className="flex items-center gap-[3px] w-full mt-[2px]">
+                  {/* Left Code */}
+                  <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+                      {homePlaceholder}
+                    </span>
+                  </div>
+                  
+                  {/* Home Team Input */}
+                  <div className="flex-1 h-[14px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+                  
+                  {/* Home Goal Input */}
+                  <div className="w-[13px] h-[14px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+                  
+                  {/* Away Goal Input */}
+                  <div className="w-[13px] h-[14px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+                  
+                  {/* Away Team Input */}
+                  <div className="flex-1 h-[14px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+                  
+                  {/* Right Code */}
+                  <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+                    <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+                      {awayPlaceholder}
+                    </span>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {isCompactPhase && (
-          <div className="mt-0.5 pt-0.5 border-t border-white/10">
-            <div
-              style={{
-                fontFamily: effectiveBodyFont || 'inherit',
-                color: effectiveBodyColor || '#ffffff',
-                fontSize: `${matchMetaFontSize}px`,
-              }}
-              className="uppercase tracking-widest opacity-60 mb-1"
-            >
-              Notas
-            </div>
-            <div className="h-[1px] w-full bg-white/10" />
-          </div>
-        )}
+
       </div>
 
       {/* Footer Branding */}

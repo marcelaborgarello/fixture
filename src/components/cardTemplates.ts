@@ -1,17 +1,17 @@
-import { Group, PlayoffPhase } from '../types';
-import { getFlagSvg } from '../utils/flags';
+import { Group, PlayoffPhase } from "../types";
+import { getFlagSvg } from "../utils/flags";
 
 // Generate inline flag HTML for group stage
 const renderFlag = (team: any): string => {
-  if (typeof team === 'string') {
-    return `<div class="team-flag placeholder-flag">${getFlagSvg('TBD')}</div>`;
+  if (typeof team === "string") {
+    return `<div class="team-flag placeholder-flag">${getFlagSvg("TBD")}</div>`;
   }
   return `<div class="team-flag">${getFlagSvg(team.flagCode)}</div>`;
 };
 
 // Generate team name / placeholder text for group stage
 const renderTeamName = (team: any): string => {
-  if (typeof team === 'string') {
+  if (typeof team === "string") {
     return `<span class="team-code placeholder">${team}</span>`;
   }
   return `<span class="team-code" title="${team.name}">${team.code}</span>`;
@@ -20,28 +20,31 @@ const renderTeamName = (team: any): string => {
 // Format date to a short Spanish version (e.g. Jue 11/6)
 const formatShortDate = (dateStr: string): string => {
   return dateStr
-    .replace(' de junio', '/6')
-    .replace(' de julio', '/7')
-    .replace('Jueves', 'Jue')
-    .replace('Viernes', 'Vie')
-    .replace('Sábado', 'Sáb')
-    .replace('Domingo', 'Dom')
-    .replace('Lunes', 'Lun')
-    .replace('Martes', 'Mar')
-    .replace('Miércoles', 'Mié');
+    .replace(" de junio", "/6")
+    .replace(" de julio", "/7")
+    .replace("Jueves", "Jue")
+    .replace("Viernes", "Vie")
+    .replace("Sábado", "Sáb")
+    .replace("Domingo", "Dom")
+    .replace("Lunes", "Lun")
+    .replace("Martes", "Mar")
+    .replace("Miércoles", "Mié");
 };
 
 // Helper to conditionally render the branding badge (text and/or custom logo image)
-const renderBranding = (brandSignature: string, brandLogoUrl: string = ""): string => {
-  const hasSig = brandSignature && brandSignature.trim() !== '';
-  const hasLogo = brandLogoUrl && brandLogoUrl.trim() !== '';
-  
-  if (!hasSig && !hasLogo) return '';
-  
+const renderBranding = (
+  brandSignature: string,
+  brandLogoUrl: string = "",
+): string => {
+  const hasSig = brandSignature && brandSignature.trim() !== "";
+  const hasLogo = brandLogoUrl && brandLogoUrl.trim() !== "";
+
+  if (!hasSig && !hasLogo) return "";
+
   return `
     <div class="card-branding-badge">
-      ${hasLogo ? `<img src="${brandLogoUrl}" class="branding-logo-img" style="height: 12px; max-width: 60px; object-fit: contain; vertical-align: middle; margin-right: 4px;" />` : ''}
-      ${hasSig ? `<span>${brandSignature}</span>` : ''}
+      ${hasLogo ? `<img src="${brandLogoUrl}" class="branding-logo-img" style="height: 12px; max-width: 60px; object-fit: contain; vertical-align: middle; margin-right: 4px;" />` : ""}
+      ${hasSig ? `<span>${brandSignature}</span>` : ""}
     </div>
   `;
 };
@@ -64,34 +67,34 @@ export const renderCoverCardHtml = (
   coverTitleSize?: number,
   coverSubtitleColor?: string,
   showCoverYear: boolean = true,
-  showCoverFifaText: boolean = true
+  showCoverFifaText: boolean = true,
 ): string => {
   const badgeHtml = renderBranding(brandSignature, brandLogoUrl);
-  
+
   // Handle custom cover background style override
-  let coverCustomStyle = '';
+  let coverCustomStyle = "";
   if (coverBgImageUrl) {
     coverCustomStyle += `background-image: url(${coverBgImageUrl}) !important; background-size: cover !important; background-position: center !important;`;
   } else if (coverBgColor) {
     coverCustomStyle += `background-color: ${coverBgColor} !important; background-image: none !important;`;
   }
-  
-  let centralIllustrationHtml = '';
+
+  let centralIllustrationHtml = "";
   if (coverIllustrationUrl) {
     const scaleFactor = coverIllustrationScale / 100;
     // Align illustration dynamically using scale and Y offsets
     centralIllustrationHtml = `<img src="${coverIllustrationUrl}" class="cover-custom-illustration" style="position: absolute; top: ${coverIllustrationY}px; left: 50%; transform: translateX(-50%) scale(${scaleFactor}); width: 90%; height: 90%; object-fit: contain; z-index: 2; opacity: ${coverIllustrationOpacity}; transition: transform 0.2s ease, top 0.2s ease, opacity 0.2s ease;" />`;
   }
-  
-  let trophyHtml = '';
+
+  let trophyHtml = "";
   if (showCoverTrophy) {
     trophyHtml = `
-      <img src="/src/assets/copa.png" class="trophy-img" style="${coverIllustrationUrl ? 'position: absolute; top: 10%; left: 15%; width: 70%; height: 70%; z-index: 3;' : 'width: 100%; height: 100%; z-index: 2; object-fit: contain; pointer-events: none;'}" alt="Trophy" />
+      <img src="/src/assets/copa.png" class="trophy-img" style="${coverIllustrationUrl ? "position: absolute; top: 10%; left: 15%; width: 70%; height: 70%; z-index: 3;" : "width: 100%; height: 100%; z-index: 2; object-fit: contain; pointer-events: none;"}" alt="Trophy" />
     `;
   }
-  
+
   // Handle custom text styling overrides
-  let titleStyle = '';
+  let titleStyle = "";
   if (coverTitleFontFamily) {
     titleStyle += `font-family: ${coverTitleFontFamily} !important;`;
   }
@@ -101,8 +104,8 @@ export const renderCoverCardHtml = (
   if (coverTitleSize) {
     titleStyle += `font-size: ${coverTitleSize}rem !important;`;
   }
-  
-  let subtitleStyle = '';
+
+  let subtitleStyle = "";
   if (coverSubtitleColor) {
     subtitleStyle += `color: ${coverSubtitleColor} !important;`;
   }
@@ -112,12 +115,12 @@ export const renderCoverCardHtml = (
       <div class="card-overlay"></div>
       <div class="card-content safe-zone">
         <div class="cover-header">
-          ${showCoverYear ? `<span class="cover-year-bg">26</span>` : ''}
+          ${showCoverYear ? `<span class="cover-year-bg">26</span>` : ""}
           <div class="cover-trophy" style="position: relative; width: 130px; height: 175px; display: flex; align-items: center; justify-content: center;">
             ${centralIllustrationHtml}
             ${trophyHtml}
           </div>
-          ${showCoverFifaText ? `<div class="cover-logo-text" style="${coverSubtitleColor ? `color: ${coverSubtitleColor} !important;` : ''}">FIFA</div>` : ''}
+          ${showCoverFifaText ? `<div class="cover-logo-text" style="${coverSubtitleColor ? `color: ${coverSubtitleColor} !important;` : ""}">FIFA</div>` : ""}
         </div>
         <div class="cover-footer">
           <h1 class="cover-title" style="${titleStyle}">${title}</h1>
@@ -131,20 +134,20 @@ export const renderCoverCardHtml = (
 
 // 2. GRUPO CARD
 export const renderGroupCardHtml = (
-  group: Group, 
-  brandSignature: string = "", 
-  brandLogoUrl: string = ""
+  group: Group,
+  brandSignature: string = "",
+  brandLogoUrl: string = "",
 ): string => {
   const teamHeaderHtml = group.teams
-    .map(t => `<span class="group-header-team">${t.name}</span>`)
-    .join(' • ');
+    .map((t) => `<span class="group-header-team">${t.name}</span>`)
+    .join(" • ");
 
   const matchesHtml = group.matches
-    .map(match => {
+    .map((match) => {
       return `
         <div class="match-item">
           <div class="match-meta">
-            <span class="match-date">${formatShortDate(match.date)} - ${match.time.replace(' hs.', '')}</span>
+            <span class="match-date">${formatShortDate(match.date)} - ${match.time.replace(" hs.", "")}</span>
             <span class="match-venue">${match.city}</span>
           </div>
           <div class="match-row">
@@ -165,7 +168,7 @@ export const renderGroupCardHtml = (
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   return `
     <div class="card-inner group-card">
@@ -186,14 +189,20 @@ export const renderGroupCardHtml = (
 
 // 3. DIECISEISAVOS DE FINAL (ROUND OF 32)
 export const renderDieciseisavosCardHtml = (
-  phase: PlayoffPhase, 
-  brandSignature: string = "", 
-  brandLogoUrl: string = ""
+  phase: PlayoffPhase,
+  brandSignature: string = "",
+  brandLogoUrl: string = "",
 ): string => {
   const matchesHtml = phase.matches
-    .map(match => {
-      const homePlaceholder = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
-      const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
+    .map((match) => {
+      const homePlaceholder =
+        typeof match.homeTeam === "string"
+          ? match.homeTeam
+          : match.homeTeam.code;
+      const awayPlaceholder =
+        typeof match.awayTeam === "string"
+          ? match.awayTeam
+          : match.awayTeam.code;
 
       return `
         <div class="playoff-match compact">
@@ -217,7 +226,7 @@ export const renderDieciseisavosCardHtml = (
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   return `
     <div class="card-inner playoff-card dieciseisavos">
@@ -237,14 +246,20 @@ export const renderDieciseisavosCardHtml = (
 
 // 4. OCTAVOS DE FINAL (ROUND OF 16)
 export const renderOctavosCardHtml = (
-  phase: PlayoffPhase, 
-  brandSignature: string = "", 
-  brandLogoUrl: string = ""
+  phase: PlayoffPhase,
+  brandSignature: string = "",
+  brandLogoUrl: string = "",
 ): string => {
   const matchesHtml = phase.matches
-    .map(match => {
-      const homePlaceholder = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
-      const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
+    .map((match) => {
+      const homePlaceholder =
+        typeof match.homeTeam === "string"
+          ? match.homeTeam
+          : match.homeTeam.code;
+      const awayPlaceholder =
+        typeof match.awayTeam === "string"
+          ? match.awayTeam
+          : match.awayTeam.code;
 
       return `
         <div class="playoff-match compact">
@@ -268,7 +283,7 @@ export const renderOctavosCardHtml = (
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   return `
     <div class="card-inner playoff-card octavos">
@@ -288,14 +303,20 @@ export const renderOctavosCardHtml = (
 
 // 5. CUARTOS DE FINAL (QUARTERFINALS)
 export const renderCuartosCardHtml = (
-  phase: PlayoffPhase, 
-  brandSignature: string = "", 
-  brandLogoUrl: string = ""
+  phase: PlayoffPhase,
+  brandSignature: string = "",
+  brandLogoUrl: string = "",
 ): string => {
   const matchesHtml = phase.matches
-    .map(match => {
-      const homePlaceholder = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
-      const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
+    .map((match) => {
+      const homePlaceholder =
+        typeof match.homeTeam === "string"
+          ? match.homeTeam
+          : match.homeTeam.code;
+      const awayPlaceholder =
+        typeof match.awayTeam === "string"
+          ? match.awayTeam
+          : match.awayTeam.code;
 
       return `
         <div class="playoff-match wide">
@@ -319,7 +340,7 @@ export const renderCuartosCardHtml = (
         </div>
       `;
     })
-    .join('');
+    .join("");
 
   return `
     <div class="card-inner playoff-card cuartos">
@@ -339,18 +360,24 @@ export const renderCuartosCardHtml = (
 
 // 6. FASE FINAL (SEMIFINAL, 3RD PLACE, FINAL & CHAMPION)
 export const renderFaseFinalCardHtml = (
-  phase: PlayoffPhase, 
-  brandSignature: string = "", 
-  brandLogoUrl: string = ""
+  phase: PlayoffPhase,
+  brandSignature: string = "",
+  brandLogoUrl: string = "",
 ): string => {
   const semifinalMatches = phase.matches.slice(0, 2);
   const thirdPlaceMatch = phase.matches[2];
   const finalMatch = phase.matches[3];
 
-  const renderSinglePlayoffMatch = (match: any, sizeClass = "medium"): string => {
-    const homePlaceholder = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
-    const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
-    const pillsClass = sizeClass === 'compact' ? 'compact-pills' : 'final-pills';
+  const renderSinglePlayoffMatch = (
+    match: any,
+    sizeClass = "medium",
+  ): string => {
+    const homePlaceholder =
+      typeof match.homeTeam === "string" ? match.homeTeam : match.homeTeam.code;
+    const awayPlaceholder =
+      typeof match.awayTeam === "string" ? match.awayTeam : match.awayTeam.code;
+    const pillsClass =
+      sizeClass === "compact" ? "compact-pills" : "final-pills";
 
     return `
       <div class="playoff-match ${sizeClass}">
@@ -383,7 +410,7 @@ export const renderFaseFinalCardHtml = (
         <div class="final-section">
           <h3 class="final-section-title">SEMIFINAL</h3>
           <div class="playoff-grid two-columns">
-            ${semifinalMatches.map(m => renderSinglePlayoffMatch(m, "compact")).join('')}
+            ${semifinalMatches.map((m) => renderSinglePlayoffMatch(m, "compact")).join("")}
           </div>
         </div>
 
@@ -427,9 +454,9 @@ export const renderCardBackHtml = (
   brandLogoUrl: string = "",
   coverBgColor?: string,
   coverBgImageUrl?: string,
-  showCoverTrophy: boolean = true
+  showCoverTrophy: boolean = true,
 ): string => {
-  let customStyle = '';
+  let customStyle = "";
   if (coverBgImageUrl) {
     customStyle += `background-image: url(${coverBgImageUrl}) !important; background-size: cover !important; background-position: center !important;`;
   } else if (coverBgColor) {
@@ -443,7 +470,7 @@ export const renderCardBackHtml = (
       <div class="card-overlay"></div>
       <div class="card-content safe-zone" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%;">
         <div class="back-logo-container" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-          ${showCoverTrophy ? `<img src="/src/assets/copa.png" class="back-trophy-img" style="width: 70px; height: 95px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); pointer-events: none;" alt="Trophy" />` : ''}
+          ${showCoverTrophy ? `<img src="/src/assets/copa.png" class="back-trophy-img" style="width: 70px; height: 95px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); pointer-events: none;" alt="Trophy" />` : ""}
           <div class="back-title" style="font-size: 0.8rem; font-weight: 800; color: #ffffff; letter-spacing: 1px; margin-top: 5px;">WORLD CUP 2026</div>
           <div class="back-subtitle" style="font-size: 0.5rem; font-weight: 600; color: var(--accent-color, #ffd700); letter-spacing: 2px; text-transform: uppercase;">Fixture Oficial</div>
         </div>
@@ -457,23 +484,27 @@ export const renderCardBackHtml = (
 
 // HELPER FOR FLYER GROUP RENDERING
 const renderFlyerGroupHtml = (group: Group): string => {
-  const teamsList = group.teams.map(t => t.code).join(' • ');
-  const matchesListHtml = group.matches.map(m => {
-    const formattedDate = formatShortDate(m.date);
-    // Extract just "11/6" from "Jue 11/6"
-    const dateOnly = formattedDate.includes(' ') ? formattedDate.split(' ')[1] : formattedDate;
-    return `
+  const teamsList = group.teams.map((t) => t.code).join(" • ");
+  const matchesListHtml = group.matches
+    .map((m) => {
+      const formattedDate = formatShortDate(m.date);
+      // Extract just "11/6" from "Jue 11/6"
+      const dateOnly = formattedDate.includes(" ")
+        ? formattedDate.split(" ")[1]
+        : formattedDate;
+      return `
       <div class="flyer-match-row">
         <span class="flyer-match-teams">
-          <strong>${typeof m.homeTeam === 'string' ? m.homeTeam : m.homeTeam.code}</strong>
+          <strong>${typeof m.homeTeam === "string" ? m.homeTeam : m.homeTeam.code}</strong>
           v
-          <strong>${typeof m.awayTeam === 'string' ? m.awayTeam : m.awayTeam.code}</strong>
+          <strong>${typeof m.awayTeam === "string" ? m.awayTeam : m.awayTeam.code}</strong>
         </span>
         <span class="flyer-match-score"></span>
-        <span class="flyer-match-meta">${dateOnly} ${m.time.replace(' hs.', '')}</span>
+        <span class="flyer-match-meta">${dateOnly} ${m.time.replace(" hs.", "")}</span>
       </div>
     `;
-  }).join('');
+    })
+    .join("");
 
   return `
     <div class="flyer-group-item">
@@ -490,10 +521,14 @@ const renderFlyerGroupHtml = (group: Group): string => {
 
 // HELPER FOR FLYER PLAYOFF MATCH RENDERING
 const renderFlyerPlayoffMatchHtml = (match: any): string => {
-  const home = typeof match.homeTeam === 'string' ? match.homeTeam : match.homeTeam.code;
-  const away = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
+  const home =
+    typeof match.homeTeam === "string" ? match.homeTeam : match.homeTeam.code;
+  const away =
+    typeof match.awayTeam === "string" ? match.awayTeam : match.awayTeam.code;
   const formattedDate = formatShortDate(match.date);
-  const dateOnly = formattedDate.includes(' ') ? formattedDate.split(' ')[1] : formattedDate;
+  const dateOnly = formattedDate.includes(" ")
+    ? formattedDate.split(" ")[1]
+    : formattedDate;
 
   return `
     <div class="flyer-playoff-row">
@@ -518,9 +553,9 @@ export const renderFlyerFrenteHtml = (
   brandSignature: string = "",
   brandLogoUrl: string = "",
   coverBgColor?: string,
-  coverBgImageUrl?: string
+  coverBgImageUrl?: string,
 ): string => {
-  let customStyle = '';
+  let customStyle = "";
   if (coverBgImageUrl) {
     customStyle += `background-image: url(${coverBgImageUrl}) !important; background-size: cover !important; background-position: center !important;`;
   } else if (coverBgColor) {
@@ -531,7 +566,9 @@ export const renderFlyerFrenteHtml = (
   const columnsHtml = [];
   for (let c = 0; c < 4; c++) {
     const colGroups = groups.slice(c * 3, (c + 1) * 3);
-    const colGroupsHtml = colGroups.map(g => renderFlyerGroupHtml(g)).join('');
+    const colGroupsHtml = colGroups
+      .map((g) => renderFlyerGroupHtml(g))
+      .join("");
     columnsHtml.push(`
       <div class="flyer-column col-${c + 1}">
         ${colGroupsHtml}
@@ -546,7 +583,7 @@ export const renderFlyerFrenteHtml = (
       <div class="card-overlay"></div>
       <div class="flyer-content safe-zone">
         <div class="flyer-columns-container four-columns">
-          ${columnsHtml.join('')}
+          ${columnsHtml.join("")}
         </div>
         <div class="flyer-branding-strip">
           <span style="font-size: 0.5rem; font-weight: 800; color: #ffffff; letter-spacing: 1px;">MUNDIAL 2026 - FIXTURE COMPLETO</span>
@@ -565,9 +602,9 @@ export const renderFlyerDorsoHtml = (
   coverBgColor?: string,
   coverBgImageUrl?: string,
   showCoverTrophy: boolean = true,
-  isMirrored: boolean = false
+  isMirrored: boolean = false,
 ): string => {
-  let customStyle = '';
+  let customStyle = "";
   if (coverBgImageUrl) {
     customStyle += `background-image: url(${coverBgImageUrl}) !important; background-size: cover !important; background-position: center !important;`;
   } else if (coverBgColor) {
@@ -575,10 +612,18 @@ export const renderFlyerDorsoHtml = (
   }
 
   // Get playoff matches
-  const r32Matches = phases[0]?.matches || []; // 16 matches
-  const r16Matches = phases[1]?.matches || []; // 8 matches
-  const qfMatches = phases[2]?.matches || []; // 4 matches
-  const finalPhaseMatches = phases[3]?.matches || []; // 4 matches: 2 semis, 3rd place, final
+  // phases[0] = Dieciseisavos Parte 1 (8 partidos)
+  // phases[1] = Dieciseisavos Parte 2 (8 partidos) → se combinan en r32
+  // phases[2] = Octavos de Final
+  // phases[3] = Cuartos de Final
+  // phases[4] = Fase Final (Semis + 3er puesto + Final)
+  const r32Matches = [
+    ...(phases[0]?.matches || []),
+    ...(phases[1]?.matches || []),
+  ]; // 16 matches total
+  const r16Matches = phases[2]?.matches || []; // 8 matches
+  const qfMatches = phases[3]?.matches || []; // 4 matches
+  const finalPhaseMatches = phases[4]?.matches || []; // 4 matches: 2 semis, 3rd place, final
 
   // Construct the 5 columns
   const cols: string[] = [];
@@ -588,7 +633,10 @@ export const renderFlyerDorsoHtml = (
     <div class="flyer-column col-1">
       <div class="flyer-column-title">1/16 DE FINAL - A</div>
       <div class="flyer-playoff-list">
-        ${r32Matches.slice(0, 8).map(m => renderFlyerPlayoffMatchHtml(m)).join('')}
+        ${r32Matches
+          .slice(0, 8)
+          .map((m) => renderFlyerPlayoffMatchHtml(m))
+          .join("")}
       </div>
     </div>
   `;
@@ -599,7 +647,10 @@ export const renderFlyerDorsoHtml = (
     <div class="flyer-column col-2">
       <div class="flyer-column-title">1/16 DE FINAL - B</div>
       <div class="flyer-playoff-list">
-        ${r32Matches.slice(8, 16).map(m => renderFlyerPlayoffMatchHtml(m)).join('')}
+        ${r32Matches
+          .slice(8, 16)
+          .map((m) => renderFlyerPlayoffMatchHtml(m))
+          .join("")}
       </div>
     </div>
   `;
@@ -610,15 +661,18 @@ export const renderFlyerDorsoHtml = (
     <div class="flyer-column col-3">
       <div class="flyer-column-title">OCTAVOS DE FINAL</div>
       <div class="flyer-playoff-list">
-        ${r16Matches.map(m => renderFlyerPlayoffMatchHtml(m)).join('')}
+        ${r16Matches.map((m) => renderFlyerPlayoffMatchHtml(m)).join("")}
       </div>
     </div>
   `;
   cols.push(col3Html);
 
   // Column 4: Cuartos de Final (4 matches) + Semifinales (2 matches)
-  const qfHtml = qfMatches.map(m => renderFlyerPlayoffMatchHtml(m)).join('');
-  const sfHtml = finalPhaseMatches.slice(0, 2).map(m => renderFlyerPlayoffMatchHtml(m)).join('');
+  const qfHtml = qfMatches.map((m) => renderFlyerPlayoffMatchHtml(m)).join("");
+  const sfHtml = finalPhaseMatches
+    .slice(0, 2)
+    .map((m) => renderFlyerPlayoffMatchHtml(m))
+    .join("");
   const col4Html = `
     <div class="flyer-column col-4">
       <div class="flyer-column-title">CUARTOS DE FINAL</div>
@@ -634,8 +688,12 @@ export const renderFlyerDorsoHtml = (
   cols.push(col4Html);
 
   // Column 5: 3er Puesto (1 match) + Final (1 match) + Cover Space
-  const thirdPlaceHtml = finalPhaseMatches[2] ? renderFlyerPlayoffMatchHtml(finalPhaseMatches[2]) : '';
-  const finalHtml = finalPhaseMatches[3] ? renderFlyerPlayoffMatchHtml(finalPhaseMatches[3]) : '';
+  const thirdPlaceHtml = finalPhaseMatches[2]
+    ? renderFlyerPlayoffMatchHtml(finalPhaseMatches[2])
+    : "";
+  const finalHtml = finalPhaseMatches[3]
+    ? renderFlyerPlayoffMatchHtml(finalPhaseMatches[3])
+    : "";
   const badgeHtml = renderBranding(brandSignature, brandLogoUrl);
   const col5Html = `
     <div class="flyer-column col-5 flyer-column-cover">
@@ -648,7 +706,7 @@ export const renderFlyerDorsoHtml = (
         ${finalHtml}
       </div>
       <div class="flyer-mini-cover-widget">
-        ${showCoverTrophy ? `<img src="/src/assets/copa.png" style="height: 38px; width: auto; object-fit: contain;" alt="Trophy" />` : ''}
+        ${showCoverTrophy ? `<img src="/src/assets/copa.png" style="height: 38px; width: auto; object-fit: contain;" alt="Trophy" />` : ""}
         <span class="mini-cover-title">WORLD CUP 26</span>
         ${badgeHtml}
       </div>
@@ -666,7 +724,7 @@ export const renderFlyerDorsoHtml = (
       <div class="card-overlay"></div>
       <div class="flyer-content safe-zone">
         <div class="flyer-columns-container five-columns">
-          ${cols.join('')}
+          ${cols.join("")}
         </div>
       </div>
     </div>

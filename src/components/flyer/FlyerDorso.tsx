@@ -54,10 +54,15 @@ export const FlyerDorso: React.FC<FlyerDorsoProps> = ({ phases, config, isMirror
     colCoverBgStyle.backgroundColor = config.coverBgColor;
   }
 
-  const r32Matches = phases[0]?.matches || [];
-  const r16Matches = phases[1]?.matches || [];
-  const qfMatches = phases[2]?.matches || [];
-  const finalPhaseMatches = phases[3]?.matches || []; // Semis, 3er puesto, final
+  // phases[0] = Dieciseisavos Parte 1 (8 partidos)
+  // phases[1] = Dieciseisavos Parte 2 (8 partidos) → se combinan en r32
+  // phases[2] = Octavos de Final
+  // phases[3] = Cuartos de Final
+  // phases[4] = Fase Final (Semis + 3er puesto + Final)
+  const r32Matches = [...(phases[0]?.matches || []), ...(phases[1]?.matches || [])];
+  const r16Matches = phases[2]?.matches || [];
+  const qfMatches = phases[3]?.matches || [];
+  const finalPhaseMatches = phases[4]?.matches || []; // Semis, 3er puesto, final
 
   // Construct column elements (Exactly 4 columns)
   const columns: React.ReactNode[] = [];

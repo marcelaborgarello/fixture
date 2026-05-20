@@ -35,10 +35,15 @@ export const PosterA4: React.FC<PosterA4Props> = ({ groups, phases, config }) =>
     bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
   }
 
-  const r32Matches = phases[0]?.matches || [];
-  const r16Matches = phases[1]?.matches || [];
-  const qfMatches = phases[2]?.matches || [];
-  const finalPhaseMatches = phases[3]?.matches || [];
+  // phases[0] = Dieciseisavos Parte 1 (8 partidos)
+  // phases[1] = Dieciseisavos Parte 2 (8 partidos) → se combinan en r32
+  // phases[2] = Octavos de Final
+  // phases[3] = Cuartos de Final
+  // phases[4] = Fase Final (Semis + 3er puesto + Final)
+  const r32Matches = [...(phases[0]?.matches || []), ...(phases[1]?.matches || [])];
+  const r16Matches = phases[2]?.matches || [];
+  const qfMatches = phases[3]?.matches || [];
+  const finalPhaseMatches = phases[4]?.matches || [];
 
   return (
     <div

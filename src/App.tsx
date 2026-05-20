@@ -153,11 +153,7 @@ export const App: React.FC = () => {
   }, [config.fontFamily, config.titleFontFamily, config.bodyFontFamily, config.coverTitleFontFamily]);
 
 
-  const dieciseisavosPhase = {
-    ...PLAYOFFS[0],
-    name: 'DIECISEISAVOS',
-    matches: [...PLAYOFFS[0].matches, ...PLAYOFFS[1].matches],
-  };
+
 
   // Construct virtual card arrays for PDF, ZIP, and pliegos exports
   const getCardsList = () => {
@@ -174,7 +170,8 @@ export const App: React.FC = () => {
     });
 
     list.push(
-      { id: 'dieciseisavos', name: 'Dieciseisavos', element: <FixtureCard type="dieciseisavos" data={dieciseisavosPhase} config={config} /> },
+      { id: 'dieciseisavos_1', name: 'Dieciseisavos - Parte 1', element: <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1'}} config={config} /> },
+      { id: 'dieciseisavos_2', name: 'Dieciseisavos - Parte 2', element: <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2'}} config={config} /> },
       { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} /> },
       { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} /> },
       { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[4]} config={config} /> },
@@ -188,7 +185,7 @@ export const App: React.FC = () => {
     try {
       if (mode === 'zip') {
         setLoadingMsg('Iniciando empaquetado de tarjetas...');
-        setProgress({ current: 0, total: 18 });
+        setProgress({ current: 0, total: 19 });
 
         const cards = getCardsList().map(c => ({ name: c.name, id: `export-card-${c.id}` }));
         const zipBlob = await exportAllToZip(
@@ -226,7 +223,8 @@ export const App: React.FC = () => {
         });
 
         fronts.push(
-          'export-card-dieciseisavos',
+          'export-card-dieciseisavos_1',
+          'export-card-dieciseisavos_2',
           'export-card-octavos',
           'export-card-cuartos',
           'export-card-final'
@@ -269,7 +267,8 @@ export const App: React.FC = () => {
         });
 
         fronts.push(
-          'export-card-dieciseisavos',
+          'export-card-dieciseisavos_1',
+          'export-card-dieciseisavos_2',
           'export-card-octavos',
           'export-card-cuartos',
           'export-card-final'
@@ -452,9 +451,6 @@ export const App: React.FC = () => {
                 >
                   <div className="flex justify-between items-center w-full mb-2 px-1 text-[10px] font-extrabold text-white/50 uppercase tracking-wider">
                     <span>{card.name}</span>
-                    <span className="text-[9px] text-[#ffd700] bg-[#ffd700]/10 px-1 py-[1px] rounded">
-                      {config.cardWidthMm}x{config.cardHeightMm}mm
-                    </span>
                   </div>
 
                   {/* Card element wrapper with scale preview style */}
@@ -665,7 +661,7 @@ export const App: React.FC = () => {
           '--card-height-mm': `${config.cardHeightMm}`,
         } as React.CSSProperties}
       >
-        {/* Renderizado de todas las 18 tarjetas */}
+        {/* Renderizado de todas las 19 tarjetas */}
         <div id="export-card-tapa">
           <FixtureCard type="cover" config={config} />
         </div>
@@ -674,8 +670,11 @@ export const App: React.FC = () => {
             <FixtureCard type="group" data={g} config={config} />
           </div>
         ))}
-        <div id="export-card-dieciseisavos">
-          <FixtureCard type="dieciseisavos" data={dieciseisavosPhase} config={config} />
+        <div id="export-card-dieciseisavos_1">
+          <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1'}} config={config} />
+        </div>
+        <div id="export-card-dieciseisavos_2">
+          <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2'}} config={config} />
         </div>
         <div id="export-card-octavos">
           <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} />

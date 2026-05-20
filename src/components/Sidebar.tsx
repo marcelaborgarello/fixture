@@ -64,37 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setActiveTab(activeTab === tabName ? '' : tabName);
   };
 
-  const handleSizePreset = (presetName: string) => {
-    let width = 70;
-    let height = 100;
-    let useFifa = false;
-
-    if (presetName === 'pocket') {
-      width = 60;
-      height = 90;
-      useFifa = true;
-    } else if (presetName === 'standard') {
-      width = 70;
-      height = 100;
-      useFifa = true;
-    } else if (presetName === 'medium') {
-      width = 80;
-      height = 115;
-      useFifa = false;
-    } else if (presetName === 'large') {
-      width = 90;
-      height = 130;
-      useFifa = false;
-    }
-
-    onChange({
-      ...config,
-      cardWidthMm: width,
-      cardHeightMm: height,
-      useFifaCode: useFifa,
-    });
-  };
-
   return (
     <aside className={`w-80 h-screen bg-[#072418] text-white flex flex-col border-r border-[#15462E] select-none shrink-0 overflow-hidden shadow-2xl transition-transform duration-300 z-40 fixed md:relative top-0 left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
@@ -144,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Output Mode */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Modo de Salida</label>
-                <div className="grid grid-cols-4 gap-1">
+                <div className="grid grid-cols-2 gap-2">
                   {(['cards', 'flyer', 'poster', 'folding'] as const).map((m) => (
                     <button
                       key={m}
@@ -162,26 +131,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               {config.formatMode === 'cards' && (
                 <>
-                  {/* Presets */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Tamaño de Tarjeta</label>
-                    <select
-                      onChange={(e) => handleSizePreset(e.target.value)}
-                      value={
-                        config.cardWidthMm === 60 && config.cardHeightMm === 90 ? 'pocket' :
-                          config.cardWidthMm === 70 && config.cardHeightMm === 100 ? 'standard' :
-                            config.cardWidthMm === 80 && config.cardHeightMm === 115 ? 'medium' :
-                              config.cardWidthMm === 90 && config.cardHeightMm === 130 ? 'large' : 'standard'
-                      }
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-2 py-1.5 focus:outline-none focus:border-[#ffd700]"
-                    >
-                      <option value="pocket">Bolsillo (60x90 mm)</option>
-                      <option value="standard">Estándar (70x100 mm)</option>
-                      <option value="medium">Mediana (80x115 mm)</option>
-                      <option value="large">Grande (90x130 mm)</option>
-                    </select>
-                  </div>
-
                   {/* Short FIFA names toggle */}
                   <div className="flex items-center justify-between pt-1">
                     <div className="flex flex-col">

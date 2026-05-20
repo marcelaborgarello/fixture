@@ -9,7 +9,7 @@
   /* Default Design System Tokens (Green World Cup Aesthetic) */
   --font-family: 'Outfit', sans-serif;
   --border-radius: 12px;
-  
+
   --primary-color: #0d5c3a;
   --secondary-color: #1b8555;
   --accent-color: #ffd700;
@@ -19,7 +19,7 @@
   --border-color: rgba(255, 255, 255, 0.15);
   --bg-gradient: linear-gradient(135deg, #093c24 0%, #15623e 50%, #0d5c3a 100%);
   --solid-color: #0d5c3a;
-  
+
   --score-bg: #ffffff;
   --score-text: #0d5c3a;
   --score-border: rgba(255, 255, 255, 0.3);
@@ -27,7 +27,7 @@
   /* CUSTOM CARD DIMENSIONS IN MILLIMETERS (Dynamically adjusted by JS) */
   --card-width-mm: 70;
   --card-height-mm: 100;
-  
+
   /* SCREEN SCALE (Proportional to mm sizing) */
   --card-width: calc(var(--card-width-mm) * 4.4px);
   --card-height: calc(var(--card-height-mm) * 4.4px);
@@ -322,11 +322,11 @@ input[type="range"] {
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #2563eb;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(20px);
 }
 
@@ -598,7 +598,8 @@ input:checked + .slider:before {
 
 /* Safe Zone margin layout (Creative Stationery Guidelines) */
 .card-content.safe-zone {
-  padding: 16px 14px 14px 14px; /* 4.5mm top, 4mm sides/bottom equivalent */
+  padding: 16px 14px 14px 14px;
+  /* 4.5mm top, 4mm sides/bottom equivalent */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -684,7 +685,7 @@ input:checked + .slider:before {
 
 .cover-custom-illustration {
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .cover-logo-text {
@@ -712,7 +713,7 @@ input:checked + .slider:before {
   font-weight: 800;
   letter-spacing: 0.5px;
   color: var(--text-primary);
-  text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
 }
 
@@ -771,7 +772,8 @@ input:checked + .slider:before {
 .group-matches {
   display: flex;
   flex-direction: column;
-  gap: 7px; /* Uniform spacious vertical gap preventing overflow */
+  gap: 7px;
+  /* Uniform spacious vertical gap preventing overflow */
   flex-grow: 1;
   justify-content: flex-start;
   overflow: hidden;
@@ -838,7 +840,7 @@ input:checked + .slider:before {
   height: 12px;
   border-radius: 2px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -876,7 +878,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .score-divider {
@@ -906,7 +908,7 @@ input:checked + .slider:before {
 .playoff-grid {
   display: grid;
   flex-grow: 1;
-  overflow: hidden;
+  overflow-y: auto;
   justify-content: stretch;
 }
 
@@ -1007,10 +1009,12 @@ input:checked + .slider:before {
   height: 15px;
   width: 32px;
 }
+
 .compact-pills .playoff-score-pill {
   height: 15px;
   width: 16px;
 }
+
 .compact-pills .playoff-placeholder-label {
   font-size: 0.52rem;
   width: 20px;
@@ -1020,10 +1024,12 @@ input:checked + .slider:before {
   height: 17px;
   width: 40px;
 }
+
 .standard-playoff-pills .playoff-score-pill {
   height: 17px;
   width: 17px;
 }
+
 .standard-playoff-pills .playoff-placeholder-label {
   font-size: 0.55rem;
   width: 24px;
@@ -1033,10 +1039,12 @@ input:checked + .slider:before {
   height: 18px;
   width: 44px;
 }
+
 .final-pills .playoff-score-pill {
   height: 18px;
   width: 18px;
 }
+
 .final-pills .playoff-placeholder-label {
   font-size: 0.58rem;
   width: 26px;
@@ -1045,7 +1053,8 @@ input:checked + .slider:before {
 /* Grid sizes adjustments for single columns */
 .playoff-grid.single-column {
   grid-template-columns: 1fr;
-  gap: 7px; /* Balanced spacing prevent vertical overflows */
+  gap: 7px;
+  /* Balanced spacing prevent vertical overflows */
 }
 
 .playoff-match.medium {
@@ -1107,8 +1116,13 @@ input:checked + .slider:before {
 }
 
 @keyframes shine {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
 }
 
 .champion-decor {
@@ -1118,7 +1132,7 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .champion-mini-trophy {
@@ -1196,7 +1210,9 @@ input:checked + .slider:before {
 }
 
 @keyframes spin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .progress-title {
@@ -1253,6 +1269,7 @@ input:checked + .slider:before {
   .app-container {
     flex-direction: column;
   }
+
   .sidebar {
     width: 100%;
     height: 400px;
@@ -1508,8 +1525,11 @@ input:checked + .slider:before {
     size: A4 landscape;
     margin: 0;
   }
-  
-  body, .app-container, .main-content, .viewer-container {
+
+  body,
+  .app-container,
+  .main-content,
+  .viewer-container {
     background: none !important;
     background-color: #ffffff !important;
     padding: 0 !important;
@@ -1520,7 +1540,11 @@ input:checked + .slider:before {
     display: block !important;
   }
 
-  .sidebar, .main-header, .card-actions-bar, .modal-overlay, .toast {
+  .sidebar,
+  .main-header,
+  .card-actions-bar,
+  .modal-overlay,
+  .toast {
     display: none !important;
   }
 
@@ -1535,7 +1559,7 @@ input:checked + .slider:before {
     padding: 0 !important;
     margin: 0 !important;
   }
-  
+
   .card-wrapper.exclude-from-sheets .card-container {
     margin: auto !important;
     border: none !important;
@@ -1598,7 +1622,8 @@ input:checked + .slider:before {
   }
 
   .card-content.safe-zone {
-    padding: 4.2mm 3.8mm 3.8mm 3.8mm !important; /* Safe zone prevents manual cropping cuts */
+    padding: 4.2mm 3.8mm 3.8mm 3.8mm !important;
+    /* Safe zone prevents manual cropping cuts */
     height: 100% !important;
     box-sizing: border-box !important;
   }
@@ -1607,31 +1632,39 @@ input:checked + .slider:before {
   .group-card-header {
     margin-bottom: 1.5mm !important;
   }
+
   .group-title {
     font-size: 3.2mm !important;
   }
+
   .group-teams-subtitle {
     font-size: 1.5mm !important;
     margin-top: 0.3mm !important;
   }
+
   .group-matches {
     gap: 1.5mm !important;
   }
+
   .match-item {
     padding: 1.2mm 1.6mm !important;
     border-radius: 1.5mm !important;
   }
+
   .match-meta {
     font-size: 1.4mm !important;
   }
+
   .match-team {
     font-size: 1.9mm !important;
   }
+
   .team-flag {
     width: 4.2mm !important;
     height: 2.8mm !important;
     border-radius: 0.4mm !important;
   }
+
   .score-box {
     width: 5mm !important;
     height: 4mm !important;
@@ -1639,80 +1672,92 @@ input:checked + .slider:before {
     background-color: #ffffff !important;
     border: 0.3mm solid #000000 !important;
   }
+
   .score-divider {
     width: 1mm !important;
   }
-  
+
   /* Playoff write pills print adjustments */
-  .playoff-team-pill, .playoff-score-pill, .champion-name-pill {
+  .playoff-team-pill,
+  .playoff-score-pill,
+  .champion-name-pill {
     background-color: #ffffff !important;
     border: 0.3mm solid #000000 !important;
     box-shadow: none !important;
   }
-  
+
   .compact-pills .playoff-team-pill {
     height: 3.4mm !important;
     width: 7.5mm !important;
     border-radius: 0.8mm !important;
   }
+
   .compact-pills .playoff-score-pill {
     width: 3.5mm !important;
     height: 3.4mm !important;
     border-radius: 0.8mm !important;
   }
+
   .compact-pills .playoff-placeholder-label {
     font-size: 1.1mm !important;
     width: 4.2mm !important;
   }
-  
+
   .standard-playoff-pills .playoff-team-pill {
     height: 3.8mm !important;
     width: 9.5mm !important;
     border-radius: 0.8mm !important;
   }
+
   .standard-playoff-pills .playoff-score-pill {
     width: 3.8mm !important;
     height: 3.8mm !important;
     border-radius: 0.8mm !important;
   }
+
   .standard-playoff-pills .playoff-placeholder-label {
     font-size: 1.3mm !important;
     width: 5.2mm !important;
   }
-  
+
   .final-pills .playoff-team-pill {
     height: 4mm !important;
     width: 10.5mm !important;
     border-radius: 0.8mm !important;
   }
+
   .final-pills .playoff-score-pill {
     width: 4mm !important;
     height: 4mm !important;
     border-radius: 0.8mm !important;
   }
+
   .final-pills .playoff-placeholder-label {
     font-size: 1.4mm !important;
     width: 6mm !important;
   }
-  
+
   .playoff-vs {
     font-size: 1.1mm !important;
     width: 3mm !important;
   }
-  
+
   .playoff-card-header {
     margin-bottom: 2mm !important;
   }
+
   .playoff-title {
     font-size: 3.2mm !important;
   }
-  
+
   .playoff-match.compact {
     padding: 1mm 1.5mm !important;
   }
+
   .playoff-match.medium {
     padding: 1.5mm 2mm !important;
   }
+
   .playoff-match.wide {
     padding: 2mm 3mm !important;
   }
@@ -1720,32 +1765,40 @@ input:checked + .slider:before {
   .cover-card .card-content.safe-zone {
     padding: 6mm 5mm !important;
   }
+
   .cover-year-bg {
     font-size: 24mm !important;
     top: -4mm !important;
   }
+
   .cover-trophy {
     width: 30mm !important;
     height: 40mm !important;
   }
+
   .cover-logo-text {
     font-size: 4.5mm !important;
     margin-top: 2mm !important;
   }
+
   .cover-title {
     font-size: 4.2mm !important;
   }
+
   .cover-subtitle {
     font-size: 2.2mm !important;
   }
+
   .cover-badge {
     font-size: 1.6mm !important;
     padding: 0.8mm 2mm !important;
   }
+
   .card-branding-badge {
     font-size: 1.2mm !important;
     padding-top: 1mm !important;
   }
+
   .branding-logo-img {
     height: 2.8mm !important;
     max-width: 14mm !important;

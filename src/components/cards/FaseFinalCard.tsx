@@ -2,6 +2,7 @@ import React from 'react';
 import { PlayoffPhase, DesignConfig } from '../../types';
 import { CardInner } from './CardInner';
 import { BrandingPlaceholder } from '../BrandingPlaceholder';
+import trophyImg from '../../assets/trophy.png';
 
 interface FaseFinalCardProps {
   phase: PlayoffPhase;
@@ -37,12 +38,11 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
   // const effectiveBodyColor = config.applyCoverTypographyToAllCards
   //   ? (config.coverSubtitleColor || config.bodyTextColor)
   //   : config.bodyTextColor;
-  const matchBackground = config.showMatchRowBackground === false
-    ? 'transparent'
-    : (config.cardBgColor || 'rgba(255, 255, 255, 0.08)');
-  const matchBorder = config.borderColor || 'rgba(255, 255, 255, 0.15)';
-  // const matchMetaFontSize = Math.min(8, 7 * (config.fontSizeScale || 1.0));
-  const matchLabelFontSize = Math.min(9, 8 * (config.fontSizeScale || 1.0));
+  // const matchBackground = config.showMatchRowBackground === false
+  //   ? 'transparent'
+  //   : (config.cardBgColor || 'rgba(255, 255, 255, 0.08)');
+  // const matchBorder = config.borderColor || 'rgba(255, 255, 255, 0.15)';
+
 
   const renderPlayoffMatchRow = (match: any) => {
     if (!match) return null;
@@ -50,55 +50,48 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
     const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
 
     return (
-      <div key={match.id} style={{ borderRadius: '0px', backgroundColor: matchBackground, borderColor: matchBorder }} className={`flex flex-col border p-2 select-none ${config.showMatchRowBackground === false ? 'bg-transparent' : ''}`}>
-        {/* Meta */}
+      <div key={match.id} className="flex flex-col mb-1.5 w-full">
+        {/* Meta details */}
         <div
           style={{
             fontFamily: config.bodyFontFamily || 'inherit',
             color: config.bodyTextColor || '#ffffff',
             fontSize: `${7 * (config.fontSizeScale || 1.0)}px`,
+            lineHeight: 1.1,
           }}
-          className="flex justify-between items-center opacity-60 font-semibold tracking-wider mb-2"
+          className="flex justify-between items-center opacity-70 tracking-widest px-1 mb-0.5"
         >
-          <span className="uppercase">{match.time}</span>
-          <span>{formatShortDate(match.date)}</span>
+          <span className="font-semibold uppercase truncate max-w-[45%]">{match.time}</span>
+          <span className="truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
         </div>
-        {/* Row */}
-        <div className="grid grid-cols-[max-content_1fr_max-content] items-center gap-2 w-full">
-          <span
-            style={{
-              fontFamily: config.bodyFontFamily || 'inherit',
-              color: config.bodyTextColor || '#ffffff',
-              fontSize: `${matchLabelFontSize}px`,
-            }}
-            className="text-right uppercase tracking-tighter truncate max-w-[90px]"
-          >
-            {homePlaceholder}
-          </span>
-          <div className={`flex items-center justify-center gap-2 px-2 py-1 rounded ${config.showMatchRowBackground === false ? 'bg-white/5 border border-white/10' : 'bg-black/10 border border-white/10'}`}>
-            <div style={{ borderRadius: '0px' }} className="w-[16px] h-[16px] bg-white border border-black/20" />
-            <span
-              style={{
-                fontFamily: config.bodyFontFamily || 'inherit',
-                color: config.bodyTextColor || '#ffffff',
-                fontSize: `${7 * (config.fontSizeScale || 1.0)}px`,
-              }}
-              className="font-black"
-            >
-              vs
+        
+        {/* Match traditional print row */}
+        <div className="flex items-center gap-[3px] w-full mt-[2px]">
+          {/* Left Code */}
+          <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+              {homePlaceholder}
             </span>
-            <div style={{ borderRadius: '0px' }} className="w-[16px] h-[16px] bg-white border border-black/20" />
           </div>
-          <span
-            style={{
-              fontFamily: config.bodyFontFamily || 'inherit',
-              color: config.bodyTextColor || '#ffffff',
-              fontSize: `${matchLabelFontSize}px`,
-            }}
-            className="truncate uppercase tracking-tighter max-w-[90px]"
-          >
-            {awayPlaceholder}
-          </span>
+          
+          {/* Home Team Input */}
+          <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+          
+          {/* Home Goal Input */}
+          <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+          
+          {/* Away Goal Input */}
+          <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+          
+          {/* Away Team Input */}
+          <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+          
+          {/* Right Code */}
+          <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+              {awayPlaceholder}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -107,7 +100,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
   return (
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
       {/* Sections Container */}
-      <div className="flex-grow flex flex-col justify-between gap-y-1.5 w-full my-0.5 overflow-hidden">
+      <div className="flex-1 flex flex-col justify-evenly py-2 w-full my-0.5 overflow-hidden">
         {/* Semifinals */}
         <div className="flex flex-col">
           <h3
@@ -120,7 +113,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           >
             SEMIFINAL
           </h3>
-          <div className="grid grid-cols-1 gap-1 w-full">
+          <div className="grid grid-cols-1 gap-1 w-full px-[4px]">
             {semifinalMatches.map(m => renderPlayoffMatchRow(m))}
           </div>
         </div>
@@ -137,7 +130,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           >
             3ER Y 4TO PUESTO
           </h3>
-          <div className="w-full">
+          <div className="w-full px-[4px]">
             {thirdPlaceMatch && renderPlayoffMatchRow(thirdPlaceMatch)}
           </div>
         </div>
@@ -154,31 +147,29 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           >
             FINAL
           </h3>
-          <div className="w-full">
+          <div className="w-full px-[4px]">
             {finalMatch && renderPlayoffMatchRow(finalMatch)}
           </div>
         </div>
 
         {/* Campeón del Mundo Section */}
-        <div style={{ borderRadius: '0px' }} className="flex flex-col items-center justify-center bg-white/5 border border-brand-accent/20 py-[3px] px-2 select-none relative overflow-hidden">
-          {/* Subtle trophy background decorator */}
-          <div className="absolute right-2 opacity-15">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-brand-accent">
-              <path d="M12 2a5 5 0 0 0-5 5v3c0 2 2.2 4 4.5 4.5V18H9v2h6v-2h-2.5v-3.5c2.3-.5 4.5-2.5 4.5-4.5V7a5 5 0 0 0-5-5zM5.5 7h1v3a4.5 4.5 0 0 1-.5 2 3 3 0 0 1-.5-5zm12 5a4.5 4.5 0 0 1-.5-2V7h1a3 3 0 0 1-.5 5z" />
-            </svg>
+        <div className="flex flex-row items-center justify-center gap-2 bg-white/5 border border-brand-accent/20 py-2 px-2 select-none relative overflow-hidden rounded mx-[4px]">
+          {/* Trophy image */}
+          <img src={trophyImg} alt="Trofeo" className="w-7 h-auto drop-shadow-md" />
+          
+          <div className="flex flex-col flex-1 items-center justify-center">
+            <span
+              style={{
+                fontFamily: config.titleFontFamily || 'inherit',
+                color: config.titleTextColor || '#ffd700',
+                fontSize: `${10 * (config.fontSizeScale || 1.0)}px`,
+              }}
+              className="font-bold tracking-widest mb-1.5 uppercase text-center"
+            >
+              CAMPEÓN DEL MUNDO
+            </span>
+            <div className="w-full h-[20px] bg-white/90 border border-black/25 shadow-inner rounded-md" />
           </div>
-
-          <span
-            style={{
-              fontFamily: config.titleFontFamily || 'inherit',
-              color: config.titleTextColor || '#ffd700',
-              fontSize: `${8 * (config.fontSizeScale || 1.0)}px`,
-            }}
-            className="font-black tracking-widest mb-[2px] uppercase"
-          >
-            CAMPEÓN DEL MUNDO
-          </span>
-          <div style={{ borderRadius: '0px' }} className="w-3/4 h-[16px] bg-white border border-black/25 shadow-inner" />
         </div>
       </div>
 
