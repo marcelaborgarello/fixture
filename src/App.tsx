@@ -170,8 +170,8 @@ export const App: React.FC = () => {
     });
 
     list.push(
-      { id: 'dieciseisavos_1', name: 'Dieciseisavos - Parte 1', element: <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1'}} config={config} /> },
-      { id: 'dieciseisavos_2', name: 'Dieciseisavos - Parte 2', element: <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2'}} config={config} /> },
+      { id: 'dieciseisavos_1', name: 'Dieciseisavos - Parte 1', element: <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1' }} config={config} /> },
+      { id: 'dieciseisavos_2', name: 'Dieciseisavos - Parte 2', element: <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2' }} config={config} /> },
       { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} /> },
       { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} /> },
       { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[4]} config={config} /> },
@@ -442,7 +442,7 @@ export const App: React.FC = () => {
 
           {/* FORMAT MODE: CARDS GRID (18 CARDS) */}
           {config.formatMode === 'cards' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-items-center">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 justify-items-center">
               {getCardsList().map((card) => (
                 <div
                   key={card.id}
@@ -671,10 +671,10 @@ export const App: React.FC = () => {
           </div>
         ))}
         <div id="export-card-dieciseisavos_1">
-          <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1'}} config={config} />
+          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1' }} config={config} />
         </div>
         <div id="export-card-dieciseisavos_2">
-          <FixtureCard type="dieciseisavos" data={{...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2'}} config={config} />
+          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2' }} config={config} />
         </div>
         <div id="export-card-octavos">
           <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} />
