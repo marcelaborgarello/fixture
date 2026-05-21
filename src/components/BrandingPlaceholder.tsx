@@ -53,7 +53,7 @@ export const BrandingPlaceholder: React.FC<BrandingPlaceholderProps> = ({
   return (
     <div
       style={containerStyle}
-      className="flex flex-col items-center justify-center gap-1 pt-1.5 mt-auto border-t border-white/10 w-full text-center select-none z-10 shrink-0"
+      className="flex flex-col items-center justify-center gap-1 mt-auto w-full text-center select-none z-10 shrink-0"
     >
       {/* Brand Sign and Logo */}
       <div className="flex items-center justify-center gap-2 flex-wrap">
