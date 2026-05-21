@@ -50,7 +50,7 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
     const awayPlaceholder = typeof match.awayTeam === 'string' ? match.awayTeam : match.awayTeam.code;
 
     return (
-      <div key={match.id} className="flex flex-col mb-1.5 w-full">
+      <div key={match.id} className="flex flex-col mb-1.5 w-full px-[6px]">
         {/* Meta details */}
         <div
           style={{
@@ -68,8 +68,11 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
         {/* Match traditional print row */}
         <div className="flex items-center gap-[3px] w-full mt-[2px]">
           {/* Left Code */}
-          <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
-            <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+          <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+            <span 
+              style={{ color: config.bodyTextColor || '#ffffff' }}
+              className="text-[5px] font-extrabold uppercase opacity-80"
+            >
               {homePlaceholder}
             </span>
           </div>
@@ -87,8 +90,11 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
           
           {/* Right Code */}
-          <div className="w-[22px] flex-shrink-0 flex items-center justify-center overflow-hidden">
-            <span className="text-[5px] leading-tight break-words text-center font-extrabold uppercase text-white/70">
+          <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+            <span 
+              style={{ color: config.bodyTextColor || '#ffffff' }}
+              className="text-[5px] font-extrabold uppercase opacity-80"
+            >
               {awayPlaceholder}
             </span>
           </div>
@@ -174,17 +180,19 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
       </div>
 
       {/* Footer Branding */}
-      <BrandingPlaceholder
-        brandSignature={config.brandSignature}
-        brandLogoUrl={config.brandLogoUrl}
-        brandLogoScale={config.brandLogoScale}
-        brandInstagram={config.brandInstagram}
-        brandPhone={config.brandPhone}
-        brandAddress={config.brandAddress}
-        brandFontFamily={config.brandFontFamily}
-        brandFontSize={config.brandFontSize}
-        brandTextColor={config.brandTextColor}
-      />
+      {config.showBrandingCards !== false && (
+        <BrandingPlaceholder
+          brandSignature={config.brandSignature}
+          brandLogoUrl={config.brandLogoUrl}
+          brandLogoScale={config.brandLogoScale}
+          brandInstagram={config.brandInstagram}
+          brandPhone={config.brandPhone}
+          brandAddress={config.brandAddress}
+          brandFontFamily={config.brandFontFamily}
+          brandFontSize={config.brandFontSize}
+          brandTextColor={config.brandTextColor}
+        />
+      )}
     </CardInner>
   );
 };

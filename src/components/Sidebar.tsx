@@ -1153,6 +1153,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   />
                 </div>
               </div>
+              
+              {/* Toggles de Visibilidad de Branding */}
+              <div className="border-t border-white/5 pt-2 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-white/70 font-bold">Mostrar logo en Portada</span>
+                  <input
+                    type="checkbox"
+                    checked={config.showBrandingCover ?? true}
+                    onChange={(e) => updateConfig('showBrandingCover', e.target.checked)}
+                    className="w-3.5 h-3.5 accent-[#ffd700]"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-white/70 font-bold">Mostrar logo en Reverso</span>
+                  <input
+                    type="checkbox"
+                    checked={config.showBrandingBack ?? true}
+                    onChange={(e) => updateConfig('showBrandingBack', e.target.checked)}
+                    className="w-3.5 h-3.5 accent-[#ffd700]"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-white/70 font-bold">Mostrar logo en Tarjetas Internas</span>
+                  <input
+                    type="checkbox"
+                    checked={config.showBrandingCards ?? true}
+                    onChange={(e) => updateConfig('showBrandingCards', e.target.checked)}
+                    className="w-3.5 h-3.5 accent-[#ffd700]"
+                  />
+                </div>
+              </div>
 
               {/* Cafecito Widget */}
               <div className="space-y-1 border-t border-white/5 pt-2">

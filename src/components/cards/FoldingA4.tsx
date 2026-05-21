@@ -120,14 +120,16 @@ export const FoldingA4: React.FC<FoldingA4Props> = ({ groups, phases, config }) 
           </div>
 
           <div className="relative z-10 w-full border-t border-white/5 pt-1.5 pb-0.5">
-            <BrandingPlaceholder
-              brandSignature={config.brandSignature}
-              brandLogoUrl={config.brandLogoUrl}
-              brandLogoScale={config.brandLogoScale}
-              brandInstagram={config.brandInstagram}
-              brandPhone={config.brandPhone}
-              brandAddress={config.brandAddress}
-            />
+            {config.showBrandingCards !== false && (
+              <BrandingPlaceholder
+                brandSignature={config.brandSignature}
+                brandLogoUrl={config.brandLogoUrl}
+                brandLogoScale={config.brandLogoScale}
+                brandInstagram={config.brandInstagram}
+                brandPhone={config.brandPhone}
+                brandAddress={config.brandAddress}
+              />
+            )}
           </div>
         </div>
 

@@ -93,6 +93,9 @@ export interface DesignConfig {
   brandFontFamily?: string;
   brandFontSize?: number;
   brandTextColor?: string;
+  showBrandingCover?: boolean;
+  showBrandingBack?: boolean;
+  showBrandingCards?: boolean;
 
   // Advanced typography options
   titleFontFamily?: string;

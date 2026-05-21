@@ -15,7 +15,8 @@ import {
   exportPliegoA4Pdf,
   exportPliegoA5Pdf,
   exportFlyerPliegoPdf,
-  captureDomElementToPng
+  captureDomElementToPng,
+  captureDomElementToJpeg
 } from './utils/exporter';
 
 const initialConfig: DesignConfig = {
@@ -45,6 +46,9 @@ const initialConfig: DesignConfig = {
   brandFontFamily: 'inherit',
   brandFontSize: 8,
   brandTextColor: 'rgba(255, 255, 255, 0.5)',
+  showBrandingCover: true,
+  showBrandingBack: true,
+  showBrandingCards: true,
   coverTitle: 'WORLD CUP 2026',
   coverSubtitle: 'CALENDARIO DE PARTIDOS',
   cafecitoUrl: 'https://cafecito.app/ginialtech',
@@ -310,17 +314,17 @@ export const App: React.FC = () => {
 
       else if (mode === 'pdf' && config.formatMode === 'poster') {
         setLoadingMsg('Generando PDF del Póster A4...');
-        const pngData = await captureDomElementToPng('export-poster', 210, 297);
+        const jpegData = await captureDomElementToJpeg('export-poster', 210, 297);
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        pdf.addImage(pngData, 'PNG', 0, 0, 210, 297);
+        pdf.addImage(jpegData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
         pdf.save('poster_A4_fixture_2026.pdf');
       }
 
       else if (mode === 'pdf' && config.formatMode === 'folding') {
         setLoadingMsg('Generando PDF del Plegable A4...');
-        const pngData = await captureDomElementToPng('export-folding-a4', 297, 210);
+        const jpegData = await captureDomElementToJpeg('export-folding-a4', 297, 210);
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-        pdf.addImage(pngData, 'PNG', 0, 0, 297, 210);
+        pdf.addImage(jpegData, 'JPEG', 0, 0, 297, 210, undefined, 'FAST');
         pdf.save('fixture_2026_plegable.pdf');
       }
 
@@ -442,12 +446,12 @@ export const App: React.FC = () => {
 
           {/* FORMAT MODE: CARDS GRID (18 CARDS) */}
           {config.formatMode === 'cards' && (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 justify-items-center">
+            <div className="flex flex-wrap justify-center gap-8 p-4">
               {getCardsList().map((card) => (
                 <div
                   key={card.id}
                   id={`preview-card-${card.id}`}
-                  className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-3 rounded-xl shadow-xl hover:border-[#15462E] transition-all group"
+                  className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl shadow-xl hover:border-[#15462E] transition-all group w-fit shrink-0"
                 >
                   <div className="flex justify-between items-center w-full mb-2 px-1 text-[10px] font-extrabold text-white/50 uppercase tracking-wider">
                     <span>{card.name}</span>
@@ -626,7 +630,10 @@ export const App: React.FC = () => {
               <h3 className="font-extrabold text-[#ffd700] text-sm uppercase tracking-wider">
                 Procesando Exportación
               </h3>
-              <p className="text-xs text-white/80 leading-relaxed font-medium">
+              <p className="text-[10px] text-white/50 uppercase tracking-widest">
+                Esto puede llevar unos minutos<span className="animate-pulse">...</span>
+              </p>
+              <p className="text-xs text-white/80 leading-relaxed font-medium mt-2">
                 {loadingMsg}
               </p>
               {progress.total > 0 && (

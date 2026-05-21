@@ -21,7 +21,7 @@ export const CardBack: React.FC<CardBackProps> = ({ config }) => {
   return (
     <CardInner config={config} isCoverOrBack={true} className="relative select-none text-center flex flex-col justify-between items-center h-full w-full">
 
-      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-4 my-auto">
+      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center my-auto">
         {/* Center Contents */}
         <div className="flex-grow flex flex-col items-center justify-center gap-2">
           {config.showCoverTrophy && (
@@ -54,17 +54,19 @@ export const CardBack: React.FC<CardBackProps> = ({ config }) => {
         </div>
 
         {/* Branding Badge */}
-        <BrandingPlaceholder
-          brandSignature={config.brandSignature}
-          brandLogoUrl={config.brandLogoUrl}
-          brandLogoScale={config.brandLogoScale}
-          brandInstagram={config.brandInstagram}
-          brandPhone={config.brandPhone}
-          brandAddress={config.brandAddress}
-          brandFontFamily={config.brandFontFamily}
-          brandFontSize={config.brandFontSize}
-          brandTextColor={config.brandTextColor}
-        />
+        {config.showBrandingBack !== false && (
+          <BrandingPlaceholder
+            brandSignature={config.brandSignature}
+            brandLogoUrl={config.brandLogoUrl}
+            brandLogoScale={config.brandLogoScale}
+            brandInstagram={config.brandInstagram}
+            brandPhone={config.brandPhone}
+            brandAddress={config.brandAddress}
+            brandFontFamily={config.brandFontFamily}
+            brandFontSize={config.brandFontSize}
+            brandTextColor={config.brandTextColor}
+          />
+        )}
       </div>
     </CardInner>
   );

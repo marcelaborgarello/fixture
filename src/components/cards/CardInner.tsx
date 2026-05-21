@@ -61,8 +61,8 @@ export const CardInner: React.FC<CardInnerProps> = ({
 
   // Handle glassmorphism classes
   const glassClasses = config.glassmorphism
-    ? 'backdrop-blur-md bg-white/10 border border-white/20 shadow-xl'
-    : 'border border-white/10';
+    ? 'backdrop-blur-md bg-white/10 border-none shadow-xl'
+    : 'border-none';
 
   return (
     <div
@@ -92,7 +92,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
       )}
 
       {/* Content wrapper with internal padding */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between p-[6%] box-border">
+      <div className={`relative z-10 w-full h-full flex flex-col justify-between box-border ${!isCoverOrBack ? 'p-[6%]' : ''}`}>
         {children}
       </div>
     </div>

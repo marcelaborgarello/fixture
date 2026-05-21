@@ -90,17 +90,19 @@ export const PosterA4: React.FC<PosterA4Props> = ({ groups, phases, config }) =>
             </span>
           </div>
         </div>
-        <BrandingPlaceholder
-          brandSignature={config.brandSignature}
-          brandLogoUrl={config.brandLogoUrl}
-          brandLogoScale={config.brandLogoScale}
-          brandInstagram={config.brandInstagram}
-          brandPhone={config.brandPhone}
-          brandAddress={config.brandAddress}
-          brandFontFamily={config.brandFontFamily}
-          brandFontSize={config.brandFontSize}
-          brandTextColor={config.brandTextColor}
-        />
+        {config.showBrandingCards !== false && (
+          <BrandingPlaceholder
+            brandSignature={config.brandSignature}
+            brandLogoUrl={config.brandLogoUrl}
+            brandLogoScale={config.brandLogoScale}
+            brandInstagram={config.brandInstagram}
+            brandPhone={config.brandPhone}
+            brandAddress={config.brandAddress}
+            brandFontFamily={config.brandFontFamily}
+            brandFontSize={config.brandFontSize}
+            brandTextColor={config.brandTextColor}
+          />
+        )}
       </div>
 
       {/* Grid Content: 4 Columns */}

@@ -179,17 +179,19 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
       </div>
 
       {/* Footer Branding Placeholder */}
-      <BrandingPlaceholder
-        brandSignature={config.brandSignature}
-        brandLogoUrl={config.brandLogoUrl}
-        brandLogoScale={config.brandLogoScale}
-        brandInstagram={config.brandInstagram}
-        brandPhone={config.brandPhone}
-        brandAddress={config.brandAddress}
-        brandFontFamily={config.brandFontFamily}
-        brandFontSize={config.brandFontSize}
-        brandTextColor={config.brandTextColor}
-      />
+      {config.showBrandingCards !== false && (
+        <BrandingPlaceholder
+          brandSignature={config.brandSignature}
+          brandLogoUrl={config.brandLogoUrl}
+          brandLogoScale={config.brandLogoScale}
+          brandInstagram={config.brandInstagram}
+          brandPhone={config.brandPhone}
+          brandAddress={config.brandAddress}
+          brandFontFamily={config.brandFontFamily}
+          brandFontSize={config.brandFontSize}
+          brandTextColor={config.brandTextColor}
+        />
+      )}
     </CardInner>
   );
 };

@@ -1,4 +1,4 @@
-import { toPng } from "html-to-image";
+import { toPng, toJpeg } from "html-to-image";
 import { jsPDF } from "jspdf";
 import JSZip from "jszip";
 
@@ -24,6 +24,41 @@ export const captureDomElementToPng = async (
   // Use toPng to generate the image
   const dataUrl = await toPng(container, {
     pixelRatio: 4, // 4x scale for crisp printing
+    width: widthPx,
+    height: heightPx,
+    style: {
+      transform: "scale(1)",
+      transformOrigin: "top left",
+    },
+  });
+
+  return dataUrl;
+};
+
+// Helper to capture a pre-rendered DOM element to JPEG by its ID with compression
+export const captureDomElementToJpeg = async (
+  elementId: string,
+  widthMm: number,
+  heightMm: number,
+): Promise<string> => {
+  const wrapper = document.getElementById(elementId);
+  if (!wrapper) {
+    throw new Error(`Element with id ${elementId} not found in DOM.`);
+  }
+
+  // Use the card-container inside, or fallback to the wrapper itself
+  const container =
+    (wrapper.querySelector(".card-container") as HTMLElement) || wrapper;
+
+  // Calculate pixel size at 4.4px per mm (default)
+  const widthPx = Math.round(widthMm * 4.4);
+  const heightPx = Math.round(heightMm * 4.4);
+
+  // Use toJpeg to generate the image with lighter settings
+  const dataUrl = await toJpeg(container, {
+    quality: 0.85,
+    backgroundColor: '#ffffff',
+    pixelRatio: 2, // reduced from 4 for lighter PDFs
     width: widthPx,
     height: heightPx,
     style: {
@@ -97,7 +132,16 @@ export const exportToPdf = async (
     format: [widthMm, heightMm],
   });
 
-  pdf.addImage(pngDataUrl, "PNG", 0, 0, widthMm, heightMm, "FAST");
+  pdf.addImage(
+    pngDataUrl,
+    "PNG",
+    0,
+    0,
+    widthMm,
+    heightMm,
+    "undefined" in pdf ? "SLOW" : "FAST",
+    "FAST",
+  );
 
   if (download) {
     pdf.save(`${filename}.pdf`);
@@ -181,6 +225,7 @@ export const exportPliegoA4Pdf = async (
   // Pre-render fronts and backs from DOM elements
   const frenteImages: string[] = [];
   const dorsoImages: string[] = [];
+  const imageCache: Record<string, string> = {};
 
   const totalSteps = doubleSided ? totalCards * 2 : totalCards;
   for (let i = 0; i < totalCards; i++) {
@@ -189,8 +234,11 @@ export const exportPliegoA4Pdf = async (
       totalSteps,
       `Procesando frente ${i + 1} de ${totalCards}...`,
     );
-    const fImg = await captureDomElementToPng(frontIds[i], widthMm, heightMm);
-    frenteImages.push(fImg);
+    const fId = frontIds[i];
+    if (!imageCache[fId]) {
+      imageCache[fId] = await captureDomElementToJpeg(fId, widthMm, heightMm);
+    }
+    frenteImages.push(imageCache[fId]);
 
     if (doubleSided) {
       progressCallback(
@@ -198,8 +246,11 @@ export const exportPliegoA4Pdf = async (
         totalSteps,
         `Procesando dorso ${i + 1} de ${totalCards}...`,
       );
-      const dImg = await captureDomElementToPng(backIds[i], widthMm, heightMm);
-      dorsoImages.push(dImg);
+      const bId = backIds[i];
+      if (!imageCache[bId]) {
+        imageCache[bId] = await captureDomElementToJpeg(bId, widthMm, heightMm);
+      }
+      dorsoImages.push(imageCache[bId]);
     }
   }
 
@@ -226,16 +277,18 @@ export const exportPliegoA4Pdf = async (
 
       pdf.addImage(
         frenteImages[cardIdx],
-        "PNG",
+        "JPEG",
         x,
         y,
         widthMm,
         heightMm,
+        undefined,
         "FAST",
       );
 
       if (hasCutLines) {
-        pdf.setDrawColor(180, 180, 180);
+        pdf.setDrawColor(200, 200, 200);
+        pdf.setLineWidth(0.1);
         pdf.setLineDashPattern([1, 1], 0);
         pdf.rect(x, y, widthMm, heightMm, "S");
       }
@@ -260,16 +313,18 @@ export const exportPliegoA4Pdf = async (
 
         pdf.addImage(
           dorsoImages[cardIdx],
-          "PNG",
+          "JPEG",
           x,
           y,
           widthMm,
           heightMm,
+          undefined,
           "FAST",
         );
 
         if (hasCutLines) {
-          pdf.setDrawColor(180, 180, 180);
+          pdf.setDrawColor(200, 200, 200);
+        pdf.setLineWidth(0.1);
           pdf.setLineDashPattern([1, 1], 0);
           pdf.rect(x, y, widthMm, heightMm, "S");
         }
@@ -309,6 +364,7 @@ export const exportPliegoA5Pdf = async (
   // Pre-render fronts and backs from DOM elements
   const frenteImages: string[] = [];
   const dorsoImages: string[] = [];
+  const imageCache: Record<string, string> = {};
 
   const totalSteps = doubleSided ? totalCards * 2 : totalCards;
   for (let i = 0; i < totalCards; i++) {
@@ -317,8 +373,11 @@ export const exportPliegoA5Pdf = async (
       totalSteps,
       `Procesando frente ${i + 1} de ${totalCards}...`,
     );
-    const fImg = await captureDomElementToPng(frontIds[i], widthMm, heightMm);
-    frenteImages.push(fImg);
+    const fId = frontIds[i];
+    if (!imageCache[fId]) {
+      imageCache[fId] = await captureDomElementToJpeg(fId, widthMm, heightMm);
+    }
+    frenteImages.push(imageCache[fId]);
 
     if (doubleSided) {
       progressCallback(
@@ -326,8 +385,11 @@ export const exportPliegoA5Pdf = async (
         totalSteps,
         `Procesando dorso ${i + 1} de ${totalCards}...`,
       );
-      const dImg = await captureDomElementToPng(backIds[i], widthMm, heightMm);
-      dorsoImages.push(dImg);
+      const bId = backIds[i];
+      if (!imageCache[bId]) {
+        imageCache[bId] = await captureDomElementToJpeg(bId, widthMm, heightMm);
+      }
+      dorsoImages.push(imageCache[bId]);
     }
   }
 
@@ -351,10 +413,20 @@ export const exportPliegoA5Pdf = async (
       const x = marginX + c * widthMm;
       const y = marginY;
 
-      pdf.addImage(frenteImages[cardIdx], "PNG", x, y, widthMm, heightMm);
+      pdf.addImage(
+        frenteImages[cardIdx],
+        "JPEG",
+        x,
+        y,
+        widthMm,
+        heightMm,
+        undefined,
+        "FAST",
+      );
 
       if (hasCutLines) {
-        pdf.setDrawColor(180, 180, 180);
+        pdf.setDrawColor(200, 200, 200);
+        pdf.setLineWidth(0.1);
         pdf.setLineDashPattern([1, 1], 0);
         pdf.rect(x, y, widthMm, heightMm, "S");
       }
@@ -378,16 +450,18 @@ export const exportPliegoA5Pdf = async (
 
         pdf.addImage(
           dorsoImages[cardIdx],
-          "PNG",
+          "JPEG",
           x,
           y,
           widthMm,
           heightMm,
+          undefined,
           "FAST",
         );
 
         if (hasCutLines) {
-          pdf.setDrawColor(180, 180, 180);
+          pdf.setDrawColor(200, 200, 200);
+          pdf.setLineWidth(0.1);
           pdf.setLineDashPattern([1, 1], 0);
           pdf.rect(x, y, widthMm, heightMm, "S");
         }
@@ -414,29 +488,67 @@ export const exportFlyerPliegoPdf = async (
   const heightMm = 105;
 
   progressCallback(1, 4, "Capturando frente del flyer...");
-  const frenteImg = await captureDomElementToPng(frenteId, widthMm, heightMm);
+  const frenteImg = await captureDomElementToJpeg(frenteId, widthMm, heightMm);
 
   progressCallback(2, 4, "Capturando dorso del flyer...");
-  const dorsoImg = await captureDomElementToPng(dorsoId, widthMm, heightMm);
+  const dorsoImg = await captureDomElementToJpeg(dorsoId, widthMm, heightMm);
 
   // --- PAGE 1: FRENTES (TOP & BOTTOM) ---
   progressCallback(3, 4, "Armando página de frentes del flyer...");
-  pdf.addImage(frenteImg, "PNG", 0, 0, widthMm, heightMm, "FAST");
-  pdf.addImage(frenteImg, "PNG", 0, 105, widthMm, heightMm, "FAST");
+  pdf.addImage(
+    frenteImg,
+    "JPEG",
+    0,
+    0,
+    widthMm,
+    heightMm,
+    undefined,
+    "FAST",
+  );
+  pdf.addImage(
+    frenteImg,
+    "JPEG",
+    0,
+    105,
+    widthMm,
+    heightMm,
+    undefined,
+    "FAST",
+  );
 
   // Cut guideline in the middle
-  pdf.setDrawColor(128, 128, 128);
+  pdf.setDrawColor(200, 200, 200);
+  pdf.setLineWidth(0.1);
   pdf.setLineDashPattern([2, 2], 0);
   pdf.line(0, 105, 297, 105);
 
   // --- PAGE 2: DORSOS (TOP & BOTTOM) ---
   pdf.addPage();
   progressCallback(4, 4, "Armando página de dorsos del flyer...");
-  pdf.addImage(dorsoImg, "PNG", 0, 0, widthMm, heightMm, "FAST");
-  pdf.addImage(dorsoImg, "PNG", 0, 105, widthMm, heightMm, "FAST");
+  pdf.addImage(
+    dorsoImg,
+    "JPEG",
+    0,
+    0,
+    widthMm,
+    heightMm,
+    undefined,
+    "FAST",
+  );
+  pdf.addImage(
+    dorsoImg,
+    "JPEG",
+    0,
+    105,
+    widthMm,
+    heightMm,
+    undefined,
+    "FAST",
+  );
 
   // Cut guideline in the middle
-  pdf.setDrawColor(128, 128, 128);
+  pdf.setDrawColor(200, 200, 200);
+  pdf.setLineWidth(0.1);
   pdf.setLineDashPattern([2, 2], 0);
   pdf.line(0, 105, 297, 105);
 
