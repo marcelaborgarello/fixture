@@ -68,10 +68,10 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
         {/* Match traditional print row */}
         <div className="flex items-center gap-[3px] w-full mt-[2px]">
           {/* Left Code */}
-          <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+          <div className="w-[28px] flex-shrink-0 text-center">
             <span 
               style={{ color: config.bodyTextColor || '#ffffff' }}
-              className="text-[5px] font-extrabold uppercase opacity-80 px-1"
+              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
             >
               {homePlaceholder}
             </span>
@@ -90,10 +90,10 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
           
           {/* Right Code */}
-          <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+          <div className="w-[28px] flex-shrink-0 text-center">
             <span 
               style={{ color: config.bodyTextColor || '#ffffff' }}
-              className="text-[5px] font-extrabold uppercase opacity-80 px-1"
+              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
             >
               {awayPlaceholder}
             </span>

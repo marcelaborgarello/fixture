@@ -60,7 +60,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
       </div>
 
       {/* Playoff Matches Area */}
-      <div className="flex-1 flex flex-col justify-evenly py-2 w-full overflow-hidden px-[4px]">
+      <div className="flex-1 flex flex-col justify-evenly py-2 w-full overflow-hidden px-1">
         <div className={`${gridClass} w-full`}>
           {phase.matches.map((match) => {
             const homePlaceholder = typeof match.homeTeam === 'string'
@@ -89,10 +89,10 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                 {/* Match traditional print row */}
                 <div className="flex items-center gap-[3px] w-full mt-[2px]">
                   {/* Left Code */}
-                  <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+                  <div className="w-[28px] flex-shrink-0 text-center">
                     <span 
                       style={{ color: effectiveBodyColor || '#ffffff' }}
-                      className="text-[5px] font-extrabold uppercase opacity-80 px-1"
+                      className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
                     >
                       {homePlaceholder}
                     </span>
@@ -111,10 +111,10 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   <div className="flex-1 h-[14px] bg-white/90 rounded-md shadow-inner border border-black/10" />
                   
                   {/* Right Code */}
-                  <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
+                  <div className="w-[28px] flex-shrink-0 text-center">
                     <span 
                       style={{ color: effectiveBodyColor || '#ffffff' }}
-                      className="text-[5px] font-extrabold uppercase opacity-80 px-1"
+                      className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
                     >
                       {awayPlaceholder}
                     </span>

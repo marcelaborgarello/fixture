@@ -70,7 +70,7 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
             opacity: 0.5,
             fontSize: `${subtitleScaleSize}px`,
           }}
-          className="font-semibold tracking-wider uppercase truncate max-w-[95%] mt-0.5"
+          className="font-semibold tracking-wider uppercase max-w-full mt-0.5 flex flex-wrap justify-center gap-x-1 leading-tight px-2"
         >
           {teamNamesLine}
         </div>
