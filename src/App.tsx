@@ -15,7 +15,6 @@ import {
   exportPliegoA4Pdf,
   exportPliegoA5Pdf,
   exportFlyerPliegoPdf,
-  captureDomElementToPng,
   captureDomElementToJpeg
 } from './utils/exporter';
 
@@ -101,10 +100,10 @@ const initialConfig: DesignConfig = {
 };
 
 
-const LOCAL_STORAGE_KEY = 'fixture_maker_config_v3';
+const LOCAL_STORAGE_KEY = 'fixture_configs_v4';
 
 export const App: React.FC = () => {
-  const [config, setConfig] = useState<DesignConfig>(() => {
+  const [configs, setConfigs] = useState<Record<string, DesignConfig>>(() => {
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
@@ -113,8 +112,22 @@ export const App: React.FC = () => {
     } catch (e) {
       console.error('Error loading config from localStorage:', e);
     }
-    return initialConfig;
+    return {
+      cards: { ...initialConfig, formatMode: 'cards' },
+      flyer: { ...initialConfig, formatMode: 'flyer' },
+      poster: { ...initialConfig, formatMode: 'poster' },
+    };
   });
+  const [currentMode, setCurrentMode] = useState<'cards' | 'flyer' | 'poster'>('cards');
+  const config = configs[currentMode] || initialConfig;
+
+  const handleConfigChange = (newConfig: DesignConfig) => {
+    if (newConfig.formatMode !== currentMode) {
+      setCurrentMode(newConfig.formatMode as 'cards' | 'flyer' | 'poster');
+    } else {
+      setConfigs(prev => ({ ...prev, [currentMode]: newConfig }));
+    }
+  };
   const [zipOption, setZipOption] = useState<'all' | 'png' | 'pdf'>('all');
   const [loadingMsg, setLoadingMsg] = useState<string>('');
   const [progress, setProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
@@ -122,12 +135,14 @@ export const App: React.FC = () => {
 
   // Auto-save configuration to localStorage on changes
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
-  }, [config]);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(configs));
+  }, [configs]);
 
   const handleResetConfig = () => {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-    setConfig(initialConfig);
+    setConfigs(prev => ({
+      ...prev,
+      [currentMode]: { ...initialConfig, formatMode: currentMode }
+    }));
   };
 
   // Dynamic Google Font Loader
@@ -321,22 +336,6 @@ export const App: React.FC = () => {
         pdf.save('poster_A4_fixture_2026.pdf');
       }
 
-      else if (mode === 'pdf' && config.formatMode === 'folding') {
-        setLoadingMsg('Generando PDF del Plegable A4...');
-        const jpegData = await captureDomElementToJpeg('export-folding-a4', 297, 210);
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-        pdf.addImage(jpegData, 'JPEG', 0, 0, 297, 210, undefined, 'FAST');
-        pdf.save('fixture_2026_plegable.pdf');
-      }
-
-      else if (mode === 'png' && config.formatMode === 'folding') {
-        setLoadingMsg('Generando imagen del Plegable A4...');
-        const pngData = await captureDomElementToPng('export-folding-a4', 297, 210);
-        const link = document.createElement('a');
-        link.download = 'fixture_2026_plegable.png';
-        link.href = pngData;
-        link.click();
-      }
     } catch (err) {
       console.error(err);
       alert('Hubo un problema al exportar. Revisa la consola.');
@@ -363,10 +362,6 @@ export const App: React.FC = () => {
       targetId = 'export-poster';
       w = 210;
       h = 297;
-    } else if (cardId === 'folding') {
-      targetId = 'export-folding-a4';
-      w = 297;
-      h = 210;
     } else {
       targetId = `export-card-${cardId}`;
     }
@@ -407,7 +402,7 @@ export const App: React.FC = () => {
       {/* Sidebar controls */}
       <Sidebar
         config={config}
-        onChange={setConfig}
+        onChange={handleConfigChange}
         onExport={handleExport}
         zipOption={zipOption}
         setZipOption={setZipOption}
@@ -434,11 +429,11 @@ export const App: React.FC = () => {
               Área de Trabajo y Previsualización
             </h2>
             <span className="text-[10px] text-white/40 font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full uppercase">
-              {config.formatMode === 'cards' ? 'Tarjetas Separadas' : config.formatMode === 'flyer' ? 'Folleto Horizontal' : config.formatMode === 'folding' ? 'Plegable A4' : 'Póster A4'}
+              {config.formatMode === 'cards' ? 'Tarjetas Separadas' : config.formatMode === 'flyer' ? 'Folleto Flyer Media A4' : 'Póster A4 Vertical'}
             </span>
           </div>
           <span className="text-[10px] text-[#ffd700] font-black uppercase tracking-widest bg-[#ffd700]/10 border border-[#ffd700]/20 px-2.5 py-0.5 rounded-full">
-            Medidas: {config.formatMode === 'cards' ? `${config.cardWidthMm}x${config.cardHeightMm}mm` : config.formatMode === 'flyer' ? '297x105mm' : config.formatMode === 'folding' ? 'A4 Plegable 297x210mm' : 'A4 210x297mm'}
+            Medidas: {config.formatMode === 'cards' ? `${config.cardWidthMm}x${config.cardHeightMm}mm` : config.formatMode === 'flyer' ? '297x105mm' : 'A4 210x297mm'}
           </span>
         </header>
 
@@ -593,8 +588,8 @@ export const App: React.FC = () => {
                   <span>Fixture Plegable A4 (Frente Simple Faz para doblar)</span>
                   <span className="text-[#ffd700]">297x210mm</span>
                 </div>
-                <div className="overflow-x-auto w-full flex justify-center pb-2">
-                  <div className="border border-white/10 rounded shadow-2xl shrink-0">
+                <div className="overflow-x-auto w-full pb-2">
+                  <div className="w-fit mx-auto border border-white/10 rounded shadow-2xl shrink-0">
                     <FoldingA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
                   </div>
                 </div>
@@ -609,7 +604,7 @@ export const App: React.FC = () => {
                     onClick={() => handleExport('pdf')}
                     className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[10px] font-bold py-1.5 px-3 rounded transition-all"
                   >
-                    Descargar PDF
+                    📄 Descargar PDF
                   </button>
                 </div>
               </div>
@@ -717,6 +712,7 @@ export const App: React.FC = () => {
         <div id="export-folding-a4">
           <FoldingA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
         </div>
+        
       </div>
     </div>
   );

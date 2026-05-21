@@ -24,14 +24,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<string>('format');
 
-  const handleGradientPreset = (primary: string, secondary: string) => {
-    onChange({
-      ...config,
-      primaryColor: primary,
-      secondaryColor: secondary,
-      backgroundGradient: `linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`
-    });
-  };
+
 
   const updateConfig = (key: keyof DesignConfig, value: any) => {
     const newConfig = { ...config, [key]: value };
@@ -113,17 +106,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Output Mode */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Modo de Salida</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(['cards', 'flyer', 'poster', 'folding'] as const).map((m) => (
+                <div className="grid grid-cols-3 gap-1.5 mt-2">
+                  {(['cards', 'flyer', 'poster'] as const).map((m) => (
                     <button
                       key={m}
-                      onClick={() => updateConfig('formatMode', m)}
-                      className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all truncate ${config.formatMode === m
-                        ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
-                        : 'border-white/10 text-white hover:bg-white/5'
+                      onClick={() => onChange({ ...config, formatMode: m })}
+                      className={`text-[9px] py-1.5 px-1 font-bold rounded uppercase tracking-wider transition-all border ${config.formatMode === m
+                        ? 'bg-[#1b8555] text-white border-transparent'
+                        : 'bg-black/20 text-white/40 border-white/10 hover:bg-white/5 hover:text-white/80'
                         }`}
                     >
-                      {m === 'cards' ? 'Tarjetas' : m === 'flyer' ? 'Flyer' : m === 'poster' ? 'Póster' : 'Plegable'}
+                      {m === 'cards' ? 'Tarjetas' : m === 'flyer' ? 'Flyer' : 'Póster'}
                     </button>
                   ))}
                 </div>
@@ -161,45 +154,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </>
               )}
 
-              {/* Show cut lines */}
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-white/80">Líneas de corte impresas</span>
-                  <span className="text-[9px] text-white/40">Guías punteadas finas</span>
+              {/* Show cut lines - Only for Cards */}
+              {config.formatMode === 'cards' && (
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-white/80">Líneas de corte impresas</span>
+                    <span className="text-[9px] text-white/40">Guías punteadas finas</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={config.showCutLines ?? false}
+                    onChange={(e) => updateConfig('showCutLines', e.target.checked)}
+                    className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
+                  />
                 </div>
-                <input
-                  type="checkbox"
-                  checked={config.showCutLines ?? false}
-                  onChange={(e) => updateConfig('showCutLines', e.target.checked)}
-                  className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
-                />
-              </div>
+              )}
 
-              {/* Binding Margin */}
-              <div className="space-y-1 pt-1 border-t border-white/5">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
-                <div className="grid grid-cols-3 gap-1">
-                  {(['none', 'top', 'left'] as const).map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => updateConfig('bindingMargin', m)}
-                      className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
-                        ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
-                        : 'border-white/10 text-white hover:bg-white/5'
-                        }`}
-                    >
-                      {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
-                    </button>
-                  ))}
+              {/* Binding Margin - Only for Cards */}
+              {config.formatMode === 'cards' && (
+                <div className="space-y-1 pt-1 border-t border-white/5">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
+                  <div className="grid grid-cols-3 gap-1">
+                    {(['none', 'top', 'left'] as const).map((m) => (
+                      <button
+                        key={m}
+                        onClick={() => updateConfig('bindingMargin', m)}
+                        className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
+                          ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
+                          : 'border-white/10 text-white hover:bg-white/5'
+                          }`}
+                      >
+                        {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* SECTION 2: COVER DESIGN */}
-        <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
-          <button
+        {/* SECTION 2: COVER DESIGN - Oculto para poster porque no tiene portada */}
+        {config.formatMode !== 'poster' && (
+          <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
+            <button
             onClick={() => toggleTab('cover')}
             className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'cover' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
               }`}
@@ -492,112 +490,115 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
         </div>
+        )}
 
-        {/* SECTION 3: REVERSO / BACK CARD */}
-        <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
-          <button
-            onClick={() => toggleTab('back')}
-            className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'back' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
-              }`}
-          >
-            <span>🔄 Reverso y Tipografía</span>
-            <span>{activeTab === 'back' ? '▲' : '▼'}</span>
-          </button>
+        {/* SECTION 3: REVERSO / BACK CARD - Oculto para todo lo que no sea cards */}
+        {config.formatMode === 'cards' && (
+          <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
+            <button
+              onClick={() => toggleTab('back')}
+              className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'back' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
+                }`}
+            >
+              <span>🔄 Reverso y Tipografía</span>
+              <span>{activeTab === 'back' ? '▲' : '▼'}</span>
+            </button>
 
-          {activeTab === 'back' && (
-            <div className="p-3 space-y-3 border-t border-[#15462E]/40">
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Título Reverso</label>
-                <select
-                  value={config.backTitleFontFamily || 'inherit'}
-                  onChange={(e) => updateConfig('backTitleFontFamily', e.target.value)}
-                  className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                >
-                  <option value="inherit">General</option>
-                  <option value="'Outfit', sans-serif">Outfit</option>
-                  <option value="'Montserrat', sans-serif">Montserrat</option>
-                  <option value="'Poppins', sans-serif">Poppins</option>
-                  <option value="'Inter', sans-serif">Inter</option>
-                  <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                  <option value="'Anton', sans-serif">Anton</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                </select>
-              </div>
+            {activeTab === 'back' && (
+              <div className="p-3 space-y-3 border-t border-[#15462E]/40">
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Título Reverso</label>
+                  <select
+                    value={config.backTitleFontFamily || 'inherit'}
+                    onChange={(e) => updateConfig('backTitleFontFamily', e.target.value)}
+                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
+                  >
+                    <option value="inherit">General</option>
+                    <option value="'Outfit', sans-serif">Outfit</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                    <option value="'Inter', sans-serif">Inter</option>
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                    <option value="'Anton', sans-serif">Anton</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                  </select>
+                </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Color Título Reverso</label>
-                <div className="flex gap-1.5">
-                  <input
-                    type="color"
-                    value={config.titleTextColor || '#ffd700'}
-                    onChange={(e) => updateConfig('titleTextColor', e.target.value)}
-                    className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={config.titleTextColor || '#ffd700'}
-                    onChange={(e) => updateConfig('titleTextColor', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[10px] focus:outline-none"
-                  />
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Color Título Reverso</label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="color"
+                      value={config.titleTextColor || '#ffd700'}
+                      onChange={(e) => updateConfig('titleTextColor', e.target.value)}
+                      className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.titleTextColor || '#ffd700'}
+                      onChange={(e) => updateConfig('titleTextColor', e.target.value)}
+                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[10px] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Subtítulo Reverso</label>
+                  <select
+                    value={config.backSubtitleFontFamily || 'inherit'}
+                    onChange={(e) => updateConfig('backSubtitleFontFamily', e.target.value)}
+                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
+                  >
+                    <option value="inherit">General</option>
+                    <option value="'Outfit', sans-serif">Outfit</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                    <option value="'Inter', sans-serif">Inter</option>
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                    <option value="'Anton', sans-serif">Anton</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Color Subtítulo Reverso</label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="color"
+                      value={config.backSubtitleTextColor || '#ffd700'}
+                      onChange={(e) => updateConfig('backSubtitleTextColor', e.target.value)}
+                      className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.backSubtitleTextColor || '#ffd700'}
+                      onChange={(e) => updateConfig('backSubtitleTextColor', e.target.value)}
+                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[10px] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Texto Reverso</label>
+                  <select
+                    value={config.backBodyFontFamily || 'inherit'}
+                    onChange={(e) => updateConfig('backBodyFontFamily', e.target.value)}
+                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
+                  >
+                    <option value="inherit">General</option>
+                    <option value="'Outfit', sans-serif">Outfit</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                    <option value="'Inter', sans-serif">Inter</option>
+                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                    <option value="'Anton', sans-serif">Anton</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                  </select>
                 </div>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Subtítulo Reverso</label>
-                <select
-                  value={config.backSubtitleFontFamily || 'inherit'}
-                  onChange={(e) => updateConfig('backSubtitleFontFamily', e.target.value)}
-                  className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                >
-                  <option value="inherit">General</option>
-                  <option value="'Outfit', sans-serif">Outfit</option>
-                  <option value="'Montserrat', sans-serif">Montserrat</option>
-                  <option value="'Poppins', sans-serif">Poppins</option>
-                  <option value="'Inter', sans-serif">Inter</option>
-                  <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                  <option value="'Anton', sans-serif">Anton</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                </select>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Color Subtítulo Reverso</label>
-                <div className="flex gap-1.5">
-                  <input
-                    type="color"
-                    value={config.backSubtitleTextColor || '#ffd700'}
-                    onChange={(e) => updateConfig('backSubtitleTextColor', e.target.value)}
-                    className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={config.backSubtitleTextColor || '#ffd700'}
-                    onChange={(e) => updateConfig('backSubtitleTextColor', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[10px] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Texto Reverso</label>
-                <select
-                  value={config.backBodyFontFamily || 'inherit'}
-                  onChange={(e) => updateConfig('backBodyFontFamily', e.target.value)}
-                  className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                >
-                  <option value="inherit">General</option>
-                  <option value="'Outfit', sans-serif">Outfit</option>
-                  <option value="'Montserrat', sans-serif">Montserrat</option>
-                  <option value="'Poppins', sans-serif">Poppins</option>
-                  <option value="'Inter', sans-serif">Inter</option>
-                  <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                  <option value="'Anton', sans-serif">Anton</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                </select>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* SECTION 3: CORE DESIGN & COLOR SYSTEM */}
         <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
@@ -700,32 +701,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-1 text-[8.5px]">
-                    <button
-                      onClick={() => handleGradientPreset('#093c24', '#15623e')}
-                      className="bg-emerald-950/80 border border-emerald-800 rounded py-0.5"
-                    >
-                      Esmeralda Clásico
-                    </button>
-                    <button
-                      onClick={() => handleGradientPreset('#101014', '#1c1d24')}
-                      className="bg-zinc-900 border border-zinc-700 rounded py-0.5"
-                    >
-                      Carbono Premium
-                    </button>
-                    <button
-                      onClick={() => handleGradientPreset('#0f172a', '#1e293b')}
-                      className="bg-slate-900 border border-slate-700 rounded py-0.5"
-                    >
-                      Azul Cósmico
-                    </button>
-                    <button
-                      onClick={() => handleGradientPreset('#311042', '#4c1d6f')}
-                      className="bg-purple-950/80 border border-purple-800 rounded py-0.5"
-                    >
-                      Violeta Imperial
-                    </button>
-                  </div>
+
                 </div>
               )}
 
@@ -770,10 +746,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
 
               {/* Theme Colors */}
-              <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-2">
+              <div className="border-t border-white/5 pt-2">
                 <div className="space-y-1">
                   <label className="text-[10px] text-white/40 font-bold uppercase">Acento (Oro/Detalles)</label>
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-1.5 w-1/2">
                     <input
                       type="color"
                       value={config.accentColor}
@@ -784,23 +760,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       type="text"
                       value={config.accentColor}
                       onChange={(e) => updateConfig('accentColor', e.target.value)}
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Bordes</label>
-                  <div className="flex gap-1.5">
-                    <input
-                      type="color"
-                      value={config.borderColor.startsWith('rgba') ? '#ffffff' : config.borderColor}
-                      onChange={(e) => updateConfig('borderColor', e.target.value)}
-                      className="w-5 h-5 border-0 bg-transparent rounded cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={config.borderColor}
-                      onChange={(e) => updateConfig('borderColor', e.target.value)}
                       className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none"
                     />
                   </div>
@@ -1252,7 +1211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => onExport('zip')}
               className="w-full bg-[#ffd700] hover:bg-[#ffe55c] active:bg-[#e6c200] text-black font-extrabold py-2 px-3 rounded flex items-center justify-center gap-1.5 shadow-lg select-none transition-all uppercase tracking-wider text-xs"
             >
-              📦 Descargar Paquete Individual
+              📦 Descargar Paquete ZIP (300+ DPI)
             </button>
           )}
 
@@ -1293,25 +1252,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <span>📄 Descargar Póster A4 (PDF)</span>
             </button>
-          )}
-
-          {config.formatMode === 'folding' && (
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                onClick={() => onExport('pdf')}
-                className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E] text-[10px] uppercase"
-              >
-                <span>📄 PDF Plegable</span>
-                <span className="text-[8px] text-white/70 font-semibold mt-0.5">A4 Horizontal</span>
-              </button>
-              <button
-                onClick={() => onExport('png')}
-                className="bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all text-[10px] uppercase"
-              >
-                <span>🖼️ PNG Plegable</span>
-                <span className="text-[8px] text-white/70 font-semibold mt-0.5">A4 Horizontal</span>
-              </button>
-            </div>
           )}
         </div>
 

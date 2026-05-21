@@ -70,6 +70,62 @@ export const captureDomElementToJpeg = async (
   return dataUrl;
 };
 
+// ─── Sheet-level capture (NO querySelector .card-container) ──────────────────
+// Use these for full-page layouts: LibritoZineA4, FoldingA4, PosterA4, etc.
+// Captures the element itself at its actual rendered pixel dimensions.
+
+export const captureSheetToPng = async (
+  elementId: string,
+  pixelRatio = 3,
+): Promise<string> => {
+  const el = document.getElementById(elementId);
+  if (!el) throw new Error(`Element #${elementId} not found in DOM.`);
+
+  const rect = el.getBoundingClientRect();
+  // Use offsetWidth/Height for the off-screen hidden element (getBoundingClientRect is 0 when off-screen)
+  const w = el.offsetWidth || Math.round(rect.width);
+  const h = el.offsetHeight || Math.round(rect.height);
+
+  const dataUrl = await toPng(el, {
+    pixelRatio,
+    width: w,
+    height: h,
+    backgroundColor: '#ffffff',
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left',
+    },
+  });
+
+  return dataUrl;
+};
+
+export const captureSheetToJpeg = async (
+  elementId: string,
+  pixelRatio = 2,
+  quality = 0.90,
+): Promise<string> => {
+  const el = document.getElementById(elementId);
+  if (!el) throw new Error(`Element #${elementId} not found in DOM.`);
+
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+
+  const dataUrl = await toJpeg(el, {
+    pixelRatio,
+    quality,
+    width: w,
+    height: h,
+    backgroundColor: '#ffffff',
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left',
+    },
+  });
+
+  return dataUrl;
+};
+
 // Export an HTML element as PNG data URL or trigger download
 export const exportToPng = async (
   element: HTMLElement,
@@ -493,30 +549,27 @@ export const exportFlyerPliegoPdf = async (
   progressCallback(2, 4, "Capturando dorso del flyer...");
   const dorsoImg = await captureDomElementToJpeg(dorsoId, widthMm, heightMm);
 
+  // Ecotank Print Margins (Scale to fit within safe printable area)
+  // Safe area: ~5mm margins on all edges
+  // Original ratio: 297x105. Target ratio inside half A4 (297x105) with 5mm margins = 287x95
+  // Scale factor based on height to maintain proportions: 95/105 = 0.9047
+  // Scaled Width = 297 * 0.9047 = 268.7mm. Scaled Height = 95mm.
+  // Center X = (297 - 268.7) / 2 = 14.15mm
+  // To have them touch at the central cut line (105mm):
+  // Top Flyer bottom must be at 105 -> topY = 105 - 95 = 10
+  // Bottom Flyer top must be at 105 -> bottomY = 105
+  const printWidth = 268.7;
+  const printHeight = 95;
+  const marginX = 14.15;
+  const topY = 10;
+  const bottomY = 105;
+
   // --- PAGE 1: FRENTES (TOP & BOTTOM) ---
   progressCallback(3, 4, "Armando página de frentes del flyer...");
-  pdf.addImage(
-    frenteImg,
-    "JPEG",
-    0,
-    0,
-    widthMm,
-    heightMm,
-    undefined,
-    "FAST",
-  );
-  pdf.addImage(
-    frenteImg,
-    "JPEG",
-    0,
-    105,
-    widthMm,
-    heightMm,
-    undefined,
-    "FAST",
-  );
+  pdf.addImage(frenteImg, "JPEG", marginX, topY, printWidth, printHeight, undefined, "FAST");
+  pdf.addImage(frenteImg, "JPEG", marginX, bottomY, printWidth, printHeight, undefined, "FAST");
 
-  // Cut guideline in the middle
+  // Cut guideline in the middle (at exactly 105mm, which is the center of the A4)
   pdf.setDrawColor(200, 200, 200);
   pdf.setLineWidth(0.1);
   pdf.setLineDashPattern([2, 2], 0);
@@ -525,32 +578,14 @@ export const exportFlyerPliegoPdf = async (
   // --- PAGE 2: DORSOS (TOP & BOTTOM) ---
   pdf.addPage();
   progressCallback(4, 4, "Armando página de dorsos del flyer...");
-  pdf.addImage(
-    dorsoImg,
-    "JPEG",
-    0,
-    0,
-    widthMm,
-    heightMm,
-    undefined,
-    "FAST",
-  );
-  pdf.addImage(
-    dorsoImg,
-    "JPEG",
-    0,
-    105,
-    widthMm,
-    heightMm,
-    undefined,
-    "FAST",
-  );
+  pdf.addImage(dorsoImg, "JPEG", marginX, topY, printWidth, printHeight, undefined, "FAST");
+  pdf.addImage(dorsoImg, "JPEG", marginX, bottomY, printWidth, printHeight, undefined, "FAST");
 
-  // Cut guideline in the middle
   pdf.setDrawColor(200, 200, 200);
   pdf.setLineWidth(0.1);
   pdf.setLineDashPattern([2, 2], 0);
   pdf.line(0, 105, 297, 105);
 
+  pdf.save("Fixture_Flyer_Doble_Faz_A4.pdf");
   return pdf;
 };

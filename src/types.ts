@@ -77,7 +77,7 @@ export interface DesignConfig {
   showCoverFifaText?: boolean;
 
   // Format mode toggle
-  formatMode?: "cards" | "flyer" | "poster" | "folding";
+  formatMode?: "cards" | "flyer" | "poster" | "folding" | "zine";
 
   // Use 3-letter FIFA code for team names (e.g. ARG, MEX)
   useFifaCode?: boolean;
