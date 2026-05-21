@@ -92,7 +92,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
                     <span 
                       style={{ color: effectiveBodyColor || '#ffffff' }}
-                      className="text-[5px] font-extrabold uppercase opacity-80"
+                      className="text-[5px] font-extrabold uppercase opacity-80 px-1"
                     >
                       {homePlaceholder}
                     </span>
@@ -114,7 +114,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   <div className="w-[24px] flex-shrink-0 text-center leading-[1.1] break-words overflow-visible flex items-center justify-center">
                     <span 
                       style={{ color: effectiveBodyColor || '#ffffff' }}
-                      className="text-[5px] font-extrabold uppercase opacity-80"
+                      className="text-[5px] font-extrabold uppercase opacity-80 px-1"
                     >
                       {awayPlaceholder}
                     </span>

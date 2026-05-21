@@ -174,6 +174,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
                 />
               </div>
+
+              {/* Binding Margin */}
+              <div className="space-y-1 pt-1 border-t border-white/5">
+                <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
+                <div className="grid grid-cols-3 gap-1">
+                  {(['none', 'top', 'left'] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => updateConfig('bindingMargin', m)}
+                      className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
+                        ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
+                        : 'border-white/10 text-white hover:bg-white/5'
+                        }`}
+                    >
+                      {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>

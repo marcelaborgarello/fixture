@@ -21,7 +21,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       showWatermark={config.showCoverYear}
       className="relative select-none text-center"
     >
-      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center">
+      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-6 px-4">
         {/* Header Section */}
         <div className="flex flex-col items-center w-full">
           {config.showCoverFifaText && (
@@ -60,7 +60,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
         </div>
 
         {/* Central Illustration Area */}
-        <div className="relative flex-grow w-full flex items-center justify-center overflow-hidden my-3">
+        <div className="relative flex-1 w-full flex items-center justify-center overflow-hidden my-3">
           {config.showCoverTrophy && (
             <div
               style={{
@@ -81,15 +81,17 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
 
         {/* Branding placeholder */}
         {config.showBrandingCover !== false && (
-          <BrandingPlaceholder
-            brandSignature={config.brandSignature}
-            brandLogoUrl={config.brandLogoUrl}
-            brandLogoScale={config.brandLogoScale}
+          <div className="mb-2">
+            <BrandingPlaceholder
+              brandSignature={config.brandSignature}
+              brandLogoUrl={config.brandLogoUrl}
+              brandLogoScale={config.brandLogoScale}
             brandInstagram={config.brandInstagram}
             brandPhone={config.brandPhone}
             brandAddress={config.brandAddress}
-            brandTextColor={config.coverTitleColor || config.brandTextColor}
-          />
+              brandTextColor={config.coverTitleColor || config.brandTextColor}
+            />
+          </div>
         )}
       </div>
     </CardInner>

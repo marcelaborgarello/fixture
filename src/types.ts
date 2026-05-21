@@ -84,6 +84,7 @@ export interface DesignConfig {
 
   // Pliego configuration
   pliegoDoubleSided?: boolean;
+  bindingMargin?: 'none' | 'top' | 'left';
 
   // Business branding options
   brandLogoScale?: number;

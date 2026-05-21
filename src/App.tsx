@@ -55,6 +55,7 @@ const initialConfig: DesignConfig = {
   excludeCoverFromSheets: false,
   showCutLines: true,
   pliegoDoubleSided: true,
+  bindingMargin: 'none',
 
   // Custom dimensions (in mm)
   cardWidthMm: 70,
