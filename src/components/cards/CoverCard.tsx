@@ -22,14 +22,40 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       className="relative select-none text-center"
     >
       {/*
-       * py-8: safe zone vertical generoso (≈ 8mm a escala de impresión)
-       * px-6: margen lateral limpio sin tocar bordes de guillotina
-       * Evitamos duplicar padding con CardInner usando el override directo aquí
+       * ── DISEÑO DE PORTADA ──────────────────────────────────────────────
+       * El trofeo ocupa position: absolute inset-0 (z-10) → llena TODA la
+       * tarjeta sin restricciones. El layout de header+branding usa z-20
+       * para flotar encima del trofeo, sin ningún fondo propio.
+       * ──────────────────────────────────────────────────────────────────
        */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-8 px-6">
 
-        {/* ── Header: título limpio, sin bg ni blur ── */}
-        <div className="flex flex-col items-center w-full shrink-0">
+      {/* ── TROFEO: absolute inset-0, llena 88% del alto, centrado ── */}
+      {config.showCoverTrophy && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none bg-transparent"
+          style={{
+            transform: `scale(${illustrationScale / 100}) translate(${illustrationX}px, ${illustrationY}px)`,
+            opacity: illustrationOpacity,
+            transition: 'transform 0.2s ease-out',
+            transformOrigin: 'center center',
+          }}
+        >
+          <img
+            src={config.coverIllustrationUrl || trophyImg}
+            alt="Trophy"
+            className="w-auto object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.45)]"
+            style={{ height: '88%', maxHeight: '88%' }}
+          />
+        </div>
+      )}
+
+      {/* ── LAYOUT VERTICAL: header top, branding bottom ── */}
+      {/* z-20 flota sobre el trofeo. bg-transparent garantiza ningún fondo. */}
+      <div className="relative z-20 w-full h-full flex flex-col justify-between items-center py-5 px-5 bg-transparent">
+
+        {/* ── HEADER: FIFA / Título / Subtítulo — sin fondo, sin blur ── */}
+        <div className="flex flex-col items-center w-full shrink-0 bg-transparent">
           {config.showCoverFifaText && (
             <span
               style={{ fontSize: `${10 * (config.fontSizeScale || 1.0)}px` }}
@@ -49,7 +75,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
               fontSize: `${(config.coverTitleSize || 2.2) * (config.fontSizeScale || 1.0)}rem`,
               lineHeight: 1.1,
             }}
-            className="font-extrabold uppercase select-none max-w-full break-words tracking-tight"
+            className="font-extrabold uppercase select-none max-w-full break-words tracking-tight bg-transparent"
           >
             {config.coverTitle || 'WORLD CUP'}
           </h1>
@@ -63,35 +89,15 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
               color: config.coverSubtitleColor || '#ffd700',
               fontSize: `${10 * (config.fontSizeScale || 1.0)}px`,
             }}
-            className="font-bold tracking-[0.2em] uppercase mt-2 max-w-[90%]"
+            className="font-bold tracking-[0.2em] uppercase mt-2 max-w-[90%] bg-transparent"
           >
             {config.coverSubtitle || 'CALENDARIO'}
           </div>
         </div>
 
-        {/* ── Central Illustration: trofeo prominente y perfectamente centrado ── */}
-        <div className="relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden my-4">
-          {config.showCoverTrophy && (
-            <div
-              style={{
-                transform: `scale(${illustrationScale / 100}) translate(${illustrationX}px, ${illustrationY}px)`,
-                opacity: illustrationOpacity,
-                transition: 'transform 0.2s ease-out',
-              }}
-              className="w-[180px] h-[220px] flex items-center justify-center"
-            >
-              <img
-                src={config.coverIllustrationUrl || trophyImg}
-                alt="Trophy"
-                className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* ── Branding: limpio, sin bg, con safe zone para guillotina inferior ── */}
+        {/* ── BRANDING: logo + datos — sin fondo, safe zone guillotina ── */}
         {config.showBrandingCover !== false && (
-          <div className="shrink-0 pb-2">
+          <div className="shrink-0 pb-2 w-full bg-transparent">
             <BrandingPlaceholder
               brandSignature={config.brandSignature}
               brandLogoUrl={config.brandLogoUrl}

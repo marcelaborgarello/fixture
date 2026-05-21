@@ -807,19 +807,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
 
-              {/* Glassmorphism switch */}
-              <div className="flex items-center justify-between border-t border-white/5 pt-2">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-white/80">Efecto Vidrio (Glassmorphism)</span>
-                  <span className="text-[9px] text-white/40">Fondo translúcido con borde suave. Dejar desactivado para impresión plana.</span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={config.glassmorphism}
-                  onChange={(e) => updateConfig('glassmorphism', e.target.checked)}
-                  className="w-4 h-4 accent-[#ffd700]"
-                />
-              </div>
+
 
               {/* Typography Options */}
               <div className="border-t border-white/5 pt-2 space-y-2">
