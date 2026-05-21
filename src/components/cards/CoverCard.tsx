@@ -21,9 +21,15 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       showWatermark={config.showCoverYear}
       className="relative select-none text-center"
     >
-      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-6 px-4">
-        {/* Header Section */}
-        <div className="flex flex-col items-center w-full">
+      {/*
+       * py-8: safe zone vertical generoso (≈ 8mm a escala de impresión)
+       * px-6: margen lateral limpio sin tocar bordes de guillotina
+       * Evitamos duplicar padding con CardInner usando el override directo aquí
+       */}
+      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center py-8 px-6">
+
+        {/* ── Header: título limpio, sin bg ni blur ── */}
+        <div className="flex flex-col items-center w-full shrink-0">
           {config.showCoverFifaText && (
             <span
               style={{ fontSize: `${10 * (config.fontSizeScale || 1.0)}px` }}
@@ -35,7 +41,10 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
 
           <h1
             style={{
-              fontFamily: config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit' ? config.coverTitleFontFamily : (config.titleFontFamily || undefined),
+              fontFamily:
+                config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit'
+                  ? config.coverTitleFontFamily
+                  : config.titleFontFamily || undefined,
               color: config.coverTitleColor || '#ffffff',
               fontSize: `${(config.coverTitleSize || 2.2) * (config.fontSizeScale || 1.0)}rem`,
               lineHeight: 1.1,
@@ -47,11 +56,12 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
 
           <div
             style={{
-              fontFamily: config.coverSubtitleFontFamily && config.coverSubtitleFontFamily !== 'inherit'
-                ? config.coverSubtitleFontFamily
-                : config.bodyFontFamily || undefined,
+              fontFamily:
+                config.coverSubtitleFontFamily && config.coverSubtitleFontFamily !== 'inherit'
+                  ? config.coverSubtitleFontFamily
+                  : config.bodyFontFamily || undefined,
               color: config.coverSubtitleColor || '#ffd700',
-              fontSize: `${10 * (config.fontSizeScale || 1.0)}px`
+              fontSize: `${10 * (config.fontSizeScale || 1.0)}px`,
             }}
             className="font-bold tracking-[0.2em] uppercase mt-2 max-w-[90%]"
           >
@@ -59,36 +69,36 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
           </div>
         </div>
 
-        {/* Central Illustration Area */}
-        <div className="relative flex-1 w-full flex items-center justify-center overflow-hidden my-3">
+        {/* ── Central Illustration: trofeo prominente y perfectamente centrado ── */}
+        <div className="relative flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden my-4">
           {config.showCoverTrophy && (
             <div
               style={{
-                transform: `scale(${(illustrationScale / 100) * 1.3}) translate(${illustrationX}px, ${illustrationY}px)`, // Added translateX support!
+                transform: `scale(${illustrationScale / 100}) translate(${illustrationX}px, ${illustrationY}px)`,
                 opacity: illustrationOpacity,
                 transition: 'transform 0.2s ease-out',
               }}
-              className="w-[120px] h-[160px] flex items-center justify-center"
+              className="w-[180px] h-[220px] flex items-center justify-center"
             >
               <img
                 src={config.coverIllustrationUrl || trophyImg}
                 alt="Trophy"
-                className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)]"
+                className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
               />
             </div>
           )}
         </div>
 
-        {/* Branding placeholder */}
+        {/* ── Branding: limpio, sin bg, con safe zone para guillotina inferior ── */}
         {config.showBrandingCover !== false && (
-          <div className="mb-2">
+          <div className="shrink-0 pb-2">
             <BrandingPlaceholder
               brandSignature={config.brandSignature}
               brandLogoUrl={config.brandLogoUrl}
               brandLogoScale={config.brandLogoScale}
-            brandInstagram={config.brandInstagram}
-            brandPhone={config.brandPhone}
-            brandAddress={config.brandAddress}
+              brandInstagram={config.brandInstagram}
+              brandPhone={config.brandPhone}
+              brandAddress={config.brandAddress}
               brandTextColor={config.coverTitleColor || config.brandTextColor}
             />
           </div>
