@@ -498,17 +498,20 @@ export const App: React.FC = () => {
             <FixtureCard type="group" data={g} config={config} />
           </div>
         ))}
-        <div id="export-card-dieciseisavos">
-          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS' }} config={config} />
+        <div id="export-card-dieciseisavos_1">
+          <FixtureCard type="dieciseisavos" data={PLAYOFFS[0]} config={config} />
+        </div>
+        <div id="export-card-dieciseisavos_2">
+          <FixtureCard type="dieciseisavos" data={PLAYOFFS[1]} config={config} />
         </div>
         <div id="export-card-octavos">
-          <FixtureCard type="octavos" data={PLAYOFFS[1]} config={config} />
+          <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} />
         </div>
         <div id="export-card-cuartos">
-          <FixtureCard type="cuartos" data={PLAYOFFS[2]} config={config} />
+          <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} />
         </div>
         <div id="export-card-final">
-          <FixtureCard type="final" data={PLAYOFFS[3]} config={config} />
+          <FixtureCard type="final" data={PLAYOFFS[4]} config={config} />
         </div>
         <div id="export-card-dorso">
           <FixtureCard type="back" config={config} />
