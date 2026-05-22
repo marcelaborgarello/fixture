@@ -9,7 +9,6 @@ interface SidebarProps {
   setZipOption: (opt: 'all' | 'png' | 'pdf') => void;
   onResetConfig: () => void;
   isOpen?: boolean;
-  onClose?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -20,7 +19,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setZipOption,
   onResetConfig,
   isOpen = false,
-  onClose,
 }) => {
   const [activeTab, setActiveTab] = useState<string>('format');
 
@@ -58,8 +56,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className={`w-80 h-screen bg-[#072418] text-white flex flex-col border-r border-[#15462E] select-none shrink-0 overflow-hidden shadow-2xl transition-transform duration-300 z-40 fixed md:relative top-0 left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-      }`}>
+    <aside 
+      className={`w-full md:w-80 bg-[#072418] text-white flex flex-col border-[#15462E] select-none shrink-0 overflow-hidden shadow-2xl transition-all duration-300 z-40 relative border-b md:border-b-0 md:border-r ${
+        isOpen ? 'max-h-[65vh] md:max-h-none md:h-screen' : 'max-h-0 border-transparent md:border-[#15462E] md:max-h-none md:h-screen'
+      }`}
+    >
       {/* Brand Header */}
       <div className="p-4 border-b border-[#15462E] bg-black/20 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -75,15 +76,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span className="text-[9px] bg-[#1b8555] text-white font-bold py-0.5 px-1.5 rounded-full select-none md:inline-block hidden">
             React v3
           </span>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="md:hidden text-white/60 hover:text-white p-1 text-sm font-bold"
-              aria-label="Cerrar panel"
-            >
-              ✕
-            </button>
-          )}
         </div>
       </div>
 

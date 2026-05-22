@@ -362,14 +362,16 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#051810] relative">
-      {/* Black transparent backdrop for mobile when sidebar is open */}
-      {isSidebarOpen && (
-        <div
-          onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-black/60 z-30 md:hidden transition-opacity duration-300"
-        />
-      )}
+    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-[#051810] relative">
+      {/* Mobile Top Toggle Button */}
+      <div className="md:hidden shrink-0 bg-[#072418] border-b border-[#15462E] p-3 z-10">
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="w-full bg-[#1b8555] hover:bg-[#239f67] text-white p-3 rounded-xl shadow-md font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+        >
+          ⚙️ {isSidebarOpen ? 'Ocultar Configuraciones' : 'Desplegar Configuraciones'}
+        </button>
+      </div>
 
       {/* Sidebar controls */}
       <Sidebar
@@ -380,17 +382,7 @@ export const App: React.FC = () => {
         setZipOption={setZipOption}
         onResetConfig={handleResetConfig}
         isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
       />
-
-      {/* Floating Gear button for mobile */}
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="md:hidden fixed bottom-4 right-4 z-50 bg-[#1b8555] hover:bg-[#239f67] text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center border border-white/20 transition-all active:scale-95 text-lg"
-        title="Configuración"
-      >
-        ⚙️
-      </button>
 
       {/* Main Workspace Workspace */}
       <main className="flex-grow flex flex-col h-full overflow-hidden relative">
@@ -404,9 +396,6 @@ export const App: React.FC = () => {
               Tarjetas Separadas
             </span>
           </div>
-          <span className="text-[10px] text-[#ffd700] font-black uppercase tracking-widest bg-[#ffd700]/10 border border-[#ffd700]/20 px-2.5 py-0.5 rounded-full">
-            Medidas: {config.cardWidthMm}x{config.cardHeightMm}mm
-          </span>
         </header>
 
         {/* Scrollable grid contents */}
