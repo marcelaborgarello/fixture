@@ -96,7 +96,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: '10px',
                         transformOrigin: 'center',
-                        transform: homePlaceholder.length > 7 ? 'scale(0.28)' : (homePlaceholder.length > 5 ? 'scale(0.35)' : 'scale(0.5)')
+                        transform: homePlaceholder.length > 7 ? 'scale(0.35)' : (homePlaceholder.length > 5 ? 'scale(0.42)' : 'scale(0.55)')
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap leading-none tracking-tighter block text-center"
                     >
@@ -123,7 +123,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: '10px',
                         transformOrigin: 'center',
-                        transform: awayPlaceholder.length > 7 ? 'scale(0.28)' : (awayPlaceholder.length > 5 ? 'scale(0.35)' : 'scale(0.5)')
+                        transform: awayPlaceholder.length > 7 ? 'scale(0.35)' : (awayPlaceholder.length > 5 ? 'scale(0.42)' : 'scale(0.55)')
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap leading-none tracking-tighter block text-center"
                     >
