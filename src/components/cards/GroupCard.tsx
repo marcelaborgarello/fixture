@@ -41,38 +41,23 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
     : (config.cardBgColor || 'rgba(255, 255, 255, 0.08)');
   const matchBorder = config.borderColor || 'rgba(255, 255, 255, 0.15)';
 
-  // Render header team list
-  const teamNamesLine = group.teams
-    .map(t => useFifaCode ? t.code : t.name)
-    .join(' • ');
-
   const titleScaleSize = 13 * (config.fontSizeScale || 1.0);
-  const subtitleScaleSize = 7.5 * (config.fontSizeScale || 1.0);
 
   return (
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
       {/* Card Header */}
-      <div className="flex flex-col items-center text-center w-full select-none mb-1">
-        <h2
-          style={{
-            fontFamily: effectiveTitleFont || 'inherit',
-            color: effectiveTitleColor || '#ffd700',
-            fontSize: `${titleScaleSize}px`,
-          }}
-          className="font-extrabold tracking-widest uppercase drop-shadow"
-        >
-          GRUPO {group.name}
-        </h2>
-        <div
-          style={{
-            fontFamily: effectiveBodyFont || 'inherit',
-            color: effectiveBodyColor || '#ffffff',
-            opacity: 0.5,
-            fontSize: `${subtitleScaleSize}px`,
-          }}
-          className="font-semibold tracking-wider uppercase max-w-full mt-0.5 flex flex-wrap justify-center gap-x-1 leading-tight px-2"
-        >
-          {teamNamesLine}
+      <div className="flex flex-col items-center text-center w-full select-none mb-1 mt-1">
+        <div className="bg-black/30 w-[95%] rounded-full py-[3px] flex items-center justify-center border border-white/10 shadow-sm">
+          <h2
+            style={{
+              fontFamily: effectiveTitleFont || 'inherit',
+              color: effectiveTitleColor === '#ffd700' ? '#ffffff' : effectiveTitleColor,
+              fontSize: `${titleScaleSize}px`,
+            }}
+            className="font-extrabold tracking-wider uppercase drop-shadow-sm leading-none"
+          >
+            {group.name ? `GRUPO ${group.name}` : ''}
+          </h2>
         </div>
       </div>
 
@@ -112,20 +97,20 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
               }}
               className={`flex flex-col justify-center border-b py-[2px] last:border-0 transition-colors duration-150 px-1 rounded ${config.showMatchRowBackground === false ? '' : 'hover:bg-white/10'}`}
             >
-              {/* Match Meta (Date & Venue) */}
+              {/* Match Meta (Date & Venue) - Nivel Dios divider style */}
               <div
                 style={{
                   fontFamily: effectiveBodyFont || 'inherit',
                   color: effectiveBodyColor || '#ffffff',
-                  opacity: 0.4,
-                  fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+                  opacity: 0.8,
+                  fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px`,
+                  lineHeight: 1
                 }}
-                className="flex justify-between items-center font-semibold tracking-wider mb-[2px] select-none"
+                className="flex justify-center items-center font-bold tracking-widest mb-[1.5px] select-none bg-white/10 rounded-full py-[1.5px] px-2 mx-auto w-max border border-white/5"
               >
-                <span>
-                  {formatShortDate(match.date)} - {match.time.replace(' hs.', '')}
+                <span className="uppercase text-center">
+                  {formatShortDate(match.date)} • {match.city}
                 </span>
-                <span className="truncate max-w-[45%] text-right">{match.city}</span>
               </div>
 
               {/* Match Row (Teams and Score Inputs) */}
@@ -150,9 +135,8 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
 
                 {/* Score Boxes (Playable print inputs) */}
                 <div className="flex items-center gap-[2px] px-[2px] shrink-0 select-none">
-                  <div style={{ borderRadius: '0px' }} className="w-[16px] h-[14px] bg-white border border-black/25" />
-                  <span style={{ fontSize: `${7 * (config.fontSizeScale || 1.0)}px` }} className="text-white/30 font-bold shrink-0">-</span>
-                  <div style={{ borderRadius: '0px' }} className="w-[16px] h-[14px] bg-white border border-black/25" />
+                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
+                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
                 </div>
 
                 {/* Away Team */}

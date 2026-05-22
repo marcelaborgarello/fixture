@@ -184,11 +184,10 @@ export const App: React.FC = () => {
     });
 
     list.push(
-      { id: 'dieciseisavos_1', name: 'Dieciseisavos P1', element: <FixtureCard type="dieciseisavos" data={PLAYOFFS[0]} config={config} /> },
-      { id: 'dieciseisavos_2', name: 'Dieciseisavos P2', element: <FixtureCard type="dieciseisavos" data={PLAYOFFS[1]} config={config} /> },
-      { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} /> },
-      { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} /> },
-      { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[4]} config={config} /> },
+      { id: 'dieciseisavos', name: 'Dieciseisavos', element: <FixtureCard type="dieciseisavos" data={PLAYOFFS[0]} config={config} /> },
+      { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[1]} config={config} /> },
+      { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[2]} config={config} /> },
+      { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[3]} config={config} /> },
       { id: 'dorso', name: 'Reverso Tarjeta', element: <FixtureCard type="back" config={config} /> }
     );
 
@@ -199,7 +198,7 @@ export const App: React.FC = () => {
     try {
       if (mode === 'zip') {
         setLoadingMsg('Iniciando empaquetado de tarjetas...');
-        setProgress({ current: 0, total: 20 });
+        setProgress({ current: 0, total: 19 });
 
         const cards = getCardsList().map(c => ({ name: c.name, id: `export-card-${c.id}` }));
         const zipBlob = await exportAllToZip(

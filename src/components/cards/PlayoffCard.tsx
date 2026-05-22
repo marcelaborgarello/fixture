@@ -46,17 +46,19 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
   return (
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
       {/* Header */}
-      <div className="flex flex-col items-center text-center w-full select-none mb-1">
-        <h2
-          style={{
-            fontFamily: effectiveTitleFont || 'inherit',
-            color: effectiveTitleColor || '#ffd700',
-            fontSize: `${(phase.name.length > 15 ? 11 : 13) * (config.fontSizeScale || 1.0)}px`,
-          }}
-          className="font-extrabold tracking-widest uppercase drop-shadow leading-none"
-        >
-          {phase.name}
-        </h2>
+      <div className="flex flex-col items-center text-center w-full select-none mb-1 mt-1">
+        <div className="bg-black/30 w-[95%] rounded-full py-[3px] flex items-center justify-center border border-white/10 shadow-sm">
+          <h2
+            style={{
+              fontFamily: effectiveTitleFont || 'inherit',
+              color: effectiveTitleColor === '#ffd700' ? '#ffffff' : effectiveTitleColor,
+              fontSize: `${(phase.name.length > 15 ? 11 : 13) * (config.fontSizeScale || 1.0)}px`,
+            }}
+            className="font-extrabold tracking-widest uppercase drop-shadow-sm leading-none"
+          >
+            {phase.name}
+          </h2>
+        </div>
       </div>
 
       {/* Playoff Matches Area */}
@@ -72,18 +74,17 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
 
             return (
               <div key={match.id} className={`flex flex-col mb-0.5 w-full px-[6px]`}>
-                {/* Meta details */}
+                {/* Meta details (Nivel Dios divider style) */}
                 <div
                   style={{
                     fontFamily: effectiveBodyFont || 'inherit',
                     color: effectiveBodyColor || '#ffffff',
-                    fontSize: `${matchMetaFontSize}px`,
-                    lineHeight: 1.1,
+                    fontSize: type === 'dieciseisavos' ? '3.5px' : `${matchMetaFontSize * 0.9}px`,
+                    lineHeight: 1,
                   }}
-                  className="flex justify-between items-center opacity-70 tracking-widest px-0.5"
+                  className={`flex justify-center items-center opacity-80 tracking-widest px-1 bg-white/10 rounded-full py-[1.5px] w-max mx-auto border border-white/5 ${type === 'dieciseisavos' ? 'mb-[0.5px]' : 'mb-[1.5px]'}`}
                 >
-                  <span className="font-semibold uppercase truncate max-w-[45%]">{match.time}</span>
-                  <span className="truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
+                  <span className="font-bold uppercase truncate">{match.time} • {formatShortDate(match.date)}</span>
                 </div>
                 
                 {/* Match traditional print row */}
@@ -102,16 +103,16 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   </div>
                   
                   {/* Home Team Input */}
-                  <div className={`flex-1 h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
+                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[9px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
                   
                   {/* Home Goal Input */}
-                  <div className={`w-[14px] h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
+                  <div className={`${type === 'dieciseisavos' ? 'w-[9px] h-[9px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
                   
                   {/* Away Goal Input */}
-                  <div className={`w-[14px] h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
+                  <div className={`${type === 'dieciseisavos' ? 'w-[9px] h-[9px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
                   
                   {/* Away Team Input */}
-                  <div className={`flex-1 h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
+                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[9px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
                   
                   {/* Right Code */}
                   <div className={`w-[28px] flex-shrink-0 text-center flex items-center justify-center`}>

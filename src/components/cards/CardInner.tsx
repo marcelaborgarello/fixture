@@ -32,7 +32,9 @@ export const CardInner: React.FC<CardInnerProps> = ({
 
   let hasCustomBgImage = false;
 
-  if (isCoverOrBack && config.coverBgColor && config.coverBgColor !== 'GRADIENT') {
+  const applyCoverBg = isCoverOrBack || config.applyCoverTypographyToAllCards;
+
+  if (applyCoverBg && config.coverBgColor && config.coverBgColor !== 'GRADIENT') {
     // Solid color override for cover/back
     bgStyle.backgroundColor = config.coverBgColor;
     if (config.coverBgImageUrl) {
@@ -43,7 +45,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
       bgImageLayerStyle.backgroundRepeat = 'no-repeat';
       bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
     }
-  } else if (isCoverOrBack && config.coverBgColor === 'GRADIENT') {
+  } else if (applyCoverBg && config.coverBgColor === 'GRADIENT') {
     // Gradient override for cover: use the general gradient colors
     bgStyle.background = config.backgroundGradient;
     if (config.coverBgImageUrl) {
@@ -68,7 +70,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
       bgImageLayerStyle.backgroundRepeat = 'no-repeat';
       bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
     }
-    if (isCoverOrBack && config.coverBgImageUrl) {
+    if (applyCoverBg && config.coverBgImageUrl) {
       hasCustomBgImage = true;
       bgImageLayerStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
       bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
