@@ -82,9 +82,9 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                     fontSize: `${matchMetaFontSize * 0.9}px`,
                     lineHeight: 1,
                   }}
-                  className="flex justify-center items-center opacity-80 tracking-widest px-1 bg-white/10 rounded-full w-max mx-auto border border-white/5 py-[1.5px] mb-[1.5px]"
+                  className="flex justify-center items-center opacity-80 tracking-widest px-1 bg-white/10 rounded-full w-max mx-auto border border-white/5 py-[1.5px] mb-[1.5px] whitespace-nowrap"
                 >
-                  <span className="font-bold uppercase truncate">{match.time} • {formatShortDate(match.date)}</span>
+                  <span className="font-bold uppercase whitespace-nowrap">{match.time} • {formatShortDate(match.date)}</span>
                 </div>
                 
                 {/* Match traditional print row */}

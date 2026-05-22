@@ -106,9 +106,9 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
                   fontSize: `${6.5 * (config.fontSizeScale || 1.0)}px`,
                   lineHeight: 1
                 }}
-                className="flex justify-center items-center font-bold tracking-widest mb-[1.5px] select-none bg-white/10 rounded-full py-[1.5px] px-2 mx-auto w-max border border-white/5"
+                className="flex justify-center items-center font-bold tracking-widest mb-[1.5px] select-none bg-white/10 rounded-full py-[1.5px] px-2 mx-auto w-max border border-white/5 whitespace-nowrap"
               >
-                <span className="uppercase text-center">
+                <span className="uppercase text-center whitespace-nowrap">
                   {formatShortDate(match.date)} • {match.city}
                 </span>
               </div>

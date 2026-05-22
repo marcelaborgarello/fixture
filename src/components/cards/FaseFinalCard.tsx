@@ -59,10 +59,10 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
             fontSize: `${7 * (config.fontSizeScale || 1.0)}px`,
             lineHeight: 1.1,
           }}
-          className="flex justify-between items-center opacity-70 tracking-widest px-1 mb-0.5"
+          className="flex justify-between items-center opacity-70 tracking-widest px-1 mb-0.5 whitespace-nowrap flex-nowrap"
         >
-          <span className="font-semibold uppercase truncate max-w-[45%]">{match.time}</span>
-          <span className="truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
+          <span className="font-semibold uppercase whitespace-nowrap truncate max-w-[45%]">{match.time}</span>
+          <span className="whitespace-nowrap truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
         </div>
         
         {/* Match traditional print row */}
