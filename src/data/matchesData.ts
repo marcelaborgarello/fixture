@@ -212,7 +212,7 @@ export const GROUPS: Group[] = [
 
 export const PLAYOFFS: PlayoffPhase[] = [
   {
-    name: 'DIECISEISAVOS',
+    name: 'DIECISEISAVOS - PARTE 1',
     matches: [
       { id: 73, date: 'Domingo 28 de junio', time: 'Part. 73', stadium: 'Estadio Los Ángeles', city: 'Los Ángeles', homeTeam: '2A', awayTeam: '2B' },
       { id: 74, date: 'Lunes 29 de junio', time: 'Part. 74', stadium: 'Estadio Boston', city: 'Boston', homeTeam: '1E', awayTeam: '3A/B/C/D' },
@@ -221,7 +221,12 @@ export const PLAYOFFS: PlayoffPhase[] = [
       { id: 77, date: 'Martes 30 de junio', time: 'Part. 77', stadium: 'Estadio Nueva York', city: 'NY/NJ', homeTeam: '1I', awayTeam: '3C/D/E/F' },
       { id: 78, date: 'Martes 30 de junio', time: 'Part. 78', stadium: 'Estadio Dallas', city: 'Dallas', homeTeam: '2E', awayTeam: '2I' },
       { id: 79, date: 'Martes 30 de junio', time: 'Part. 79', stadium: 'Estadio Ciudad de México', city: 'C. de México', homeTeam: '1A', awayTeam: '3E/F/G/H' },
-      { id: 80, date: 'Miércoles 1 de julio', time: 'Part. 80', stadium: 'Estadio San Francisco', city: 'San Francisco', homeTeam: '1L', awayTeam: '3I/J/K/L' },
+      { id: 80, date: 'Miércoles 1 de julio', time: 'Part. 80', stadium: 'Estadio San Francisco', city: 'San Francisco', homeTeam: '1L', awayTeam: '3I/J/K/L' }
+    ]
+  },
+  {
+    name: 'DIECISEISAVOS - PARTE 2',
+    matches: [
       { id: 81, date: 'Miércoles 1 de julio', time: 'Part. 81', stadium: 'Estadio Seattle', city: 'Seattle', homeTeam: '1D', awayTeam: '3G/H/I/J' },
       { id: 82, date: 'Miércoles 1 de julio', time: 'Part. 82', stadium: 'Estadio Toronto', city: 'Toronto', homeTeam: '1G', awayTeam: '3K/L/A/B' },
       { id: 83, date: 'Jueves 2 de julio', time: 'Part. 83', stadium: 'Estadio Vancouver', city: 'Vancouver', homeTeam: '2K', awayTeam: '2L' },

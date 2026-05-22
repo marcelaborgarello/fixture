@@ -24,7 +24,7 @@ const formatShortDate = (dateStr: string): string => {
 
 export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type }) => {
   const isCompactPhase = type === 'dieciseisavos' || type === 'octavos';
-  const gridClass = type === 'dieciseisavos' ? 'grid grid-cols-2 gap-x-2 gap-y-1' : 'grid grid-cols-1 gap-1';
+  const gridClass = 'grid grid-cols-1 gap-1';
 
   const effectiveTitleFont = config.applyCoverTypographyToAllCards
     ? (config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit' ? config.coverTitleFontFamily : config.titleFontFamily)
@@ -71,13 +71,13 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
               : (match.awayTeam as any).code;
 
             return (
-              <div key={match.id} className={`flex flex-col mb-0.5 w-full ${type === 'dieciseisavos' ? 'px-0' : 'px-[6px]'}`}>
+              <div key={match.id} className={`flex flex-col mb-0.5 w-full px-[6px]`}>
                 {/* Meta details */}
                 <div
                   style={{
                     fontFamily: effectiveBodyFont || 'inherit',
                     color: effectiveBodyColor || '#ffffff',
-                    fontSize: type === 'dieciseisavos' ? '3.5px' : `${matchMetaFontSize}px`,
+                    fontSize: `${matchMetaFontSize}px`,
                     lineHeight: 1.1,
                   }}
                   className="flex justify-between items-center opacity-70 tracking-widest px-0.5"
@@ -89,11 +89,11 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                 {/* Match traditional print row */}
                 <div className={`flex items-center gap-[2px] w-full mt-[1px]`}>
                   {/* Left Code */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[14px]' : 'w-[28px]'} flex-shrink-0 text-center flex items-center justify-center`}>
+                  <div className={`w-[28px] flex-shrink-0 text-center flex items-center justify-center`}>
                     <span 
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
-                        fontSize: type === 'dieciseisavos' ? '4px' : (homePlaceholder.length > 5 ? '3.5px' : '5px')
+                        fontSize: homePlaceholder.length > 5 ? '3.5px' : '5px'
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
                     >
@@ -102,23 +102,23 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   </div>
                   
                   {/* Home Team Input */}
-                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[8px]' : 'h-[14px]'} bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
+                  <div className={`flex-1 h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
                   
                   {/* Home Goal Input */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[8px] h-[8px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
+                  <div className={`w-[14px] h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
                   
                   {/* Away Goal Input */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[8px] h-[8px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
+                  <div className={`w-[14px] h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10 shrink-0`} />
                   
                   {/* Away Team Input */}
-                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[8px]' : 'h-[14px]'} bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
+                  <div className={`flex-1 h-[14px] bg-white/90 rounded-[1px] shadow-inner border border-black/10`} />
                   
                   {/* Right Code */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[14px]' : 'w-[28px]'} flex-shrink-0 text-center flex items-center justify-center`}>
+                  <div className={`w-[28px] flex-shrink-0 text-center flex items-center justify-center`}>
                     <span 
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
-                        fontSize: type === 'dieciseisavos' ? '4px' : (awayPlaceholder.length > 5 ? '3.5px' : '5px')
+                        fontSize: awayPlaceholder.length > 5 ? '3.5px' : '5px'
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
                     >
