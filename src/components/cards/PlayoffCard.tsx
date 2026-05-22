@@ -90,13 +90,13 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                 {/* Match traditional print row */}
                 <div className="flex items-center gap-[2px] w-full mt-[1px]">
                   {/* Left Code */}
-                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
+                  <div className="w-[34px] flex-shrink-0 text-center flex items-center justify-center">
                     <span 
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
-                        fontSize: homePlaceholder.length > 5 ? '3.5px' : '5px'
+                        fontSize: homePlaceholder.length > 7 ? '2.7px' : (homePlaceholder.length > 5 ? '3.5px' : '5px')
                       }}
-                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full"
+                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full tracking-tighter"
                     >
                       {homePlaceholder}
                     </span>
@@ -115,13 +115,13 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   <div className="flex-1 h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20" />
                   
                   {/* Right Code */}
-                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
+                  <div className="w-[34px] flex-shrink-0 text-center flex items-center justify-center">
                     <span 
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
-                        fontSize: awayPlaceholder.length > 5 ? '3.5px' : '5px'
+                        fontSize: awayPlaceholder.length > 7 ? '2.7px' : (awayPlaceholder.length > 5 ? '3.5px' : '5px')
                       }}
-                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full"
+                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full tracking-tighter"
                     >
                       {awayPlaceholder}
                     </span>
