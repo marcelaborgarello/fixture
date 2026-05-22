@@ -131,6 +131,7 @@ export const App: React.FC = () => {
     const preloadLink = document.createElement('link');
     preloadLink.id = 'sport-fonts-preload';
     preloadLink.rel = 'stylesheet';
+    preloadLink.crossOrigin = 'anonymous';
     preloadLink.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Montserrat:wght@400;700;800;900&family=Poppins:wght@400;700;800&family=Inter:wght@400;700;800&family=Bebas+Neue&family=Anton&family=Russo+One&family=Barlow+Condensed:wght@400;700;800;900&family=Rajdhani:wght@400;600;700&family=Teko:wght@400;600;700&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;700;800&family=Saira+Condensed:wght@400;700;800&display=swap';
     if (!document.getElementById('sport-fonts-preload')) {
       document.head.appendChild(preloadLink);
@@ -156,6 +157,7 @@ export const App: React.FC = () => {
       link = document.createElement('link');
       link.id = linkId;
       link.rel = 'stylesheet';
+      link.crossOrigin = 'anonymous';
       document.head.appendChild(link);
     }
 
