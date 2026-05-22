@@ -72,11 +72,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Mundial 2026</span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-[9px] bg-[#1b8555] text-white font-bold py-0.5 px-1.5 rounded-full select-none md:inline-block hidden">
-            React v3
-          </span>
-        </div>
       </div>
 
       {/* Configuration Accordion */}

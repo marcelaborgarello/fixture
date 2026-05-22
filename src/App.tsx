@@ -392,9 +392,6 @@ export const App: React.FC = () => {
             <h2 className="text-white font-extrabold text-sm uppercase tracking-wider">
               Área de Trabajo y Previsualización
             </h2>
-            <span className="text-[10px] text-white/40 font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full uppercase">
-              Tarjetas Separadas
-            </span>
           </div>
         </header>
 
