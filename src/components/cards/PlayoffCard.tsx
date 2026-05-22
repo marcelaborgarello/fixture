@@ -62,7 +62,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
       </div>
 
       {/* Playoff Matches Area */}
-      <div className={`flex-1 flex flex-col justify-evenly w-full px-1 ${type === 'dieciseisavos' ? 'py-0' : 'py-0.5'}`}>
+      <div className={`flex-1 flex flex-col justify-evenly w-full px-1 py-0.5`}>
         <div className={`${gridClass} w-full`}>
           {phase.matches.map((match) => {
             const homePlaceholder = typeof match.homeTeam === 'string'
@@ -73,29 +73,29 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
               : (match.awayTeam as any).code;
 
             return (
-              <div key={match.id} className={`flex flex-col w-full px-[6px] ${type === 'dieciseisavos' ? 'mb-0' : 'mb-0.5'}`}>
+              <div key={match.id} className={`flex flex-col w-full px-[6px] ${type === 'dieciseisavos' ? 'mb-[0.5px]' : 'mb-0.5'}`}>
                 {/* Meta details (Nivel Dios divider style) */}
                 <div
                   style={{
                     fontFamily: effectiveBodyFont || 'inherit',
                     color: effectiveBodyColor || '#ffffff',
-                    fontSize: type === 'dieciseisavos' ? '2.5px' : `${matchMetaFontSize * 0.9}px`,
+                    fontSize: type === 'dieciseisavos' ? '3px' : `${matchMetaFontSize * 0.9}px`,
                     lineHeight: 1,
                   }}
-                  className={`flex justify-center items-center opacity-80 tracking-widest px-1 bg-white/10 rounded-full w-max mx-auto border border-white/5 ${type === 'dieciseisavos' ? 'py-[0.5px] mb-0' : 'py-[1.5px] mb-[1.5px]'}`}
+                  className={`flex justify-center items-center opacity-80 tracking-widest px-1 bg-white/10 rounded-full w-max mx-auto border border-white/5 ${type === 'dieciseisavos' ? 'py-[0.5px] mb-[0.5px]' : 'py-[1.5px] mb-[1.5px]'}`}
                 >
                   <span className="font-bold uppercase truncate">{match.time} • {formatShortDate(match.date)}</span>
                 </div>
                 
                 {/* Match traditional print row */}
-                <div className={`flex items-center gap-[2px] w-full ${type === 'dieciseisavos' ? 'mt-0' : 'mt-[1px]'}`}>
+                <div className={`flex items-center gap-[2px] w-full ${type === 'dieciseisavos' ? 'mt-[0.5px]' : 'mt-[1px]'}`}>
                   {/* Left Code */}
                   <div className={`w-[28px] flex-shrink-0 text-center flex items-center justify-center`}>
                     <span 
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: type === 'dieciseisavos' 
-                          ? (homePlaceholder.length > 5 ? '2.5px' : '3.3px')
+                          ? (homePlaceholder.length > 5 ? '3px' : '4px')
                           : (homePlaceholder.length > 5 ? '3.5px' : '5px')
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full"
@@ -105,16 +105,16 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                   </div>
                   
                   {/* Home Team Input */}
-                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[6px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
+                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[10px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
                   
                   {/* Home Goal Input */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[6px] h-[6px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
+                  <div className={`${type === 'dieciseisavos' ? 'w-[10px] h-[10px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
                   
                   {/* Away Goal Input */}
-                  <div className={`${type === 'dieciseisavos' ? 'w-[6px] h-[6px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
+                  <div className={`${type === 'dieciseisavos' ? 'w-[10px] h-[10px]' : 'w-[14px] h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0`} />
                   
                   {/* Away Team Input */}
-                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[6px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
+                  <div className={`flex-1 ${type === 'dieciseisavos' ? 'h-[10px]' : 'h-[14px]'} bg-white/90 rounded-[1.5px] shadow-inner border border-black/20`} />
                   
                   {/* Right Code */}
                   <div className={`w-[28px] flex-shrink-0 text-center flex items-center justify-center`}>
@@ -122,7 +122,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                       style={{ 
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: type === 'dieciseisavos'
-                          ? (awayPlaceholder.length > 5 ? '2.5px' : '3.3px')
+                          ? (awayPlaceholder.length > 5 ? '3px' : '4px')
                           : (awayPlaceholder.length > 5 ? '3.5px' : '5px')
                       }}
                       className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-visible text-ellipsis leading-[1.1] block w-full"
