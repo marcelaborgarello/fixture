@@ -32,10 +32,20 @@ export const CardInner: React.FC<CardInnerProps> = ({
 
   let hasCustomBgImage = false;
 
-  if (isCoverOrBack && (config.coverBgColor || config.coverBgImageUrl)) {
-    if (config.coverBgColor) {
-      bgStyle.backgroundColor = config.coverBgColor;
+  if (isCoverOrBack && config.coverBgColor && config.coverBgColor !== 'GRADIENT') {
+    // Solid color override for cover/back
+    bgStyle.backgroundColor = config.coverBgColor;
+    if (config.coverBgImageUrl) {
+      hasCustomBgImage = true;
+      bgImageLayerStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
+      bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
+      bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
+      bgImageLayerStyle.backgroundRepeat = 'no-repeat';
+      bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
     }
+  } else if (isCoverOrBack && config.coverBgColor === 'GRADIENT') {
+    // Gradient override for cover: use the general gradient colors
+    bgStyle.background = config.backgroundGradient;
     if (config.coverBgImageUrl) {
       hasCustomBgImage = true;
       bgImageLayerStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
@@ -45,6 +55,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
       bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
     }
   } else {
+    // General background (same as all cards)
     if (config.backgroundType === 'gradient') {
       bgStyle.background = config.backgroundGradient;
     } else if (config.backgroundType === 'solid') {
@@ -52,6 +63,14 @@ export const CardInner: React.FC<CardInnerProps> = ({
     } else if (config.backgroundType === 'image' && config.backgroundImageUrl) {
       hasCustomBgImage = true;
       bgImageLayerStyle.backgroundImage = `url(${config.backgroundImageUrl})`;
+      bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
+      bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
+      bgImageLayerStyle.backgroundRepeat = 'no-repeat';
+      bgImageLayerStyle.opacity = (config.bgImageOpacity ?? 100) / 100;
+    }
+    if (isCoverOrBack && config.coverBgImageUrl) {
+      hasCustomBgImage = true;
+      bgImageLayerStyle.backgroundImage = `url(${config.coverBgImageUrl})`;
       bgImageLayerStyle.backgroundSize = `${config.bgImageScale ?? 100}%`;
       bgImageLayerStyle.backgroundPosition = `${config.bgImageX ?? 50}% ${config.bgImageY ?? 50}%`;
       bgImageLayerStyle.backgroundRepeat = 'no-repeat';

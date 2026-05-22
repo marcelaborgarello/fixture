@@ -77,7 +77,7 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
       </div>
 
       {/* Matches List (Distributed with Flexbox) */}
-      <div className="flex-grow flex flex-col justify-between my-1 gap-y-0.5 w-full overflow-hidden">
+      <div className="flex-grow flex flex-col justify-between my-1 gap-y-0.5 w-full">
         {group.matches.map((match) => {
           const isHomeStr = typeof match.homeTeam === 'string';
           const isAwayStr = typeof match.awayTeam === 'string';
@@ -179,19 +179,23 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
       </div>
 
       {/* Footer Branding Placeholder */}
-      {config.showBrandingCards !== false && (
-        <BrandingPlaceholder
-          brandSignature={config.brandSignature}
-          brandLogoUrl={config.brandLogoUrl}
-          brandLogoScale={config.brandLogoScale}
-          brandInstagram={config.brandInstagram}
-          brandPhone={config.brandPhone}
-          brandAddress={config.brandAddress}
-          brandFontFamily={config.brandFontFamily}
-          brandFontSize={config.brandFontSize}
-          brandTextColor={config.brandTextColor}
-        />
-      )}
+      <div className="shrink-0 mt-auto flex items-end justify-center pt-1" style={{ maxHeight: '40px' }}>
+        {config.showBrandingCards !== false && (
+          <div className="scale-75 origin-bottom">
+            <BrandingPlaceholder
+              brandSignature={config.brandSignature}
+              brandLogoUrl={config.brandLogoUrl}
+              brandLogoScale={config.brandLogoScale}
+              brandInstagram={config.brandInstagram}
+              brandPhone={config.brandPhone}
+              brandAddress={config.brandAddress}
+              brandFontFamily={config.brandFontFamily}
+              brandFontSize={config.brandFontSize}
+              brandTextColor={config.brandTextColor}
+            />
+          </div>
+        )}
+      </div>
     </CardInner>
   );
 };

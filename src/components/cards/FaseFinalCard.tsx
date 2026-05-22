@@ -67,37 +67,43 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
         
         {/* Match traditional print row */}
         <div className="flex items-center gap-[3px] w-full mt-[2px]">
-          {/* Left Code */}
-          <div className="w-[28px] flex-shrink-0 text-center">
-            <span 
-              style={{ color: config.bodyTextColor || '#ffffff' }}
-              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
-            >
-              {homePlaceholder}
-            </span>
-          </div>
-          
-          {/* Home Team Input */}
-          <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
-          
-          {/* Home Goal Input */}
-          <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
-          
-          {/* Away Goal Input */}
-          <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
-          
-          {/* Away Team Input */}
-          <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
-          
-          {/* Right Code */}
-          <div className="w-[28px] flex-shrink-0 text-center">
-            <span 
-              style={{ color: config.bodyTextColor || '#ffffff' }}
-              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-normal break-all leading-[1.1] block"
-            >
-              {awayPlaceholder}
-            </span>
-          </div>
+                  {/* Left Code */}
+                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
+                    <span 
+                      style={{ 
+                        color: config.bodyTextColor || '#ffffff',
+                        fontSize: homePlaceholder.length > 5 ? '3.5px' : '5px'
+                      }}
+                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
+                    >
+                      {homePlaceholder}
+                    </span>
+                  </div>
+                  
+                  {/* Home Team Input */}
+                  <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+                  
+                  {/* Home Goal Input */}
+                  <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+                  
+                  {/* Away Goal Input */}
+                  <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
+                  
+                  {/* Away Team Input */}
+                  <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
+                  
+                  {/* Right Code */}
+                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
+                    <span 
+                      style={{ 
+                        color: config.bodyTextColor || '#ffffff',
+                        fontSize: awayPlaceholder.length > 5 ? '3.5px' : '5px'
+                      }}
+                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
+                    >
+                      {awayPlaceholder}
+                    </span>
+                  </div>
         </div>
       </div>
     );

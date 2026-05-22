@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { jsPDF } from 'jspdf';
+
 import { DesignConfig } from './types';
 import { GROUPS, PLAYOFFS } from './data/matchesData';
 import { Sidebar } from './components/Sidebar';
 import { FixtureCard } from './components/cards/FixtureCard';
-import { FlyerFrente } from './components/flyer/FlyerFrente';
-import { FlyerDorso } from './components/flyer/FlyerDorso';
-import { PosterA4 } from './components/cards/PosterA4';
-import { FoldingA4 } from './components/cards/FoldingA4';
 import {
   exportToPng,
   exportToPdf,
   exportAllToZip,
   exportPliegoA4Pdf,
-  exportPliegoA5Pdf,
-  exportFlyerPliegoPdf,
-  captureDomElementToJpeg
+  exportPliegoA5Pdf
 } from './utils/exporter';
 
 const initialConfig: DesignConfig = {
@@ -63,7 +57,7 @@ const initialConfig: DesignConfig = {
   // Cover details
   showCoverTrophy: true,
   coverIllustrationUrl: '',
-  coverBgColor: '#0d5c3a',
+  coverBgColor: '',
   coverBgImageUrl: '',
   coverIllustrationScale: 100,
   coverIllustrationY: 0,
@@ -100,10 +94,10 @@ const initialConfig: DesignConfig = {
 };
 
 
-const LOCAL_STORAGE_KEY = 'fixture_configs_v4';
+const LOCAL_STORAGE_KEY = 'fixture_config_v5';
 
 export const App: React.FC = () => {
-  const [configs, setConfigs] = useState<Record<string, DesignConfig>>(() => {
+  const [config, setConfig] = useState<DesignConfig>(() => {
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
@@ -112,21 +106,11 @@ export const App: React.FC = () => {
     } catch (e) {
       console.error('Error loading config from localStorage:', e);
     }
-    return {
-      cards: { ...initialConfig, formatMode: 'cards' },
-      flyer: { ...initialConfig, formatMode: 'flyer' },
-      poster: { ...initialConfig, formatMode: 'poster' },
-    };
+    return { ...initialConfig, formatMode: 'cards' };
   });
-  const [currentMode, setCurrentMode] = useState<'cards' | 'flyer' | 'poster'>('cards');
-  const config = configs[currentMode] || initialConfig;
 
   const handleConfigChange = (newConfig: DesignConfig) => {
-    if (newConfig.formatMode !== currentMode) {
-      setCurrentMode(newConfig.formatMode as 'cards' | 'flyer' | 'poster');
-    } else {
-      setConfigs(prev => ({ ...prev, [currentMode]: newConfig }));
-    }
+    setConfig(newConfig);
   };
   const [zipOption, setZipOption] = useState<'all' | 'png' | 'pdf'>('all');
   const [loadingMsg, setLoadingMsg] = useState<string>('');
@@ -135,23 +119,33 @@ export const App: React.FC = () => {
 
   // Auto-save configuration to localStorage on changes
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(configs));
-  }, [configs]);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
+  }, [config]);
 
   const handleResetConfig = () => {
-    setConfigs(prev => ({
-      ...prev,
-      [currentMode]: { ...initialConfig, formatMode: currentMode }
-    }));
+    setConfig({ ...initialConfig, formatMode: 'cards' });
   };
 
-  // Dynamic Google Font Loader
+  // Preload all available sport fonts on mount so they're ready when user selects them
+  useEffect(() => {
+    const preloadLink = document.createElement('link');
+    preloadLink.id = 'sport-fonts-preload';
+    preloadLink.rel = 'stylesheet';
+    preloadLink.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Montserrat:wght@400;700;800;900&family=Poppins:wght@400;700;800&family=Inter:wght@400;700;800&family=Bebas+Neue&family=Anton&family=Russo+One&family=Barlow+Condensed:wght@400;700;800;900&family=Rajdhani:wght@400;600;700&family=Teko:wght@400;600;700&family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;700;800&family=Saira+Condensed:wght@400;700;800&display=swap';
+    if (!document.getElementById('sport-fonts-preload')) {
+      document.head.appendChild(preloadLink);
+    }
+  }, []);
+
+  // Dynamic Google Font Loader (for per-config font selections)
   useEffect(() => {
     const fontsToLoad = new Set<string>();
     if (config.fontFamily) fontsToLoad.add(config.fontFamily);
     if (config.titleFontFamily && config.titleFontFamily !== 'inherit') fontsToLoad.add(config.titleFontFamily);
     if (config.bodyFontFamily && config.bodyFontFamily !== 'inherit') fontsToLoad.add(config.bodyFontFamily);
     if (config.coverTitleFontFamily && config.coverTitleFontFamily !== 'inherit') fontsToLoad.add(config.coverTitleFontFamily);
+    if (config.brandFontFamily && config.brandFontFamily !== 'inherit') fontsToLoad.add(config.brandFontFamily);
+    if (config.backTitleFontFamily && config.backTitleFontFamily !== 'inherit') fontsToLoad.add(config.backTitleFontFamily);
 
     const fontNames = Array.from(fontsToLoad).map(f => f.split(',')[0].replace(/'/g, '').trim());
     if (fontNames.length === 0) return;
@@ -170,7 +164,7 @@ export const App: React.FC = () => {
       .map(name => `family=${name.replace(/ /g, '+')}:wght@400;700;800;900`)
       .join('&');
     link.href = `https://fonts.googleapis.com/css2?${familiesParam}&display=swap`;
-  }, [config.fontFamily, config.titleFontFamily, config.bodyFontFamily, config.coverTitleFontFamily]);
+  }, [config.fontFamily, config.titleFontFamily, config.bodyFontFamily, config.coverTitleFontFamily, config.brandFontFamily, config.backTitleFontFamily]);
 
 
 
@@ -190,11 +184,10 @@ export const App: React.FC = () => {
     });
 
     list.push(
-      { id: 'dieciseisavos_1', name: 'Dieciseisavos - Parte 1', element: <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1' }} config={config} /> },
-      { id: 'dieciseisavos_2', name: 'Dieciseisavos - Parte 2', element: <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2' }} config={config} /> },
-      { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} /> },
-      { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} /> },
-      { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[4]} config={config} /> },
+      { id: 'dieciseisavos', name: 'Dieciseisavos', element: <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS' }} config={config} /> },
+      { id: 'octavos', name: 'Octavos', element: <FixtureCard type="octavos" data={PLAYOFFS[1]} config={config} /> },
+      { id: 'cuartos', name: 'Cuartos', element: <FixtureCard type="cuartos" data={PLAYOFFS[2]} config={config} /> },
+      { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[3]} config={config} /> },
       { id: 'dorso', name: 'Reverso Tarjeta', element: <FixtureCard type="back" config={config} /> }
     );
 
@@ -314,28 +307,6 @@ export const App: React.FC = () => {
         pdf.save(`pliego_A5_fixture_${fazText}.pdf`);
       }
 
-      else if (mode === 'flyerPliego') {
-        setLoadingMsg('Generando pliego flyer doble faz...');
-
-        const pdf = await exportFlyerPliegoPdf(
-          'export-flyer-frente',
-          'export-flyer-dorso-mirrored',
-          (curr, tot, msg) => {
-            setProgress({ current: curr, total: tot });
-            setLoadingMsg(msg);
-          }
-        );
-        pdf.save('flyer_A4_horizontal_pliego.pdf');
-      }
-
-      else if (mode === 'pdf' && config.formatMode === 'poster') {
-        setLoadingMsg('Generando PDF del Póster A4...');
-        const jpegData = await captureDomElementToJpeg('export-poster', 210, 297);
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        pdf.addImage(jpegData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
-        pdf.save('poster_A4_fixture_2026.pdf');
-      }
-
     } catch (err) {
       console.error(err);
       alert('Hubo un problema al exportar. Revisa la consola.');
@@ -429,11 +400,11 @@ export const App: React.FC = () => {
               Área de Trabajo y Previsualización
             </h2>
             <span className="text-[10px] text-white/40 font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full uppercase">
-              {config.formatMode === 'cards' ? 'Tarjetas Separadas' : config.formatMode === 'flyer' ? 'Folleto Flyer Media A4' : 'Póster A4 Vertical'}
+              Tarjetas Separadas
             </span>
           </div>
           <span className="text-[10px] text-[#ffd700] font-black uppercase tracking-widest bg-[#ffd700]/10 border border-[#ffd700]/20 px-2.5 py-0.5 rounded-full">
-            Medidas: {config.formatMode === 'cards' ? `${config.cardWidthMm}x${config.cardHeightMm}mm` : config.formatMode === 'flyer' ? '297x105mm' : 'A4 210x297mm'}
+            Medidas: {config.cardWidthMm}x{config.cardHeightMm}mm
           </span>
         </header>
 
@@ -441,175 +412,40 @@ export const App: React.FC = () => {
         <div className="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar relative">
 
           {/* FORMAT MODE: CARDS GRID (18 CARDS) */}
-          {config.formatMode === 'cards' && (
-            <div className="flex flex-wrap justify-center gap-8 p-4">
-              {getCardsList().map((card) => (
-                <div
-                  key={card.id}
-                  id={`preview-card-${card.id}`}
-                  className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl shadow-xl hover:border-[#15462E] transition-all group w-fit shrink-0"
-                >
-                  <div className="flex justify-between items-center w-full mb-2 px-1 text-[10px] font-extrabold text-white/50 uppercase tracking-wider">
-                    <span>{card.name}</span>
-                  </div>
-
-                  {/* Card element wrapper with scale preview style */}
-                  <div className="overflow-hidden border border-white/5 rounded shadow-lg bg-black/20 relative">
-                    {card.element}
-                  </div>
-
-                  {/* Single actions bar */}
-                  <div className="flex gap-1.5 w-full mt-3">
-                    <button
-                      onClick={() => handleDownloadSingle(card.id, card.name, 'png')}
-                      className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[9px] font-bold py-1 px-1.5 rounded flex items-center justify-center gap-1 transition-all"
-                    >
-                      PNG
-                    </button>
-                    <button
-                      onClick={() => handleDownloadSingle(card.id, card.name, 'pdf')}
-                      className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[9px] font-bold py-1 px-1.5 rounded flex items-center justify-center gap-1 transition-all"
-                    >
-                      PDF
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* FORMAT MODE: FLYER PREVIEW */}
-          {config.formatMode === 'flyer' && (
-            <div className="flex flex-col items-center space-y-6 max-w-4xl mx-auto">
-
-              {/* Flyer Frente */}
+          <div className="flex flex-wrap justify-center gap-8 p-4">
+            {getCardsList().map((card) => (
               <div
-                id="preview-card-flyer-frente"
-                className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl w-full"
+                key={card.id}
+                id={`preview-card-${card.id}`}
+                className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl shadow-xl hover:border-[#15462E] transition-all group w-fit shrink-0"
               >
-                <div className="flex justify-between items-center w-full mb-3 text-[10px] font-extrabold text-white/50 uppercase tracking-widest">
-                  <span>Folleto Frente (4 columnas x 3 grupos)</span>
-                  <span className="text-[#ffd700]">297x105mm</span>
+                <div className="flex justify-between items-center w-full mb-2 px-1 text-[10px] font-extrabold text-white/50 uppercase tracking-wider">
+                  <span>{card.name}</span>
                 </div>
-                <div className="overflow-x-auto w-full flex justify-center pb-2">
-                  <div className="border border-white/10 rounded shadow-2xl shrink-0">
-                    <FlyerFrente groups={GROUPS} config={config} />
-                  </div>
+
+                {/* Card element wrapper with scale preview style */}
+                <div className="overflow-hidden border border-white/5 rounded shadow-lg bg-black/20 relative">
+                  {card.element}
                 </div>
-                <div className="flex gap-2 w-full mt-3 max-w-xs">
+
+                {/* Single actions bar */}
+                <div className="flex gap-1.5 w-full mt-3">
                   <button
-                    onClick={() => handleDownloadSingle('flyer-frente', 'Flyer Frente', 'png')}
-                    className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[10px] font-bold py-1.5 px-3 rounded transition-all"
+                    onClick={() => handleDownloadSingle(card.id, card.name, 'png')}
+                    className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[9px] font-bold py-1 px-1.5 rounded flex items-center justify-center gap-1 transition-all"
                   >
-                    Descargar PNG
+                    PNG
                   </button>
                   <button
-                    onClick={() => handleDownloadSingle('flyer-frente', 'Flyer Frente', 'pdf')}
-                    className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[10px] font-bold py-1.5 px-3 rounded transition-all"
+                    onClick={() => handleDownloadSingle(card.id, card.name, 'pdf')}
+                    className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[9px] font-bold py-1 px-1.5 rounded flex items-center justify-center gap-1 transition-all"
                   >
-                    Descargar PDF
+                    PDF
                   </button>
                 </div>
               </div>
-
-              {/* Flyer Dorso */}
-              <div
-                id="preview-card-flyer-dorso"
-                className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl w-full"
-              >
-                <div className="flex justify-between items-center w-full mb-3 text-[10px] font-extrabold text-white/50 uppercase tracking-widest">
-                  <span>Folleto Dorso (Árbol completo de Fase Final)</span>
-                  <span className="text-[#ffd700]">297x105mm</span>
-                </div>
-                <div className="overflow-x-auto w-full flex justify-center pb-2">
-                  <div className="border border-white/10 rounded shadow-2xl shrink-0">
-                    <FlyerDorso phases={PLAYOFFS} config={config} isMirrored={false} />
-                  </div>
-                </div>
-                <div className="flex gap-2 w-full mt-3 max-w-xs">
-                  <button
-                    onClick={() => handleDownloadSingle('flyer-dorso', 'Flyer Dorso', 'png')}
-                    className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[10px] font-bold py-1.5 px-3 rounded transition-all"
-                  >
-                    Descargar PNG
-                  </button>
-                  <button
-                    onClick={() => handleDownloadSingle('flyer-dorso', 'Flyer Dorso', 'pdf')}
-                    className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[10px] font-bold py-1.5 px-3 rounded transition-all"
-                  >
-                    Descargar PDF
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          {/* FORMAT MODE: POSTER PREVIEW */}
-          {config.formatMode === 'poster' && (
-            <div className="flex flex-col items-center max-w-lg mx-auto">
-              <div
-                id="preview-card-poster"
-                className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl w-full"
-              >
-                <div className="flex justify-between items-center w-full mb-3 text-[10px] font-extrabold text-white/50 uppercase tracking-widest">
-                  <span>Póster Completo A4</span>
-                  <span className="text-[#ffd700]">210x297mm</span>
-                </div>
-                <div className="border border-white/10 rounded shadow-2xl overflow-hidden">
-                  <PosterA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
-                </div>
-                <div className="flex gap-2 w-full mt-4 max-w-xs">
-                  <button
-                    onClick={() => handleDownloadSingle('poster', 'Poster A4', 'png')}
-                    className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[10px] font-bold py-2 px-3 rounded transition-all"
-                  >
-                    Descargar PNG
-                  </button>
-                  <button
-                    onClick={() => handleExport('pdf')}
-                    className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[10px] font-bold py-2 px-3 rounded transition-all"
-                  >
-                    Descargar PDF
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* FORMAT MODE: FOLDING A4 PREVIEW */}
-          {config.formatMode === 'folding' && (
-            <div className="flex flex-col items-center max-w-4xl mx-auto">
-              <div
-                id="preview-card-folding"
-                className="flex flex-col items-center bg-black/25 border border-[#15462E]/60 p-4 rounded-xl w-full"
-              >
-                <div className="flex justify-between items-center w-full mb-3 text-[10px] font-extrabold text-white/50 uppercase tracking-widest">
-                  <span>Fixture Plegable A4 (Frente Simple Faz para doblar)</span>
-                  <span className="text-[#ffd700]">297x210mm</span>
-                </div>
-                <div className="overflow-x-auto w-full pb-2">
-                  <div className="w-fit mx-auto border border-white/10 rounded shadow-2xl shrink-0">
-                    <FoldingA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
-                  </div>
-                </div>
-                <div className="flex gap-2 w-full mt-3 max-w-xs">
-                  <button
-                    onClick={() => handleExport('png')}
-                    className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-[10px] font-bold py-1.5 px-3 rounded transition-all"
-                  >
-                    Descargar PNG
-                  </button>
-                  <button
-                    onClick={() => handleExport('pdf')}
-                    className="flex-1 bg-[#1b8555] hover:bg-[#239f67] text-white text-[10px] font-bold py-1.5 px-3 rounded transition-all"
-                  >
-                    📄 Descargar PDF
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+            ))}
+          </div>
 
         </div>
 
@@ -673,46 +509,21 @@ export const App: React.FC = () => {
             <FixtureCard type="group" data={g} config={config} />
           </div>
         ))}
-        <div id="export-card-dieciseisavos_1">
-          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS - PARTE 1' }} config={config} />
-        </div>
-        <div id="export-card-dieciseisavos_2">
-          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[1], name: 'DIECISEISAVOS - PARTE 2' }} config={config} />
+        <div id="export-card-dieciseisavos">
+          <FixtureCard type="dieciseisavos" data={{ ...PLAYOFFS[0], name: 'DIECISEISAVOS' }} config={config} />
         </div>
         <div id="export-card-octavos">
-          <FixtureCard type="octavos" data={PLAYOFFS[2]} config={config} />
+          <FixtureCard type="octavos" data={PLAYOFFS[1]} config={config} />
         </div>
         <div id="export-card-cuartos">
-          <FixtureCard type="cuartos" data={PLAYOFFS[3]} config={config} />
+          <FixtureCard type="cuartos" data={PLAYOFFS[2]} config={config} />
         </div>
         <div id="export-card-final">
-          <FixtureCard type="final" data={PLAYOFFS[4]} config={config} />
+          <FixtureCard type="final" data={PLAYOFFS[3]} config={config} />
         </div>
         <div id="export-card-dorso">
           <FixtureCard type="back" config={config} />
         </div>
-
-        {/* Renderizado de Flyers */}
-        <div id="export-flyer-frente">
-          <FlyerFrente groups={GROUPS} config={config} />
-        </div>
-        <div id="export-flyer-dorso">
-          <FlyerDorso phases={PLAYOFFS} config={config} isMirrored={false} />
-        </div>
-        <div id="export-flyer-dorso-mirrored">
-          <FlyerDorso phases={PLAYOFFS} config={config} isMirrored={true} />
-        </div>
-
-        {/* Renderizado de Poster */}
-        <div id="export-poster">
-          <PosterA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
-        </div>
-
-        {/* Renderizado de Folding A4 */}
-        <div id="export-folding-a4">
-          <FoldingA4 groups={GROUPS} phases={PLAYOFFS} config={config} />
-        </div>
-        
       </div>
     </div>
   );

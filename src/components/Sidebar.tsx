@@ -102,28 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
 
           {activeTab === 'format' && (
-            <div className="p-3 space-y-3 border-t border-[#15462E]/40">
-              {/* Output Mode */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Modo de Salida</label>
-                <div className="grid grid-cols-3 gap-1.5 mt-2">
-                  {(['cards', 'flyer', 'poster'] as const).map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => onChange({ ...config, formatMode: m })}
-                      className={`text-[9px] py-1.5 px-1 font-bold rounded uppercase tracking-wider transition-all border ${config.formatMode === m
-                        ? 'bg-[#1b8555] text-white border-transparent'
-                        : 'bg-black/20 text-white/40 border-white/10 hover:bg-white/5 hover:text-white/80'
-                        }`}
-                    >
-                      {m === 'cards' ? 'Tarjetas' : m === 'flyer' ? 'Flyer' : 'Póster'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {config.formatMode === 'cards' && (
-                <>
+              <div className="p-3 space-y-3 border-t border-[#15462E]/40">
                   {/* Short FIFA names toggle */}
                   <div className="flex items-center justify-between pt-1">
                     <div className="flex flex-col">
@@ -151,16 +130,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
                     />
                   </div>
-                </>
-              )}
 
               {/* Show cut lines - Only for Cards */}
-              {config.formatMode === 'cards' && (
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-white/80">Líneas de corte impresas</span>
-                    <span className="text-[9px] text-white/40">Guías punteadas finas</span>
-                  </div>
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex flex-col">
+                  <span className="font-semibold text-white/80">Líneas de corte impresas</span>
+                  <span className="text-[9px] text-white/40">Guías punteadas finas</span>
+                </div>
                   <input
                     type="checkbox"
                     checked={config.showCutLines ?? false}
@@ -168,37 +144,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
                   />
                 </div>
-              )}
 
               {/* Binding Margin - Only for Cards */}
-              {config.formatMode === 'cards' && (
-                <div className="space-y-1 pt-1 border-t border-white/5">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
-                  <div className="grid grid-cols-3 gap-1">
-                    {(['none', 'top', 'left'] as const).map((m) => (
-                      <button
-                        key={m}
-                        onClick={() => updateConfig('bindingMargin', m)}
-                        className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
-                          ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
-                          : 'border-white/10 text-white hover:bg-white/5'
-                          }`}
-                      >
-                        {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
-                      </button>
-                    ))}
-                  </div>
+              <div className="space-y-1 pt-1 border-t border-white/5">
+                <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
+                <div className="grid grid-cols-3 gap-1">
+                  {(['none', 'top', 'left'] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => updateConfig('bindingMargin', m)}
+                      className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
+                        ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
+                        : 'border-white/10 text-white hover:bg-white/5'
+                        }`}
+                    >
+                      {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
 
-        {/* SECTION 2: COVER DESIGN - Oculto para poster porque no tiene portada */}
-        {config.formatMode !== 'poster' && (
-          <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
-            <button
-            onClick={() => toggleTab('cover')}
+        {/* SECTION 2: COVER DESIGN */}
+        <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
+          <button
+          onClick={() => toggleTab('cover')}
             className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'cover' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
               }`}
           >
@@ -332,23 +304,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 />
               </div>
 
-              {/* Cover BG Override */}
-              <div className="space-y-1">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Portada (Color)</label>
-                <div className="flex gap-1.5">
-                  <input
-                    type="color"
-                    value={config.coverBgColor || '#0d5c3a'}
-                    onChange={(e) => updateConfig('coverBgColor', e.target.value)}
-                    className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
-                  />
-                  <input
-                    type="text"
-                    value={config.coverBgColor || '#0d5c3a'}
-                    onChange={(e) => updateConfig('coverBgColor', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none"
-                  />
+
+              {/* Cover BG Override — Sólido, Degradado o Imagen */}
+              <div className="space-y-2">
+                <label className="text-[10px] text-white/40 font-bold uppercase">Fondo de la Portada</label>
+                <div className="grid grid-cols-3 gap-1">
+                  {(['default', 'solid', 'gradient'] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => updateConfig('coverBgColor', t === 'default' ? '' : t === 'solid' ? (config.coverBgColor || config.primaryColor) : 'GRADIENT')}
+                      className={`py-1 px-0.5 rounded text-[9px] uppercase border transition-all ${
+                        (t === 'default' && !config.coverBgColor) || (t === 'solid' && config.coverBgColor && config.coverBgColor !== 'GRADIENT') || (t === 'gradient' && config.coverBgColor === 'GRADIENT')
+                          ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
+                          : 'border-white/10 hover:bg-white/5 text-white'
+                      }`}
+                    >
+                      {t === 'default' ? 'General' : t === 'solid' ? 'Sólido' : 'Degradado'}
+                    </button>
+                  ))}
                 </div>
+
+                {/* Solid color picker */}
+                {config.coverBgColor && config.coverBgColor !== 'GRADIENT' && (
+                  <div className="flex gap-1.5">
+                    <input
+                      type="color"
+                      value={config.coverBgColor || config.primaryColor}
+                      onChange={(e) => updateConfig('coverBgColor', e.target.value)}
+                      className="w-8 h-8 border-0 bg-transparent rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.coverBgColor}
+                      onChange={(e) => updateConfig('coverBgColor', e.target.value)}
+                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none"
+                    />
+                  </div>
+                )}
+
+                {/* Gradient: reuse primary/secondary */}
+                {config.coverBgColor === 'GRADIENT' && (
+                  <p className="text-[9px] text-white/50">Usa los colores Principal y Secundario de la sección Estilo y Paleta General.</p>
+                )}
               </div>
 
               {/* Cover BG image upload */}
@@ -490,11 +487,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
         </div>
-        )}
 
-        {/* SECTION 3: REVERSO / BACK CARD - Oculto para todo lo que no sea cards */}
-        {config.formatMode === 'cards' && (
-          <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
+        {/* SECTION 3: REVERSO / BACK CARD */}
+        <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
             <button
               onClick={() => toggleTab('back')}
               className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'back' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
@@ -598,8 +593,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             )}
           </div>
-        )}
-
         {/* SECTION 3: CORE DESIGN & COLOR SYSTEM */}
         <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
           <button
@@ -745,26 +738,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               )}
 
-              {/* Theme Colors */}
-              <div className="border-t border-white/5 pt-2">
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Acento (Oro/Detalles)</label>
-                  <div className="flex gap-1.5 w-1/2">
-                    <input
-                      type="color"
-                      value={config.accentColor}
-                      onChange={(e) => updateConfig('accentColor', e.target.value)}
-                      className="w-5 h-5 border-0 bg-transparent rounded cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={config.accentColor}
-                      onChange={(e) => updateConfig('accentColor', e.target.value)}
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
+
 
 
 
@@ -785,6 +759,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <option value="'Inter', sans-serif">Inter</option>
                       <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
                       <option value="'Anton', sans-serif">Anton</option>
+                      <option value="'Russo One', sans-serif">Russo One</option>
+                      <option value="'Barlow Condensed', sans-serif">Barlow Condensed</option>
+                      <option value="'Rajdhani', sans-serif">Rajdhani</option>
+                      <option value="'Teko', sans-serif">Teko</option>
+                      <option value="'Orbitron', sans-serif">Orbitron</option>
+                      <option value="'Exo 2', sans-serif">Exo 2</option>
+                      <option value="'Saira Condensed', sans-serif">Saira Condensed</option>
                       <option value="Arial, sans-serif">Arial</option>
                     </select>
                   </div>
@@ -802,6 +783,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <option value="'Inter', sans-serif">Inter</option>
                       <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
                       <option value="'Anton', sans-serif">Anton</option>
+                      <option value="'Russo One', sans-serif">Russo One</option>
+                      <option value="'Barlow Condensed', sans-serif">Barlow Condensed</option>
+                      <option value="'Rajdhani', sans-serif">Rajdhani</option>
+                      <option value="'Teko', sans-serif">Teko</option>
+                      <option value="'Orbitron', sans-serif">Orbitron</option>
+                      <option value="'Exo 2', sans-serif">Exo 2</option>
+                      <option value="'Saira Condensed', sans-serif">Saira Condensed</option>
                       <option value="Arial, sans-serif">Arial</option>
                     </select>
                   </div>
@@ -1081,6 +1069,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <option value="'Inter', sans-serif">Inter</option>
                       <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
                       <option value="'Anton', sans-serif">Anton</option>
+                      <option value="'Russo One', sans-serif">Russo One</option>
+                      <option value="'Barlow Condensed', sans-serif">Barlow Condensed</option>
+                      <option value="'Rajdhani', sans-serif">Rajdhani</option>
+                      <option value="'Teko', sans-serif">Teko</option>
+                      <option value="'Orbitron', sans-serif">Orbitron</option>
+                      <option value="'Exo 2', sans-serif">Exo 2</option>
+                      <option value="'Saira Condensed', sans-serif">Saira Condensed</option>
                       <option value="Arial, sans-serif">Arial</option>
                     </select>
                   </div>
@@ -1151,17 +1146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
 
-              {/* Cafecito Widget */}
-              <div className="space-y-1 border-t border-white/5 pt-2">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Link Cafecito ☕</label>
-                <input
-                  type="text"
-                  placeholder="https://cafecito.app/tu-usuario"
-                  value={config.cafecitoUrl}
-                  onChange={(e) => updateConfig('cafecitoUrl', e.target.value)}
-                  className="w-full bg-[#051810] border border-[#15462E] rounded px-2 py-1.5 focus:outline-none focus:border-[#ffd700]"
-                />
-              </div>
+
             </div>
           )}
         </div>
@@ -1172,87 +1157,60 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-t border-[#15462E] bg-black/40 space-y-2">
         <label className="text-[10px] font-bold text-white/50 uppercase tracking-wider block">Panel de Impresión y Descarga</label>
 
-        {/* Zip configurations (only relevant for cards mode) */}
-        {config.formatMode === 'cards' && (
-          <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
-            <span className="text-[9.5px] font-bold text-white/70">Descargar ZIP:</span>
-            <select
-              value={zipOption}
-              onChange={(e) => setZipOption(e.target.value as any)}
-              className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
-            >
-              <option value="all">PNG + PDF</option>
-              <option value="png">Solo PNGs</option>
-              <option value="pdf">Solo PDFs</option>
-            </select>
-          </div>
-        )}
+        {/* Zip configurations */}
+        <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
+          <span className="text-[9.5px] font-bold text-white/70">Descargar ZIP:</span>
+          <select
+            value={zipOption}
+            onChange={(e) => setZipOption(e.target.value as any)}
+            className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
+          >
+            <option value="all">PNG + PDF</option>
+            <option value="png">Solo PNGs</option>
+            <option value="pdf">Solo PDFs</option>
+          </select>
+        </div>
 
-        {/* Pliego Simple vs Doble Faz (only relevant for cards mode pliegos) */}
-        {config.formatMode === 'cards' && (
-          <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
-            <span className="text-[9.5px] font-bold text-white/70">Tipo de Pliego:</span>
-            <select
-              value={config.pliegoDoubleSided ? 'double' : 'simple'}
-              onChange={(e) => updateConfig('pliegoDoubleSided', e.target.value === 'double')}
-              className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
-            >
-              <option value="simple">Simple Faz (Solo Frentes)</option>
-              <option value="double">Doble Faz (Frente y Dorso)</option>
-            </select>
-          </div>
-        )}
+        {/* Pliego Simple vs Doble Faz */}
+        <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
+          <span className="text-[9.5px] font-bold text-white/70">Tipo de Pliego:</span>
+          <select
+            value={config.pliegoDoubleSided ? 'double' : 'simple'}
+            onChange={(e) => updateConfig('pliegoDoubleSided', e.target.value === 'double')}
+            className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
+          >
+            <option value="simple">Simple Faz (Solo Frentes)</option>
+            <option value="double">Doble Faz (Frente y Dorso)</option>
+          </select>
+        </div>
 
         {/* Master Export Buttons */}
         <div className="space-y-1.5">
           {/* Main download bundle button */}
-          {config.formatMode === 'cards' && (
-            <button
-              onClick={() => onExport('zip')}
-              className="w-full bg-[#ffd700] hover:bg-[#ffe55c] active:bg-[#e6c200] text-black font-extrabold py-2 px-3 rounded flex items-center justify-center gap-1.5 shadow-lg select-none transition-all uppercase tracking-wider text-xs"
-            >
-              📦 Descargar Paquete ZIP (300+ DPI)
-            </button>
-          )}
+          <button
+            onClick={() => onExport('zip')}
+            className="w-full bg-[#ffd700] hover:bg-[#ffe55c] active:bg-[#e6c200] text-black font-extrabold py-2 px-3 rounded flex items-center justify-center gap-1.5 shadow-lg select-none transition-all uppercase tracking-wider text-xs"
+          >
+            📦 Descargar Paquete ZIP (300+ DPI)
+          </button>
 
           {/* Duplex imposition layouts (Print pliegos) */}
-          {config.formatMode === 'cards' && (
-            <div className="grid grid-cols-2 gap-1.5">
-              <button
-                onClick={() => onExport('pliegoA4')}
-                className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
-              >
-                <span>📄 Pliego A4</span>
-                <span className="text-[8px] text-white/70 font-semibold mt-0.5">8 Tarjetas</span>
-              </button>
-              <button
-                onClick={() => onExport('pliegoA5')}
-                className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
-              >
-                <span>📄 Pliego A5</span>
-                <span className="text-[8px] text-white/70 font-semibold mt-0.5">2 Tarjetas</span>
-              </button>
-            </div>
-          )}
-
-          {config.formatMode === 'flyer' && (
+          <div className="grid grid-cols-2 gap-1.5">
             <button
-              onClick={() => onExport('flyerPliego')}
-              className="w-full bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-3 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E] uppercase text-[10px] tracking-wider"
+              onClick={() => onExport('pliegoA4')}
+              className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
             >
-              <span>📄 Imprimir Pliego Flyer Doble Faz</span>
-              <span className="text-[8px] text-white/70 font-semibold mt-0.5">Hoja A4 - Corte Horizontal</span>
+              <span>📄 Pliego A4</span>
+              <span className="text-[8px] text-white/70 font-semibold mt-0.5">8 Tarjetas</span>
             </button>
-          )}
-
-          {config.formatMode === 'poster' && (
             <button
-              onClick={() => onExport('pdf')}
-              className="w-full bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-3 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E] uppercase text-[10px] tracking-wider"
+              onClick={() => onExport('pliegoA5')}
+              className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
             >
-              <span>📄 Descargar Póster A4 (PDF)</span>
+              <span>📄 Pliego A5</span>
+              <span className="text-[8px] text-white/70 font-semibold mt-0.5">2 Tarjetas</span>
             </button>
-          )}
+          </div>
         </div>
 
         {/* Restore defaults button */}
