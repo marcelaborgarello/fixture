@@ -4,6 +4,8 @@ import { DesignConfig } from './types';
 import { GROUPS, PLAYOFFS } from './data/matchesData';
 import { Sidebar } from './components/Sidebar';
 import { FixtureCard } from './components/cards/FixtureCard';
+import { SupportModal } from './components/SupportModal';
+import { Footer } from './components/Footer';
 import {
   exportToPng,
   exportToPdf,
@@ -116,7 +118,8 @@ export const App: React.FC = () => {
     setConfig(newConfig);
   };
   const [zipOption, setZipOption] = useState<'all' | 'png' | 'pdf'>('all');
-  const [loadingMsg, setLoadingMsg] = useState<string>('');
+  const [loadingMsg, setLoadingMsg] = useState('');
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(window.innerWidth > 768);
 
@@ -405,8 +408,8 @@ export const App: React.FC = () => {
       {/* Main Workspace Workspace */}
       <main className="flex-grow flex flex-col h-full overflow-hidden relative">
         {/* Top Navbar */}
-        <header className="h-14 border-b border-[#15462E] bg-black/20 flex items-center justify-between px-6 select-none shrink-0">
-          <div className="flex items-center gap-3">
+        <header className="h-16 border-b border-[#15462E] bg-black/20 flex items-center justify-between px-6 select-none shrink-0 relative">
+          <div className="flex items-center gap-3 z-10">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-[#072418] hover:bg-[#15462E] border border-[#15462E] text-white transition-colors"
@@ -414,10 +417,25 @@ export const App: React.FC = () => {
             >
               {isSidebarOpen ? '◀' : '▶'}
             </button>
-            <h2 className="text-white font-extrabold text-sm uppercase tracking-wider">
-              Área de Trabajo y Previsualización
+            <h2 className="text-white font-extrabold text-sm uppercase tracking-wider hidden sm:block">
+              Área de Trabajo
             </h2>
           </div>
+          
+          {/* Botón Central Destacado */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+            <button
+              onClick={() => setIsSupportModalOpen(true)}
+              className="bg-[#ffd700] hover:bg-[#ffe55c] text-black text-xs font-black py-2.5 px-6 rounded-lg shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] uppercase tracking-wide transition-all active:scale-95 flex items-center gap-2"
+            >
+              <span className="text-lg">☕</span>
+              <span className="hidden sm:inline">Apoyar a GinialTech / Sugerencias</span>
+              <span className="sm:hidden">Soporte y Sugerencias</span>
+            </button>
+          </div>
+          
+          {/* Placeholder derecho para equilibrar flex si hiciera falta */}
+          <div className="w-8 z-10"></div>
         </header>
 
         {/* Scrollable grid contents */}
@@ -459,6 +477,7 @@ export const App: React.FC = () => {
             ))}
           </div>
 
+          <Footer />
         </div>
 
         {/* Global Loading / Export Overlay Toast */}
@@ -496,6 +515,11 @@ export const App: React.FC = () => {
             </div>
           </div>
         )}
+
+        <SupportModal 
+          isOpen={isSupportModalOpen} 
+          onClose={() => setIsSupportModalOpen(false)} 
+        />
       </main>
 
       {/* Contenedor oculto en el DOM para exportaciones */}
