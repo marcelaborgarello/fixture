@@ -573,6 +573,12 @@ export const exportTirasHorizontalPdf = async (
     pdf.addImage(images[i], "JPEG", x, marginYBottom, cardWidthMm, cardHeightMm, undefined, "FAST");
   }
 
+  // Cut guideline in the middle (at exactly 105mm, which is the center of the A4)
+  pdf.setDrawColor(200, 200, 200);
+  pdf.setLineWidth(0.1);
+  pdf.setLineDashPattern([2, 2], 0);
+  pdf.line(0, 105, 297, 105);
+
   // --- PAGE 2: FASES FINALES Y PORTADA ---
   pdf.addPage();
   progressCallback(10, totalSteps, "Armando Página 2 (Playoffs)...");
@@ -583,6 +589,12 @@ export const exportTirasHorizontalPdf = async (
     // Bottom strip (duplicate)
     pdf.addImage(images[i + 4], "JPEG", x, marginYBottom, cardWidthMm, cardHeightMm, undefined, "FAST");
   }
+
+  // Cut guideline in the middle
+  pdf.setDrawColor(200, 200, 200);
+  pdf.setLineWidth(0.1);
+  pdf.setLineDashPattern([2, 2], 0);
+  pdf.line(0, 105, 297, 105);
 
   pdf.save("Fixture_Tiras_Horizontal_A4.pdf");
   return pdf;
