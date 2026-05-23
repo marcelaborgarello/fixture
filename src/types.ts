@@ -79,7 +79,7 @@ export interface DesignConfig {
   coverYearScale?: number;
   coverYearX?: number;
   coverYearY?: number;
-  coverYearLayer?: 'front' | 'back';
+  coverYearLayer?: "front" | "back";
 
   showCoverFifaText?: boolean;
   coverFifaColor?: string;
@@ -87,17 +87,17 @@ export interface DesignConfig {
   coverFifaScale?: number;
   coverFifaX?: number;
   coverFifaY?: number;
-  coverFifaLayer?: 'front' | 'back';
+  coverFifaLayer?: "front" | "back";
 
-  // Format mode toggle (now exclusively cards, MVP mode)
-  formatMode?: "cards";
+  // Format mode toggle (exclusively cards or compact 8 cards mode)
+  formatMode?: "cards" | "compact8";
 
   // Use 3-letter FIFA code for team names (e.g. ARG, MEX)
   useFifaCode?: boolean;
 
   // Pliego configuration
   pliegoDoubleSided?: boolean;
-  bindingMargin?: 'none' | 'top' | 'left';
+  bindingMargin?: "none" | "top" | "left";
 
   // Business branding options
   brandLogoScale?: number;
@@ -115,6 +115,12 @@ export interface DesignConfig {
   titleFontFamily?: string;
   bodyFontFamily?: string;
   titleTextColor?: string;
+  titleBgColor?: string;
+  coverTitleBgColor?: string;
+  groupsTitleBgColor?: string;
+  roundOf32TitleBgColor?: string;
+  roundOf16TitleBgColor?: string;
+  semifinalTitleBgColor?: string;
   bodyTextColor?: string;
   fontSizeScale?: number;
   showMatchRowBackground?: boolean;

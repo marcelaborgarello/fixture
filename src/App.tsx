@@ -8,8 +8,7 @@ import {
   exportToPng,
   exportToPdf,
   exportAllToZip,
-  exportPliegoA4Pdf,
-  exportPliegoA5Pdf
+  exportPliegoA4Pdf
 } from './utils/exporter';
 
 const initialConfig: DesignConfig = {
@@ -175,6 +174,19 @@ export const App: React.FC = () => {
 
   // Construct virtual card arrays for PDF, ZIP, and pliegos exports
   const getCardsList = () => {
+    if (config.formatMode === 'compact8') {
+      return [
+        { id: 'tapa', name: 'Portada', element: <FixtureCard type="cover" config={config} /> },
+        { id: 'compact_groups_1', name: 'Grupos A-B-C', element: <FixtureCard type="compact-group" data={GROUPS.slice(0, 3)} config={config} /> },
+        { id: 'compact_groups_2', name: 'Grupos D-E-F', element: <FixtureCard type="compact-group" data={GROUPS.slice(3, 6)} config={config} /> },
+        { id: 'compact_groups_3', name: 'Grupos G-H-I', element: <FixtureCard type="compact-group" data={GROUPS.slice(6, 9)} config={config} /> },
+        { id: 'compact_groups_4', name: 'Grupos J-K-L', element: <FixtureCard type="compact-group" data={GROUPS.slice(9, 12)} config={config} /> },
+        { id: 'compact_dieciseisavos', name: 'Dieciseisavos', element: <FixtureCard type="compact-round32" data={PLAYOFFS.slice(0, 2)} config={config} /> },
+        { id: 'compact_octavos_cuartos', name: 'Octavos y Cuartos', element: <FixtureCard type="compact-round16-quarters" data={{ octavos: PLAYOFFS[2], cuartos: PLAYOFFS[3] }} config={config} /> },
+        { id: 'final', name: 'Fase Final', element: <FixtureCard type="final" data={PLAYOFFS[4]} config={config} /> }
+      ];
+    }
+
     const list = [
       { id: 'tapa', name: 'Portada', element: <FixtureCard type="cover" config={config} /> },
     ];
@@ -199,7 +211,7 @@ export const App: React.FC = () => {
     return list;
   };
 
-  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'pliegoA5' | 'flyerPliego') => {
+  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego') => {
     try {
       if (mode === 'zip') {
         setLoadingMsg('Iniciando empaquetado de tarjetas...');
@@ -230,33 +242,42 @@ export const App: React.FC = () => {
         const fronts: string[] = [];
         const backs: string[] = [];
 
-        if (!config.excludeCoverFromSheets) {
-          fronts.push('export-card-tapa');
-          backs.push('export-card-dorso');
-        }
-
-        GROUPS.forEach((g) => {
-          fronts.push(`export-card-grupo_${g.name.toLowerCase()}`);
-          backs.push('export-card-dorso');
-        });
-
-        fronts.push(
-          'export-card-dieciseisavos_1',
-          'export-card-dieciseisavos_2',
-          'export-card-octavos',
-          'export-card-cuartos',
-          'export-card-final'
-        );
-
-        while (backs.length < fronts.length) {
-          backs.push('export-card-dorso');
-        }
-
-        // Si es simple faz, llenamos la última hoja (8 cartas) con reversos
-        if (!(config.pliegoDoubleSided ?? true)) {
-          for (let i = 0; i < 8; i++) {
-            fronts.push('export-card-dorso');
+        if (config.formatMode === 'compact8') {
+          // Exactly 8 cards, front only
+          getCardsList().forEach(c => {
+            fronts.push(`export-card-${c.id}`);
+            backs.push(''); // No backs in compact mode
+          });
+        } else {
+          // Standard 18-card mode
+          if (!config.excludeCoverFromSheets) {
+            fronts.push('export-card-tapa');
             backs.push('export-card-dorso');
+          }
+
+          GROUPS.forEach((g) => {
+            fronts.push(`export-card-grupo_${g.name.toLowerCase()}`);
+            backs.push('export-card-dorso');
+          });
+
+          fronts.push(
+            'export-card-dieciseisavos_1',
+            'export-card-dieciseisavos_2',
+            'export-card-octavos',
+            'export-card-cuartos',
+            'export-card-final'
+          );
+
+          while (backs.length < fronts.length) {
+            backs.push('export-card-dorso');
+          }
+
+          // Si es simple faz, llenamos la última hoja (8 cartas) con reversos
+          if (!(config.pliegoDoubleSided ?? true)) {
+            for (let i = 0; i < 8; i++) {
+              fronts.push('export-card-dorso');
+              backs.push('export-card-dorso');
+            }
           }
         }
 
@@ -276,57 +297,7 @@ export const App: React.FC = () => {
         pdf.save(`pliego_A4_fixture_${fazText}.pdf`);
       }
 
-      else if (mode === 'pliegoA5') {
-        setLoadingMsg('Generando pliego A5...');
 
-        const fronts: string[] = [];
-        const backs: string[] = [];
-
-        if (!config.excludeCoverFromSheets) {
-          fronts.push('export-card-tapa');
-          backs.push('export-card-dorso');
-        }
-
-        GROUPS.forEach((g) => {
-          fronts.push(`export-card-grupo_${g.name.toLowerCase()}`);
-          backs.push('export-card-dorso');
-        });
-
-        fronts.push(
-          'export-card-dieciseisavos_1',
-          'export-card-dieciseisavos_2',
-          'export-card-octavos',
-          'export-card-cuartos',
-          'export-card-final'
-        );
-
-        while (backs.length < fronts.length) {
-          backs.push('export-card-dorso');
-        }
-
-        // Si es simple faz, llenamos la última hoja (2 cartas) con reversos
-        if (!(config.pliegoDoubleSided ?? true)) {
-          for (let i = 0; i < 2; i++) {
-            fronts.push('export-card-dorso');
-            backs.push('export-card-dorso');
-          }
-        }
-
-        const pdf = await exportPliegoA5Pdf(
-          fronts,
-          backs,
-          config.showCutLines,
-          config.pliegoDoubleSided ?? true,
-          config.cardWidthMm,
-          config.cardHeightMm,
-          (curr, tot, msg) => {
-            setProgress({ current: curr, total: tot });
-            setLoadingMsg(msg);
-          }
-        );
-        const fazText = config.pliegoDoubleSided ? 'doble_faz' : 'simple_faz';
-        pdf.save(`pliego_A5_fixture_${fazText}.pdf`);
-      }
 
     } catch (err) {
       console.error(err);
@@ -540,6 +511,32 @@ export const App: React.FC = () => {
         </div>
         <div id="export-card-dorso">
           <FixtureCard type="back" config={config} />
+        </div>
+
+        {/* Renderizado modo compact8 - 8 tarjetas */}
+        <div id="export-card-tapa-compact">
+          <FixtureCard type="cover" config={config} />
+        </div>
+        <div id="export-card-compact_groups_1">
+          <FixtureCard type="compact-group" data={GROUPS.slice(0, 3)} config={config} />
+        </div>
+        <div id="export-card-compact_groups_2">
+          <FixtureCard type="compact-group" data={GROUPS.slice(3, 6)} config={config} />
+        </div>
+        <div id="export-card-compact_groups_3">
+          <FixtureCard type="compact-group" data={GROUPS.slice(6, 9)} config={config} />
+        </div>
+        <div id="export-card-compact_groups_4">
+          <FixtureCard type="compact-group" data={GROUPS.slice(9, 12)} config={config} />
+        </div>
+        <div id="export-card-compact_dieciseisavos">
+          <FixtureCard type="compact-round32" data={PLAYOFFS.slice(0, 2)} config={config} />
+        </div>
+        <div id="export-card-compact_octavos_cuartos">
+          <FixtureCard type="compact-round16-quarters" data={{ octavos: PLAYOFFS[2], cuartos: PLAYOFFS[3] }} config={config} />
+        </div>
+        <div id="export-card-final-compact">
+          <FixtureCard type="final" data={PLAYOFFS[4]} config={config} />
         </div>
       </div>
     </div>

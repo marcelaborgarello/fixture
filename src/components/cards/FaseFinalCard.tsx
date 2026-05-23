@@ -113,16 +113,21 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
       <div className="flex-1 flex flex-col justify-evenly py-2 w-full my-0.5 overflow-hidden">
         {/* Semifinals */}
         <div className="flex flex-col">
-          <h3
-            style={{
-              fontFamily: config.titleFontFamily || 'inherit',
-              color: config.titleTextColor || '#ffd700',
-              fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
-            }}
-            className="font-extrabold tracking-widest uppercase mb-0.5 text-center"
+          <div
+            className="flex justify-center items-center pb-[2px] mb-[2px] rounded-[2px]"
+            style={{ backgroundColor: config.semifinalTitleBgColor || config.titleBgColor || 'transparent' }}
           >
-            SEMIFINAL
-          </h3>
+            <h3
+              style={{
+                fontFamily: config.titleFontFamily || 'inherit',
+                color: config.titleTextColor || '#ffd700',
+                fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+              }}
+              className="font-extrabold tracking-widest uppercase mt-[1px]"
+            >
+              SEMIFINAL
+            </h3>
+          </div>
           <div className="grid grid-cols-1 gap-1 w-full px-[4px]">
             {semifinalMatches.map(m => renderPlayoffMatchRow(m))}
           </div>
@@ -130,16 +135,21 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
 
         {/* 3er y 4to Puesto */}
         <div className="flex flex-col">
-          <h3
-            style={{
-              fontFamily: config.titleFontFamily || 'inherit',
-              color: config.titleTextColor || '#ffd700',
-              fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
-            }}
-            className="font-extrabold tracking-widest uppercase mb-0.5 text-center"
+          <div
+            className="flex justify-center items-center pb-[2px] mb-[2px] rounded-[2px]"
+            style={{ backgroundColor: config.semifinalTitleBgColor || config.titleBgColor || 'transparent' }}
           >
-            3ER Y 4TO PUESTO
-          </h3>
+            <h3
+              style={{
+                fontFamily: config.titleFontFamily || 'inherit',
+                color: config.titleTextColor || '#ffd700',
+                fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+              }}
+              className="font-extrabold tracking-widest uppercase mt-[1px]"
+            >
+              3ER Y 4TO PUESTO
+            </h3>
+          </div>
           <div className="w-full px-[4px]">
             {thirdPlaceMatch && renderPlayoffMatchRow(thirdPlaceMatch)}
           </div>
@@ -147,16 +157,21 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
 
         {/* Final */}
         <div className="flex flex-col">
-          <h3
-            style={{
-              fontFamily: config.titleFontFamily || 'inherit',
-              color: config.titleTextColor || '#ffd700',
-              fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
-            }}
-            className="font-extrabold tracking-widest uppercase mb-0.5 text-center"
+          <div
+            className="flex justify-center items-center pb-[2px] mb-[2px] rounded-[2px]"
+            style={{ backgroundColor: config.semifinalTitleBgColor || config.titleBgColor || 'transparent' }}
           >
-            FINAL
-          </h3>
+            <h3
+              style={{
+                fontFamily: config.titleFontFamily || 'inherit',
+                color: config.titleTextColor || '#ffd700',
+                fontSize: `${7.5 * (config.fontSizeScale || 1.0)}px`,
+              }}
+              className="font-extrabold tracking-widest uppercase mt-[1px]"
+            >
+              FINAL
+            </h3>
+          </div>
           <div className="w-full px-[4px]">
             {finalMatch && renderPlayoffMatchRow(finalMatch)}
           </div>

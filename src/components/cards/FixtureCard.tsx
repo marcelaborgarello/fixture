@@ -5,9 +5,12 @@ import { GroupCard } from './GroupCard';
 import { PlayoffCard } from './PlayoffCard';
 import { FaseFinalCard } from './FaseFinalCard';
 import { CardBack } from './CardBack';
+import { CompactGroupCard } from './CompactGroupCard';
+import { CompactRoundOf32Card } from './CompactRoundOf32Card';
+import { CompactRoundOf16AndQuartersCard } from './CompactRoundOf16AndQuartersCard';
 
 interface FixtureCardProps {
-  type: 'cover' | 'group' | 'dieciseisavos' | 'octavos' | 'cuartos' | 'final' | 'back';
+  type: 'cover' | 'group' | 'dieciseisavos' | 'octavos' | 'cuartos' | 'final' | 'back' | 'compact-group' | 'compact-round32' | 'compact-round16-quarters';
   data?: any;
   config: DesignConfig;
   className?: string;
@@ -46,6 +49,12 @@ export const FixtureCard: React.FC<FixtureCardProps> = ({
         return <FaseFinalCard phase={data} config={config} />;
       case 'back':
         return <CardBack config={config} />;
+      case 'compact-group':
+        return <CompactGroupCard groups={data} config={config} />;
+      case 'compact-round32':
+        return <CompactRoundOf32Card phases={data} config={config} />;
+      case 'compact-round16-quarters':
+        return <CompactRoundOf16AndQuartersCard octavos={data.octavos} cuartos={data.cuartos} config={config} />;
       default:
         return null;
     }

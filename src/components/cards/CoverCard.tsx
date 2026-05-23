@@ -96,7 +96,10 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       <div className="relative z-40 w-full h-full flex flex-col justify-between items-center py-5 px-5 bg-transparent">
 
         {/* ── HEADER: FIFA / Título / Subtítulo — sin fondo, sin blur ── */}
-        <div className="flex flex-col items-center w-full shrink-0 bg-transparent">
+        <div 
+          className="flex flex-col items-center w-full shrink-0 px-[4px] py-[2px] rounded-[4px]"
+          style={{ backgroundColor: config.coverTitleBgColor || 'transparent' }}
+        >
           <h1
             style={{
               fontFamily:

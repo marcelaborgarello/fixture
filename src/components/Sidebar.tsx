@@ -4,7 +4,7 @@ import { DesignConfig } from '../types';
 interface SidebarProps {
   config: DesignConfig;
   onChange: (newConfig: DesignConfig) => void;
-  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'pliegoA5' | 'flyerPliego') => void;
+  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego') => void;
   zipOption: 'all' | 'png' | 'pdf';
   setZipOption: (opt: 'all' | 'png' | 'pdf') => void;
   onResetConfig: () => void;
@@ -90,40 +90,61 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {activeTab === 'format' && (
               <div className="p-3 space-y-3 border-t border-[#15462E]/40">
-                  {/* Short FIFA names toggle */}
-                  <div className="flex items-center justify-between pt-1">
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-white/80">Usar nombres cortos (FIFA)</span>
-                      <span className="text-[9px] text-white/40">E.g., ARG, MEX, USA</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={config.useFifaCode ?? false}
-                      onChange={(e) => updateConfig('useFifaCode', e.target.checked)}
-                      className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
-                    />
+                  {/* Format Mode toggle */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-[#ffd700] font-bold uppercase">Estructura del Fixture</label>
+                    <select
+                      value={config.formatMode || 'cards'}
+                      onChange={(e) => updateConfig('formatMode', e.target.value as any)}
+                      className="w-full bg-[#051810] border border-[#15462E] rounded px-2 py-1.5 focus:outline-none focus:border-[#ffd700] text-white"
+                    >
+                      <option value="cards">Tarjetas Individuales (18 caras)</option>
+                      <option value="compact8">Fixture Compacto (8 Tarjetas)</option>
+                    </select>
+                    <p className="text-[9px] text-white/50 leading-tight pt-1">
+                      El modo compacto comprime todo el fixture en exactamente 8 tarjetas, ideal para un zine o A4 simple faz.
+                    </p>
                   </div>
+
+                  {/* Short FIFA names toggle */}
+                  {config.formatMode !== 'compact8' && (
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-white/80">Usar nombres cortos (FIFA)</span>
+                        <span className="text-[9px] text-white/40">E.g., ARG, MEX, USA</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={config.useFifaCode ?? false}
+                        onChange={(e) => updateConfig('useFifaCode', e.target.checked)}
+                        className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
+                      />
+                    </div>
+                  )}
 
                   {/* Exclude cover from sheets option */}
-                  <div className="flex items-center justify-between pt-1">
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-white/80">Excluir tapa de pliegos</span>
-                      <span className="text-[9px] text-white/40">Para imprimir tapa en papel grueso</span>
+                  {config.formatMode !== 'compact8' && (
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-white/80">Excluir tapa de pliegos</span>
+                        <span className="text-[9px] text-white/40">Para imprimir tapa en papel grueso</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={config.excludeCoverFromSheets ?? false}
+                        onChange={(e) => updateConfig('excludeCoverFromSheets', e.target.checked)}
+                        className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
+                      />
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={config.excludeCoverFromSheets ?? false}
-                      onChange={(e) => updateConfig('excludeCoverFromSheets', e.target.checked)}
-                      className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
-                    />
-                  </div>
+                  )}
 
               {/* Show cut lines - Only for Cards */}
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-white/80">Líneas de corte impresas</span>
-                  <span className="text-[9px] text-white/40">Guías punteadas finas</span>
-                </div>
+              {config.formatMode !== 'compact8' && (
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-white/80">Líneas de corte impresas</span>
+                    <span className="text-[9px] text-white/40">Guías punteadas finas</span>
+                  </div>
                   <input
                     type="checkbox"
                     checked={config.showCutLines ?? false}
@@ -131,25 +152,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-4 h-4 accent-[#ffd700] rounded focus:outline-none cursor-pointer"
                   />
                 </div>
+              )}
 
               {/* Binding Margin - Only for Cards */}
-              <div className="space-y-1 pt-1 border-t border-white/5">
-                <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
-                <div className="grid grid-cols-3 gap-1">
-                  {(['none', 'top', 'left'] as const).map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => updateConfig('bindingMargin', m)}
-                      className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
-                        ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
-                        : 'border-white/10 text-white hover:bg-white/5'
-                        }`}
-                    >
-                      {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
-                    </button>
-                  ))}
+              {config.formatMode !== 'compact8' && (
+                <div className="space-y-1 pt-1 border-t border-white/5">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Margen de Anillado (Wire-O)</label>
+                  <div className="grid grid-cols-3 gap-1">
+                    {(['none', 'top', 'left'] as const).map((m) => (
+                      <button
+                        key={m}
+                        onClick={() => updateConfig('bindingMargin', m)}
+                        className={`py-1.5 px-0.5 font-semibold rounded text-[9px] uppercase border transition-all ${config.bindingMargin === m
+                          ? 'bg-[#ffd700] border-[#ffd700] text-black font-extrabold'
+                          : 'border-white/10 text-white hover:bg-white/5'
+                          }`}
+                      >
+                        {m === 'none' ? 'Ninguno' : m === 'top' ? 'Superior' : 'Izquierdo'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
@@ -632,7 +656,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* SECTION 3: REVERSO / BACK CARD */}
-        <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
+        {config.formatMode !== 'compact8' && (
+          <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
             <button
               onClick={() => toggleTab('back')}
               className={`w-full p-3 font-bold text-left flex justify-between items-center transition-colors hover:bg-white/5 ${activeTab === 'back' ? 'text-[#ffd700] bg-white/5' : 'text-white/80'
@@ -736,6 +761,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             )}
           </div>
+        )}
         {/* SECTION 3: CORE DESIGN & COLOR SYSTEM */}
         <div className="border border-[#15462E]/60 rounded-lg overflow-hidden bg-black/10">
           <button
@@ -938,19 +964,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[10px] text-white/40 font-bold">
-                    <span>Tamaño General Texto ({Math.round((config.fontSizeScale || 1.0) * 100)}%)</span>
+                {config.formatMode !== 'compact8' && (
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] text-white/40 font-bold">
+                      <span>Tamaño General Texto ({Math.round((config.fontSizeScale || 1.0) * 100)}%)</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="70"
+                      max="130"
+                      value={Math.round((config.fontSizeScale || 1.0) * 100)}
+                      onChange={(e) => updateConfig('fontSizeScale', parseInt(e.target.value) / 100)}
+                      className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+                    />
                   </div>
-                  <input
-                    type="range"
-                    min="70"
-                    max="130"
-                    value={Math.round((config.fontSizeScale || 1.0) * 100)}
-                    onChange={(e) => updateConfig('fontSizeScale', parseInt(e.target.value) / 100)}
-                    className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-                  />
-                </div>
+                )}
               </div>
 
               {/* Match row background */}
@@ -990,6 +1018,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               {/* Text Colors */}
               <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-2">
+                <div className="space-y-1 col-span-2 border-b border-white/5 pb-2 mb-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo de Títulos General</label>
+                  <div className="flex gap-1">
+                    <input
+                      type="color"
+                      value={config.titleBgColor || '#000000'}
+                      onChange={(e) => updateConfig('titleBgColor', e.target.value)}
+                      className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={config.titleBgColor || 'transparent'}
+                      onChange={(e) => updateConfig('titleBgColor', e.target.value)}
+                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Portada</label>
+                  <div className="flex gap-1">
+                    <input type="color" value={config.coverTitleBgColor || '#000000'} onChange={(e) => updateConfig('coverTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
+                    <input type="text" value={config.coverTitleBgColor || 'transparent'} onChange={(e) => updateConfig('coverTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Grupos</label>
+                  <div className="flex gap-1">
+                    <input type="color" value={config.groupsTitleBgColor || '#000000'} onChange={(e) => updateConfig('groupsTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
+                    <input type="text" value={config.groupsTitleBgColor || 'transparent'} onChange={(e) => updateConfig('groupsTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. 16avos</label>
+                  <div className="flex gap-1">
+                    <input type="color" value={config.roundOf32TitleBgColor || '#000000'} onChange={(e) => updateConfig('roundOf32TitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
+                    <input type="text" value={config.roundOf32TitleBgColor || 'transparent'} onChange={(e) => updateConfig('roundOf32TitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. 8vos/4tos</label>
+                  <div className="flex gap-1">
+                    <input type="color" value={config.roundOf16TitleBgColor || '#000000'} onChange={(e) => updateConfig('roundOf16TitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
+                    <input type="text" value={config.roundOf16TitleBgColor || 'transparent'} onChange={(e) => updateConfig('roundOf16TitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Semis/Final</label>
+                  <div className="flex gap-1">
+                    <input type="color" value={config.semifinalTitleBgColor || '#000000'} onChange={(e) => updateConfig('semifinalTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
+                    <input type="text" value={config.semifinalTitleBgColor || 'transparent'} onChange={(e) => updateConfig('semifinalTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
+                  </div>
+                </div>
                 <div className="space-y-1">
                   <label className="text-[10px] text-white/40 font-bold uppercase">Color de Títulos</label>
                   <div className="flex gap-1">
@@ -1322,17 +1407,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Pliego Simple vs Doble Faz */}
-        <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
-          <span className="text-[9.5px] font-bold text-white/70">Tipo de Pliego:</span>
-          <select
-            value={config.pliegoDoubleSided ? 'double' : 'simple'}
-            onChange={(e) => updateConfig('pliegoDoubleSided', e.target.value === 'double')}
-            className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
-          >
-            <option value="simple">Simple Faz (Solo Frentes)</option>
-            <option value="double">Doble Faz (Frente y Dorso)</option>
-          </select>
-        </div>
+        {config.formatMode !== 'compact8' && (
+          <div className="flex items-center justify-between gap-2 bg-[#051810] border border-[#15462E] rounded p-1.5">
+            <span className="text-[9.5px] font-bold text-white/70">Tipo de Pliego:</span>
+            <select
+              value={config.pliegoDoubleSided ? 'double' : 'simple'}
+              onChange={(e) => updateConfig('pliegoDoubleSided', e.target.value === 'double')}
+              className="bg-[#072418] border-0 text-white font-bold py-0.5 focus:outline-none cursor-pointer rounded text-[9.5px]"
+            >
+              <option value="simple">Simple Faz (Solo Frentes)</option>
+              <option value="double">Doble Faz (Frente y Dorso)</option>
+            </select>
+          </div>
+        )}
 
         {/* Master Export Buttons */}
         <div className="space-y-1.5">
@@ -1345,20 +1432,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
 
           {/* Duplex imposition layouts (Print pliegos) */}
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-1 gap-1.5">
             <button
               onClick={() => onExport('pliegoA4')}
               className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
             >
               <span>📄 Pliego A4</span>
               <span className="text-[8px] text-white/70 font-semibold mt-0.5">8 Tarjetas</span>
-            </button>
-            <button
-              onClick={() => onExport('pliegoA5')}
-              className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
-            >
-              <span>📄 Pliego A5</span>
-              <span className="text-[8px] text-white/70 font-semibold mt-0.5">2 Tarjetas</span>
             </button>
           </div>
         </div>
