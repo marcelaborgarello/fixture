@@ -9,7 +9,8 @@ import {
   exportToPdf,
   exportAllToZip,
   exportPliegoA4Pdf,
-  exportZinePdf
+  exportZinePdf,
+  exportTirasHorizontalPdf
 } from './utils/exporter';
 
 const initialConfig: DesignConfig = {
@@ -212,7 +213,7 @@ export const App: React.FC = () => {
     return list;
   };
 
-  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine') => {
+  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine' | 'tirasHorizontal') => {
     const handleProgress = (curr: number, tot: number, msg: string) => {
       setProgress({ current: curr, total: tot });
       setLoadingMsg(msg);
@@ -309,6 +310,20 @@ export const App: React.FC = () => {
           'export-card-compact_groups_3'
         ];
         await exportZinePdf(zineIds, handleProgress);
+      }
+      else if (mode === 'tirasHorizontal') {
+        setLoadingMsg('Iniciando captura de tarjetas para Tiras...');
+        const tiraIds = [
+          'export-card-compact_groups_1', // ABC
+          'export-card-compact_groups_2', // DEF
+          'export-card-compact_groups_3', // GHI
+          'export-card-compact_groups_4', // JKL
+          'export-card-compact_dieciseisavos',
+          'export-card-compact_octavos_cuartos',
+          'export-card-final-compact',
+          'export-card-tapa-compact'
+        ];
+        await exportTirasHorizontalPdf(tiraIds, handleProgress);
       }
 
     } catch (err) {

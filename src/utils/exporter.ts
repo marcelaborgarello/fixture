@@ -529,4 +529,62 @@ export const exportZinePdf = async (
   pdf.save("Fixture_Zine_Plegable_A4.pdf");
   return pdf;
 };
+
+// Generate a 2-page A4 Landscape sheet with horizontal strips
+export const exportTirasHorizontalPdf = async (
+  cardIds: string[], // Expected length 8: 0=ABC, 1=DEF, 2=GHI, 3=JKL, 4=Dieciseisavos, 5=Octavos, 6=Final, 7=Portada
+  progressCallback: (current: number, total: number, phase: string) => void,
+): Promise<jsPDF> => {
+  const pdf = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4",
+  });
+
+  const cardWidthMm = 70;
+  const cardHeightMm = 100;
+  const totalSteps = 8 + 2; // 8 captures + 2 drawing steps
+
+  const images: string[] = [];
+
+  for (let i = 0; i < 8; i++) {
+    progressCallback(
+      i + 1,
+      totalSteps,
+      `Capturando tarjeta ${i + 1} de 8...`,
+    );
+    const img = await captureDomElementToJpeg(cardIds[i], cardWidthMm, cardHeightMm, false);
+    images.push(img);
+  }
+
+  // Zine Layout Grid Area: 280 x 200 mm
+  // Margin to center on A4 (297x210)
+  const marginX = (297 - 280) / 2; // 8.5
+  const marginYTop = 5; // To have exactly 200mm height total with 2 rows of 100mm -> top y=5, bottom y=105
+  const marginYBottom = 105; 
+
+  // --- PAGE 1: GRUPOS ---
+  progressCallback(9, totalSteps, "Armando Página 1 (Grupos)...");
+  for (let i = 0; i < 4; i++) {
+    const x = marginX + i * cardWidthMm;
+    // Top strip
+    pdf.addImage(images[i], "JPEG", x, marginYTop, cardWidthMm, cardHeightMm, undefined, "FAST");
+    // Bottom strip (duplicate)
+    pdf.addImage(images[i], "JPEG", x, marginYBottom, cardWidthMm, cardHeightMm, undefined, "FAST");
+  }
+
+  // --- PAGE 2: FASES FINALES Y PORTADA ---
+  pdf.addPage();
+  progressCallback(10, totalSteps, "Armando Página 2 (Playoffs)...");
+  for (let i = 0; i < 4; i++) {
+    const x = marginX + i * cardWidthMm;
+    // Top strip
+    pdf.addImage(images[i + 4], "JPEG", x, marginYTop, cardWidthMm, cardHeightMm, undefined, "FAST");
+    // Bottom strip (duplicate)
+    pdf.addImage(images[i + 4], "JPEG", x, marginYBottom, cardWidthMm, cardHeightMm, undefined, "FAST");
+  }
+
+  pdf.save("Fixture_Tiras_Horizontal_A4.pdf");
+  return pdf;
+};
 

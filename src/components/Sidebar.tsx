@@ -4,7 +4,7 @@ import { DesignConfig } from '../types';
 interface SidebarProps {
   config: DesignConfig;
   onChange: (newConfig: DesignConfig) => void;
-  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine') => void;
+  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine' | 'tirasHorizontal') => void;
   zipOption: 'all' | 'png' | 'pdf';
   setZipOption: (opt: 'all' | 'png' | 'pdf') => void;
   onResetConfig: () => void;
@@ -1359,6 +1359,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <span>📖 Zine/Plegable</span>
               <span className="text-[8px] text-white/70 font-semibold mt-0.5">8 Tarjetas</span>
+            </button>
+            
+            <button
+              onClick={() => onExport('tirasHorizontal')}
+              className="col-span-2 bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
+            >
+              <span>🏷️ Tiras Horizontal (Acordeón)</span>
+              <span className="text-[8px] text-white/70 font-semibold mt-0.5">2 Copias por Hoja</span>
             </button>
           </div>
         </div>
