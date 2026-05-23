@@ -8,7 +8,8 @@ import {
   exportToPng,
   exportToPdf,
   exportAllToZip,
-  exportPliegoA4Pdf
+  exportPliegoA4Pdf,
+  exportZinePdf
 } from './utils/exporter';
 
 const initialConfig: DesignConfig = {
@@ -211,7 +212,12 @@ export const App: React.FC = () => {
     return list;
   };
 
-  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego') => {
+  const handleExport = async (mode: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine') => {
+    const handleProgress = (curr: number, tot: number, msg: string) => {
+      setProgress({ current: curr, total: tot });
+      setLoadingMsg(msg);
+    };
+
     try {
       if (mode === 'zip') {
         setLoadingMsg('Iniciando empaquetado de tarjetas...');
@@ -220,10 +226,7 @@ export const App: React.FC = () => {
         const cards = getCardsList().map(c => ({ name: c.name, id: `export-card-${c.id}` }));
         const zipBlob = await exportAllToZip(
           cards,
-          (curr, tot, msg) => {
-            setProgress({ current: curr, total: tot });
-            setLoadingMsg(msg);
-          },
+          handleProgress,
           config.cardWidthMm,
           config.cardHeightMm,
           zipOption
@@ -288,16 +291,25 @@ export const App: React.FC = () => {
           config.pliegoDoubleSided ?? true,
           config.cardWidthMm,
           config.cardHeightMm,
-          (curr, tot, msg) => {
-            setProgress({ current: curr, total: tot });
-            setLoadingMsg(msg);
-          }
+          handleProgress
         );
         const fazText = config.pliegoDoubleSided ? 'doble_faz' : 'simple_faz';
         pdf.save(`pliego_A4_fixture_${fazText}.pdf`);
       }
-
-
+      else if (mode === 'zine') {
+        setLoadingMsg('Iniciando captura de tarjetas para Zine...');
+        const zineIds = [
+          'export-card-final-compact',
+          'export-card-tapa-compact',
+          'export-card-compact_groups_1',
+          'export-card-compact_groups_2',
+          'export-card-compact_octavos_cuartos',
+          'export-card-compact_dieciseisavos',
+          'export-card-compact_groups_4',
+          'export-card-compact_groups_3'
+        ];
+        await exportZinePdf(zineIds, handleProgress);
+      }
 
     } catch (err) {
       console.error(err);

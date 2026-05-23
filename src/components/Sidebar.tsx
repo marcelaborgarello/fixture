@@ -4,12 +4,70 @@ import { DesignConfig } from '../types';
 interface SidebarProps {
   config: DesignConfig;
   onChange: (newConfig: DesignConfig) => void;
-  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego') => void;
+  onExport: (format: 'pdf' | 'png' | 'zip' | 'pliegoA4' | 'flyerPliego' | 'zine') => void;
   zipOption: 'all' | 'png' | 'pdf';
   setZipOption: (opt: 'all' | 'png' | 'pdf') => void;
   onResetConfig: () => void;
   isOpen?: boolean;
 }
+
+const parseColorAndOpacity = (colorStr: string) => {
+  if (!colorStr) return { hex: '#000000', opacity: 1 };
+  if (colorStr === 'transparent') return { hex: '#000000', opacity: 0 };
+  if (colorStr.startsWith('#')) {
+    if (colorStr.length === 9) {
+      const hex = colorStr.slice(0, 7);
+      const alpha = parseInt(colorStr.slice(7, 9), 16) / 255;
+      return { hex, opacity: alpha };
+    }
+    return { hex: colorStr, opacity: 1 };
+  }
+  if (colorStr.startsWith('rgba')) {
+    const parts = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (parts) {
+      const hex = '#' + [parts[1], parts[2], parts[3]].map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+      const opacity = parts[4] !== undefined ? parseFloat(parts[4]) : 1;
+      return { hex, opacity };
+    }
+  }
+  return { hex: '#000000', opacity: 1 };
+};
+
+const toRgba = (hex: string, opacity: number) => {
+  if (opacity === 0) return 'transparent';
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+  if (isNaN(r)) r = 0; if (isNaN(g)) g = 0; if (isNaN(b)) b = 0;
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+const ColorWithOpacityControl = ({ label, value, onChange }: { label: string, value: string, onChange: (val: string) => void }) => {
+  const { hex, opacity } = parseColorAndOpacity(value || '');
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between items-center">
+        <label className="text-[10px] text-white/40 font-bold uppercase">{label}</label>
+        <span className="text-[9px] text-white/40">{Math.round(opacity * 100)}%</span>
+      </div>
+      <div className="flex gap-2 items-center">
+        <input 
+          type="color" 
+          value={hex} 
+          onChange={(e) => onChange(toRgba(e.target.value, opacity))}
+          className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer shrink-0" 
+        />
+        <input 
+          type="range" 
+          min="0" max="100" 
+          value={Math.round(opacity * 100)}
+          onChange={(e) => onChange(toRgba(hex, parseInt(e.target.value) / 100))}
+          className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+        />
+      </div>
+    </div>
+  );
+};
 
 export const Sidebar: React.FC<SidebarProps> = ({
   config,
@@ -670,24 +728,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {activeTab === 'back' && (
               <div className="p-3 space-y-3 border-t border-[#15462E]/40">
                 <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Título Reverso</label>
-                  <select
-                    value={config.backTitleFontFamily || 'inherit'}
-                    onChange={(e) => updateConfig('backTitleFontFamily', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                  >
-                    <option value="inherit">General</option>
-                    <option value="'Outfit', sans-serif">Outfit</option>
-                    <option value="'Montserrat', sans-serif">Montserrat</option>
-                    <option value="'Poppins', sans-serif">Poppins</option>
-                    <option value="'Inter', sans-serif">Inter</option>
-                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                    <option value="'Anton', sans-serif">Anton</option>
-                    <option value="Arial, sans-serif">Arial</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
                   <label className="text-[10px] text-white/40 font-bold uppercase">Color Título Reverso</label>
                   <div className="flex gap-1.5">
                     <input
@@ -703,24 +743,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[10px] focus:outline-none"
                     />
                   </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Subtítulo Reverso</label>
-                  <select
-                    value={config.backSubtitleFontFamily || 'inherit'}
-                    onChange={(e) => updateConfig('backSubtitleFontFamily', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                  >
-                    <option value="inherit">General</option>
-                    <option value="'Outfit', sans-serif">Outfit</option>
-                    <option value="'Montserrat', sans-serif">Montserrat</option>
-                    <option value="'Poppins', sans-serif">Poppins</option>
-                    <option value="'Inter', sans-serif">Inter</option>
-                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                    <option value="'Anton', sans-serif">Anton</option>
-                    <option value="Arial, sans-serif">Arial</option>
-                  </select>
                 </div>
 
                 <div className="space-y-1">
@@ -741,23 +763,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Texto Reverso</label>
-                  <select
-                    value={config.backBodyFontFamily || 'inherit'}
-                    onChange={(e) => updateConfig('backBodyFontFamily', e.target.value)}
-                    className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                  >
-                    <option value="inherit">General</option>
-                    <option value="'Outfit', sans-serif">Outfit</option>
-                    <option value="'Montserrat', sans-serif">Montserrat</option>
-                    <option value="'Poppins', sans-serif">Poppins</option>
-                    <option value="'Inter', sans-serif">Inter</option>
-                    <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                    <option value="'Anton', sans-serif">Anton</option>
-                    <option value="Arial, sans-serif">Arial</option>
-                  </select>
-                </div>
               </div>
             )}
           </div>
@@ -776,7 +781,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {activeTab === 'style' && (
             <div className="p-3 space-y-3 border-t border-[#15462E]/40">
 
-              {/* Background style type selector */}
+              {!config.applyCoverTypographyToAllCards && (
+                <>
+                  {/* Background style type selector */}
               <div className="space-y-1">
                 <label className="text-[10px] text-white/40 font-bold uppercase">Tipo de Fondo</label>
                 <div className="grid grid-cols-3 gap-1">
@@ -911,59 +918,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
 
 
+                </>
+              )}
+
               {/* Typography Options */}
               <div className="border-t border-white/5 pt-2 space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Títulos</label>
-                    <select
-                      value={config.titleFontFamily || 'inherit'}
-                      onChange={(e) => updateConfig('titleFontFamily', e.target.value)}
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                    >
-                      <option value="inherit">General</option>
-                      <option value="'Outfit', sans-serif">Outfit</option>
-                      <option value="'Montserrat', sans-serif">Montserrat</option>
-                      <option value="'Poppins', sans-serif">Poppins</option>
-                      <option value="'Inter', sans-serif">Inter</option>
-                      <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                      <option value="'Anton', sans-serif">Anton</option>
-                      <option value="'Russo One', sans-serif">Russo One</option>
-                      <option value="'Barlow Condensed', sans-serif">Barlow Condensed</option>
-                      <option value="'Rajdhani', sans-serif">Rajdhani</option>
-                      <option value="'Teko', sans-serif">Teko</option>
-                      <option value="'Orbitron', sans-serif">Orbitron</option>
-                      <option value="'Exo 2', sans-serif">Exo 2</option>
-                      <option value="'Saira Condensed', sans-serif">Saira Condensed</option>
-                      <option value="Arial, sans-serif">Arial</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] text-white/40 font-bold uppercase">Fuente Cuerpo</label>
-                    <select
-                      value={config.bodyFontFamily || 'inherit'}
-                      onChange={(e) => updateConfig('bodyFontFamily', e.target.value)}
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1.5 py-1 focus:outline-none focus:border-[#ffd700]"
-                    >
-                      <option value="inherit">General</option>
-                      <option value="'Outfit', sans-serif">Outfit</option>
-                      <option value="'Montserrat', sans-serif">Montserrat</option>
-                      <option value="'Poppins', sans-serif">Poppins</option>
-                      <option value="'Inter', sans-serif">Inter</option>
-                      <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
-                      <option value="'Anton', sans-serif">Anton</option>
-                      <option value="'Russo One', sans-serif">Russo One</option>
-                      <option value="'Barlow Condensed', sans-serif">Barlow Condensed</option>
-                      <option value="'Rajdhani', sans-serif">Rajdhani</option>
-                      <option value="'Teko', sans-serif">Teko</option>
-                      <option value="'Orbitron', sans-serif">Orbitron</option>
-                      <option value="'Exo 2', sans-serif">Exo 2</option>
-                      <option value="'Saira Condensed', sans-serif">Saira Condensed</option>
-                      <option value="Arial, sans-serif">Arial</option>
-                    </select>
-                  </div>
-                </div>
-
                 {config.formatMode !== 'compact8' && (
                   <div className="space-y-1">
                     <div className="flex justify-between text-[10px] text-white/40 font-bold">
@@ -1018,63 +977,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               {/* Text Colors */}
               <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-2">
-                <div className="space-y-1 col-span-2 border-b border-white/5 pb-2 mb-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo de Títulos General</label>
-                  <div className="flex gap-1">
-                    <input
-                      type="color"
-                      value={config.titleBgColor || '#000000'}
-                      onChange={(e) => updateConfig('titleBgColor', e.target.value)}
-                      className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={config.titleBgColor || 'transparent'}
-                      onChange={(e) => updateConfig('titleBgColor', e.target.value)}
-                      className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none"
-                    />
-                  </div>
+                <div className="col-span-2 border-b border-white/5 pb-2 mb-1">
+                  <ColorWithOpacityControl label="Fondo de Títulos General" value={config.titleBgColor || 'transparent'} onChange={(v) => updateConfig('titleBgColor', v)} />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Portada</label>
-                  <div className="flex gap-1">
-                    <input type="color" value={config.coverTitleBgColor || '#000000'} onChange={(e) => updateConfig('coverTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
-                    <input type="text" value={config.coverTitleBgColor || 'transparent'} onChange={(e) => updateConfig('coverTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
-                  </div>
-                </div>
+                <ColorWithOpacityControl label="Fondo Tít. Portada" value={config.coverTitleBgColor || 'transparent'} onChange={(v) => updateConfig('coverTitleBgColor', v)} />
+                <ColorWithOpacityControl label="Fondo Tít. Grupos" value={config.groupsTitleBgColor || 'transparent'} onChange={(v) => updateConfig('groupsTitleBgColor', v)} />
+                <ColorWithOpacityControl label="Fondo Tít. 16avos" value={config.roundOf32TitleBgColor || 'transparent'} onChange={(v) => updateConfig('roundOf32TitleBgColor', v)} />
+                <ColorWithOpacityControl label="Fondo Tít. 8vos/4tos" value={config.roundOf16TitleBgColor || 'transparent'} onChange={(v) => updateConfig('roundOf16TitleBgColor', v)} />
+                <ColorWithOpacityControl label="Fondo Tít. Semis/Final" value={config.semifinalTitleBgColor || 'transparent'} onChange={(v) => updateConfig('semifinalTitleBgColor', v)} />
 
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Grupos</label>
-                  <div className="flex gap-1">
-                    <input type="color" value={config.groupsTitleBgColor || '#000000'} onChange={(e) => updateConfig('groupsTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
-                    <input type="text" value={config.groupsTitleBgColor || 'transparent'} onChange={(e) => updateConfig('groupsTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. 16avos</label>
-                  <div className="flex gap-1">
-                    <input type="color" value={config.roundOf32TitleBgColor || '#000000'} onChange={(e) => updateConfig('roundOf32TitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
-                    <input type="text" value={config.roundOf32TitleBgColor || 'transparent'} onChange={(e) => updateConfig('roundOf32TitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. 8vos/4tos</label>
-                  <div className="flex gap-1">
-                    <input type="color" value={config.roundOf16TitleBgColor || '#000000'} onChange={(e) => updateConfig('roundOf16TitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
-                    <input type="text" value={config.roundOf16TitleBgColor || 'transparent'} onChange={(e) => updateConfig('roundOf16TitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-white/40 font-bold uppercase">Fondo Tít. Semis/Final</label>
-                  <div className="flex gap-1">
-                    <input type="color" value={config.semifinalTitleBgColor || '#000000'} onChange={(e) => updateConfig('semifinalTitleBgColor', e.target.value)} className="w-6 h-6 border-0 bg-transparent rounded cursor-pointer" />
-                    <input type="text" value={config.semifinalTitleBgColor || 'transparent'} onChange={(e) => updateConfig('semifinalTitleBgColor', e.target.value)} className="w-full bg-[#051810] border border-[#15462E] rounded px-1 text-[9px] focus:outline-none" />
-                  </div>
-                </div>
                 <div className="space-y-1">
                   <label className="text-[10px] text-white/40 font-bold uppercase">Color de Títulos</label>
                   <div className="flex gap-1">
@@ -1432,12 +1344,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
 
           {/* Duplex imposition layouts (Print pliegos) */}
-          <div className="grid grid-cols-1 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5">
             <button
               onClick={() => onExport('pliegoA4')}
               className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
             >
               <span>📄 Pliego A4</span>
+              <span className="text-[8px] text-white/70 font-semibold mt-0.5">18 Tarjetas</span>
+            </button>
+
+            <button
+              onClick={() => onExport('zine')}
+              className="bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-1 rounded flex flex-col items-center justify-center leading-tight transition-all border border-[#15462E]"
+            >
+              <span>📖 Zine/Plegable</span>
               <span className="text-[8px] text-white/70 font-semibold mt-0.5">8 Tarjetas</span>
             </button>
           </div>

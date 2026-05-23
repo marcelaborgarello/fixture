@@ -23,7 +23,7 @@ export const CompactGroupCard: React.FC<CompactGroupCardProps> = ({ groups, conf
           >
             {/* Div 1: Nombre del grupo */}
             <div
-              className="text-[9px] font-black uppercase leading-none shrink-0"
+              className="w-[30%] text-[9px] font-black uppercase leading-none shrink-0"
               style={{ fontFamily: config.titleFontFamily || 'inherit', color: config.titleTextColor || 'white' }}
             >
               GRUPO {group.name}
@@ -31,7 +31,7 @@ export const CompactGroupCard: React.FC<CompactGroupCardProps> = ({ groups, conf
 
             {/* Div 2: Nombres de los equipos */}
             <div
-              className="w-[170px] text-[4.5px] font-normal leading-tight truncate text-right"
+              className="w-[70%] text-[4.5px] font-normal leading-tight truncate text-right px-[5px]"
               style={{ color: config.titleTextColor || 'white' }}
             >
               {group.teams.map(t => t.code).join(' - ')}
@@ -56,11 +56,11 @@ export const CompactGroupCard: React.FC<CompactGroupCardProps> = ({ groups, conf
 
                   {/* Lado Izquierdo (Fechas y Estadios - Ocupa el espacio sobrante) */}
                   <div className="flex-1 h-[12px] min-w-0 text-left pr-[2px] relative overflow-hidden">
-                    <div 
+                    <div
                       className="flex flex-col justify-center absolute left-0 w-[400%]"
-                      style={{ 
+                      style={{
                         top: '50%',
-                        transform: 'translateY(-50%) scale(0.25)', 
+                        transform: 'translateY(-50%) scale(0.25)',
                         transformOrigin: 'left center'
                       }}
                     >

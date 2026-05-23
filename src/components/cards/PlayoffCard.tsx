@@ -24,7 +24,8 @@ const formatShortDate = (dateStr: string): string => {
 
 export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type }) => {
   const isCompactPhase = type === 'dieciseisavos' || type === 'octavos';
-  const boxHeight = type === 'cuartos' ? 'h-[20px]' : (config.bindingMargin === 'top' ? 'h-[13px]' : 'h-[18px]');
+  const effectiveBindingMargin = config.formatMode === 'compact8' ? 'none' : config.bindingMargin;
+  const boxHeight = type === 'cuartos' ? 'h-[20px]' : (effectiveBindingMargin === 'top' ? 'h-[13px]' : 'h-[18px]');
   const gridClass = 'grid grid-cols-1 gap-1';
 
   const effectiveTitleFont = config.applyCoverTypographyToAllCards

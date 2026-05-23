@@ -104,7 +104,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
 
 
       {/* Content wrapper with internal padding */}
-      <div className={`relative z-10 w-full h-full flex flex-col justify-between box-border p-3 ${config.bindingMargin === 'top' ? 'pt-[12mm]' : ''} ${config.bindingMargin === 'left' ? 'pl-[12mm]' : ''}`}>
+      <div className={`relative z-10 w-full h-full flex flex-col justify-between box-border p-3 ${config.formatMode !== 'compact8' && config.bindingMargin === 'top' ? 'pt-[12mm]' : ''} ${config.formatMode !== 'compact8' && config.bindingMargin === 'left' ? 'pl-[12mm]' : ''}`}>
         {children}
       </div>
     </div>

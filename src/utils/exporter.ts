@@ -40,6 +40,7 @@ export const captureDomElementToJpeg = async (
   elementId: string,
   widthMm: number,
   heightMm: number,
+  rotate180: boolean = false
 ): Promise<string> => {
   const wrapper = document.getElementById(elementId);
   if (!wrapper) {
@@ -62,8 +63,8 @@ export const captureDomElementToJpeg = async (
     width: widthPx,
     height: heightPx,
     style: {
-      transform: "scale(1)",
-      transformOrigin: "top left",
+      transform: rotate180 ? "rotate(180deg)" : "scale(1)",
+      transformOrigin: rotate180 ? "center center" : "top left",
     },
   });
 
@@ -454,3 +455,78 @@ export const exportFlyerPliegoPdf = async (
   pdf.save("Fixture_Flyer_Doble_Faz_A4.pdf");
   return pdf;
 };
+
+// Generate an 8-page Zine/Plegable A4 Landscape sheet from DOM element IDs
+export const exportZinePdf = async (
+  cardIds: string[], // Expected length 8, corresponding to the compact8 layout
+  progressCallback: (current: number, total: number, phase: string) => void,
+): Promise<jsPDF> => {
+  const pdf = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4",
+  });
+
+  const cardWidthMm = 70;
+  const cardHeightMm = 100;
+  const totalSteps = 8 + 1; // 8 captures + 1 drawing step
+
+  // We map the 8 captured images
+  // The layout requires specific indices from the compact8 IDs:
+  // We assume the caller provides:
+  // 0: Fases Finales
+  // 1: Portada
+  // 2: Grupos A,B,C
+  // 3: Grupos D,E,F
+  // 4: Octavos y Cuartos
+  // 5: Dieciseisavos
+  // 6: Grupos J,K,L
+  // 7: Grupos G,H,I
+  
+  const images: string[] = [];
+
+  for (let i = 0; i < 4; i++) {
+    progressCallback(
+      i + 1,
+      totalSteps,
+      `Capturando tarjeta ${i + 1} de 8...`,
+    );
+    const img = await captureDomElementToJpeg(cardIds[i], cardWidthMm, cardHeightMm, false);
+    images.push(img);
+  }
+  for (let i = 4; i < 8; i++) {
+    progressCallback(
+      i + 1,
+      totalSteps,
+      `Capturando tarjeta invertida ${i + 1} de 8...`,
+    );
+    const img = await captureDomElementToJpeg(cardIds[i], cardWidthMm, cardHeightMm, true);
+    images.push(img);
+  }
+
+  progressCallback(9, totalSteps, "Armando Pliego Zine...");
+
+  // Zine Layout
+  // Total Grid Area: 280 x 200 mm
+  // Margin to center on A4 (297x210)
+  const marginX = (297 - 280) / 2; // 8.5
+  const marginY = (210 - 200) / 2; // 5
+
+  // Top Row (0 to 3) - upright
+  for (let i = 0; i < 4; i++) {
+    const x = marginX + i * cardWidthMm;
+    const y = marginY;
+    pdf.addImage(images[i], "JPEG", x, y, cardWidthMm, cardHeightMm, undefined, "FAST");
+  }
+
+  // Bottom Row (4 to 7) - these images are already rotated 180deg!
+  for (let i = 0; i < 4; i++) {
+    const x = marginX + i * cardWidthMm; 
+    const y = marginY + cardHeightMm; 
+    pdf.addImage(images[i + 4], "JPEG", x, y, cardWidthMm, cardHeightMm, undefined, "FAST");
+  }
+
+  pdf.save("Fixture_Zine_Plegable_A4.pdf");
+  return pdf;
+};
+

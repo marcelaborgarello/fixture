@@ -63,7 +63,7 @@ export const CompactRoundOf32Card: React.FC<CompactRoundOf32CardProps> = ({ phas
                 <div className="flex flex-row items-center justify-between w-full gap-[1px]">
                   
                   {/* Origen 1 */}
-                  <div className="w-[14px] shrink-0 h-[14px] relative overflow-hidden">
+                  <div className="w-[36px] shrink-0 h-[15px] relative overflow-hidden">
                     <div
                       className="flex flex-col justify-center absolute right-0 w-[400%]"
                       style={{ 
@@ -82,27 +82,27 @@ export const CompactRoundOf32Card: React.FC<CompactRoundOf32CardProps> = ({ phas
                   </div>
                   
                   {/* Caja Nombre 1 */}
-                  <div className="flex-1 h-[14px] bg-white/90 rounded-[5px] shadow-inner border border-black/20"></div>
+                  <div className="flex-1 h-[15px] bg-white/90 rounded-[5px] shadow-inner border border-black/20"></div>
                   
                   {/* Caja Goles 1 */}
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0 flex items-center justify-center relative overflow-hidden">
+                  <div className="w-[15px] h-[15px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute top-[50%] w-[400%] left-0" style={{ transform: 'translateY(-50%) scale(0.25)', transformOrigin: 'center center' }}>
                       <span className="text-[30px] font-bold text-black block text-center leading-none">{match.homeScore || ''}</span>
                     </div>
                   </div>
                   
                   {/* Caja Goles 2 */}
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0 flex items-center justify-center relative overflow-hidden">
+                  <div className="w-[15px] h-[15px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0 flex items-center justify-center relative overflow-hidden">
                     <div className="absolute top-[50%] w-[400%] left-0" style={{ transform: 'translateY(-50%) scale(0.25)', transformOrigin: 'center center' }}>
                       <span className="text-[30px] font-bold text-black block text-center leading-none">{match.awayScore || ''}</span>
                     </div>
                   </div>
                   
                   {/* Caja Nombre 2 */}
-                  <div className="flex-1 h-[14px] bg-white/90 rounded-[5px] shadow-inner border border-black/20"></div>
+                  <div className="flex-1 h-[15px] bg-white/90 rounded-[5px] shadow-inner border border-black/20"></div>
                   
                   {/* Origen 2 */}
-                  <div className="w-[14px] shrink-0 h-[14px] relative overflow-hidden">
+                  <div className="w-[36px] shrink-0 h-[15px] relative overflow-hidden">
                     <div
                       className="flex flex-col justify-center absolute left-0 w-[400%]"
                       style={{ 
