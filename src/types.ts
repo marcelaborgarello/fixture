@@ -79,6 +79,7 @@ export interface DesignConfig {
   coverYearScale?: number;
   coverYearX?: number;
   coverYearY?: number;
+  coverYearLayer?: 'front' | 'back';
 
   showCoverFifaText?: boolean;
   coverFifaColor?: string;
@@ -86,6 +87,7 @@ export interface DesignConfig {
   coverFifaScale?: number;
   coverFifaX?: number;
   coverFifaY?: number;
+  coverFifaLayer?: 'front' | 'back';
 
   // Format mode toggle (now exclusively cards, MVP mode)
   formatMode?: "cards";

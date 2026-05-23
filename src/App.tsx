@@ -58,6 +58,8 @@ const initialConfig: DesignConfig = {
   showCoverTrophy: true,
   coverIllustrationUrl: '',
   coverBgColor: '',
+  coverYearLayer: 'back',
+  coverFifaLayer: 'back',
   coverBgImageUrl: '',
   coverIllustrationScale: 100,
   coverIllustrationY: 0,
@@ -115,7 +117,7 @@ export const App: React.FC = () => {
   const [zipOption, setZipOption] = useState<'all' | 'png' | 'pdf'>('all');
   const [loadingMsg, setLoadingMsg] = useState<string>('');
   const [progress, setProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(window.innerWidth > 768);
 
   // Auto-save configuration to localStorage on changes
   useEffect(() => {
@@ -407,6 +409,13 @@ export const App: React.FC = () => {
         {/* Top Navbar */}
         <header className="h-14 border-b border-[#15462E] bg-black/20 flex items-center justify-between px-6 select-none shrink-0">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-[#072418] hover:bg-[#15462E] border border-[#15462E] text-white transition-colors"
+              title="Alternar panel de configuración"
+            >
+              {isSidebarOpen ? '◀' : '▶'}
+            </button>
             <h2 className="text-white font-extrabold text-sm uppercase tracking-wider">
               Área de Trabajo y Previsualización
             </h2>

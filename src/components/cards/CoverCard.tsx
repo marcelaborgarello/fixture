@@ -32,7 +32,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       {config.showCoverTrophy && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none bg-transparent"
+          className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none bg-transparent"
           style={{
             transform: `scale(${illustrationScale / 100}) translate(${illustrationX}px, ${illustrationY}px)`,
             opacity: illustrationOpacity,
@@ -53,7 +53,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       {config.showCoverYear && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-[15] flex items-center justify-center pointer-events-none bg-transparent"
+          className={`absolute inset-0 flex items-center justify-center pointer-events-none bg-transparent ${config.coverYearLayer === 'front' ? 'z-30' : 'z-10'}`}
           style={{
             transform: `scale(${(config.coverYearScale ?? 100) / 100}) translate(${config.coverYearX ?? 0}px, ${config.coverYearY ?? 0}px)`,
             opacity: config.coverYearOpacity ?? 1.0,
@@ -74,7 +74,7 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       {config.showCoverFifaText && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-[15] flex items-center justify-center pointer-events-none bg-transparent"
+          className={`absolute inset-0 flex items-center justify-center pointer-events-none bg-transparent ${config.coverFifaLayer === 'front' ? 'z-30' : 'z-10'}`}
           style={{
             transform: `scale(${(config.coverFifaScale ?? 100) / 100}) translate(${config.coverFifaX ?? 0}px, ${config.coverFifaY ?? 0}px)`,
             opacity: config.coverFifaOpacity ?? 1.0,
@@ -92,8 +92,8 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
       )}
 
       {/* ── LAYOUT VERTICAL: header top, branding bottom ── */}
-      {/* z-20 flota sobre el trofeo. bg-transparent garantiza ningún fondo. */}
-      <div className="relative z-20 w-full h-full flex flex-col justify-between items-center py-5 px-5 bg-transparent">
+      {/* z-40 flota sobre el trofeo y marcas de agua. bg-transparent garantiza ningún fondo. */}
+      <div className="relative z-40 w-full h-full flex flex-col justify-between items-center py-5 px-5 bg-transparent">
 
         {/* ── HEADER: FIFA / Título / Subtítulo — sin fondo, sin blur ── */}
         <div className="flex flex-col items-center w-full shrink-0 bg-transparent">
