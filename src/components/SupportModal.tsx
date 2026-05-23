@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface SupportModalProps {
   isOpen: boolean;
@@ -6,6 +6,40 @@ interface SupportModalProps {
 }
 
 export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) => {
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitStatus('loading');
+    
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/ginialtech@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        form.reset();
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      } else {
+        setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -53,9 +87,8 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
               🐛 Sugerencias y Reportes
             </h3>
             <form 
-              action="https://formsubmit.co/ginialtech@gmail.com" 
-              method="POST"
-              className="flex-grow flex flex-col space-y-3"
+              onSubmit={handleSubmit}
+              className="flex-grow flex flex-col space-y-3 relative"
             >
               {/* Config fields for FormSubmit */}
               <input type="hidden" name="_subject" value="Nuevo Reporte / Sugerencia (Fixture)" />
@@ -78,9 +111,10 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
               ></textarea>
               <button 
                 type="submit"
-                className="w-full bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-4 rounded transition-all mt-auto"
+                disabled={submitStatus === 'loading'}
+                className="w-full bg-[#1b8555] hover:bg-[#239f67] disabled:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-all mt-auto"
               >
-                Enviar Mensaje
+                {submitStatus === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
               </button>
             </form>
           </div>
@@ -91,9 +125,8 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
               💡 ¿Querés un Proyecto Nuevo?
             </h3>
             <form 
-              action="https://formsubmit.co/ginialtech@gmail.com" 
-              method="POST"
-              className="flex-grow flex flex-col space-y-3"
+              onSubmit={handleSubmit}
+              className="flex-grow flex flex-col space-y-3 relative"
             >
               {/* Config fields for FormSubmit */}
               <input type="hidden" name="_subject" value="Idea para Proyecto Nuevo" />
@@ -116,14 +149,28 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
               ></textarea>
               <button 
                 type="submit"
-                className="w-full bg-[#1b8555] hover:bg-[#239f67] text-white font-bold py-2 px-4 rounded transition-all mt-auto"
+                disabled={submitStatus === 'loading'}
+                className="w-full bg-[#1b8555] hover:bg-[#239f67] disabled:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-all mt-auto"
               >
-                Enviar Idea
+                {submitStatus === 'loading' ? 'Enviando...' : 'Enviar Idea'}
               </button>
             </form>
           </div>
 
         </div>
+
+        {/* Global Toast Message within the Modal */}
+        {submitStatus === 'success' && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-[#1b8555] text-white px-6 py-3 rounded-lg shadow-2xl font-bold flex items-center gap-2 animate-fade-in z-50">
+            <span>✅</span> ¡Mensaje enviado con éxito! Gracias por escribir.
+          </div>
+        )}
+        {submitStatus === 'error' && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-2xl font-bold flex items-center gap-2 animate-fade-in z-50">
+            <span>❌</span> Hubo un error al enviar el mensaje. Inténtalo de nuevo.
+          </div>
+        )}
+
       </div>
     </div>
   );
