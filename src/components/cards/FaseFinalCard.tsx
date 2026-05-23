@@ -2,7 +2,7 @@ import React from 'react';
 import { PlayoffPhase, DesignConfig } from '../../types';
 import { CardInner } from './CardInner';
 import { BrandingPlaceholder } from '../BrandingPlaceholder';
-import trophyImg from '../../assets/trophy.png';
+import trofeoImg from '../../assets/trophy.png';
 
 interface FaseFinalCardProps {
   phase: PlayoffPhase;
@@ -64,46 +64,44 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           <span className="font-semibold uppercase whitespace-nowrap truncate max-w-[45%]">{match.time}</span>
           <span className="whitespace-nowrap truncate text-right max-w-[50%]">{formatShortDate(match.date)}</span>
         </div>
-        
+
         {/* Match traditional print row */}
-        <div className="flex items-center gap-[3px] w-full mt-[2px]">
-                  {/* Left Code */}
-                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
-                    <span 
-                      style={{ 
-                        color: config.bodyTextColor || '#ffffff',
-                        fontSize: homePlaceholder.length > 5 ? '3.5px' : '5px'
-                      }}
-                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
-                    >
-                      {homePlaceholder}
-                    </span>
-                  </div>
-                  
-                  {/* Home Team Input */}
-                  <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
-                  
-                  {/* Home Goal Input */}
-                  <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
-                  
-                  {/* Away Goal Input */}
-                  <div className="w-[14px] h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10 shrink-0" />
-                  
-                  {/* Away Team Input */}
-                  <div className="flex-1 h-[16px] bg-white/90 rounded-md shadow-inner border border-black/10" />
-                  
-                  {/* Right Code */}
-                  <div className="w-[28px] flex-shrink-0 text-center flex items-center justify-center">
-                    <span 
-                      style={{ 
-                        color: config.bodyTextColor || '#ffffff',
-                        fontSize: awayPlaceholder.length > 5 ? '3.5px' : '5px'
-                      }}
-                      className="font-extrabold uppercase opacity-80 whitespace-nowrap overflow-hidden text-ellipsis leading-[1.1] block w-full"
-                    >
-                      {awayPlaceholder}
-                    </span>
-                  </div>
+        <div className="flex items-center justify-center gap-[2px] w-full mt-[1px]">
+          {/* Left Code */}
+          <div className="w-[24px] flex-shrink-0 flex items-center justify-center overflow-visible">
+            <span
+              style={{
+                color: config.bodyTextColor || '#ffffff',
+              }}
+              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-nowrap leading-none tracking-tighter text-center"
+            >
+              {homePlaceholder}
+            </span>
+          </div>
+
+          {/* Home Team Input */}
+          <div className="flex-1 h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20" />
+
+          {/* Home Goal Input */}
+          <div className="w-[18px] h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0" />
+
+          {/* Away Goal Input */}
+          <div className="w-[18px] h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0" />
+
+          {/* Away Team Input */}
+          <div className="flex-1 h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20" />
+
+          {/* Right Code */}
+          <div className="w-[24px] flex-shrink-0 flex items-center justify-center overflow-visible">
+            <span
+              style={{
+                color: config.bodyTextColor || '#ffffff',
+              }}
+              className="text-[5px] font-extrabold uppercase opacity-80 whitespace-nowrap leading-none tracking-tighter text-center"
+            >
+              {awayPlaceholder}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -164,23 +162,18 @@ export const FaseFinalCard: React.FC<FaseFinalCardProps> = ({ phase, config }) =
           </div>
         </div>
 
-        {/* Campeón del Mundo Section */}
-        <div className="flex flex-row items-center justify-center gap-2 bg-white/5 border border-brand-accent/20 py-2 px-2 select-none relative overflow-hidden rounded mx-[4px]">
-          {/* Trophy image */}
-          <img src={trophyImg} alt="Trofeo" className="w-7 h-auto drop-shadow-md" />
-          
-          <div className="flex flex-col flex-1 items-center justify-center">
-            <span
-              style={{
-                fontFamily: config.titleFontFamily || 'inherit',
-                color: config.titleTextColor || '#ffd700',
-                fontSize: `${10 * (config.fontSizeScale || 1.0)}px`,
-              }}
-              className="font-bold tracking-widest mb-1.5 uppercase text-center"
-            >
-              CAMPEÓN DEL MUNDO
+        {/* BLOQUE CAMPEÓN DEL MUNDO */}
+        <div className="flex flex-row items-center justify-center gap-2 bg-black/20 rounded-xl p-2 w-[90%] mx-auto mt-2 border border-white/10 shadow-md">
+          <img
+            src={trofeoImg}
+            alt="Trofeo"
+            className="w-10 h-auto drop-shadow-xl shrink-0"
+          />
+          <div className="flex flex-col items-center w-full">
+            <span className="font-black text-[8px] text-[#ffd700] uppercase tracking-widest mb-1 drop-shadow-md">
+              Campeón del Mundo
             </span>
-            <div className="w-full h-[20px] bg-white/90 border border-black/25 shadow-inner rounded-md" />
+            <div className="w-full h-[24px] bg-white rounded-[5px] shadow-inner border border-black/20"></div>
           </div>
         </div>
       </div>

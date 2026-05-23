@@ -24,6 +24,7 @@ const formatShortDate = (dateStr: string): string => {
 
 export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type }) => {
   const isCompactPhase = type === 'dieciseisavos' || type === 'octavos';
+  const boxHeight = type === 'cuartos' ? 'h-[20px]' : (config.bindingMargin === 'top' ? 'h-[13px]' : 'h-[18px]');
   const gridClass = 'grid grid-cols-1 gap-1';
 
   const effectiveTitleFont = config.applyCoverTypographyToAllCards
@@ -47,7 +48,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
     <CardInner config={config} className="flex flex-col justify-between h-full w-full">
       {/* Header */}
       <div className="flex flex-col items-center text-center w-full select-none mb-1 mt-1">
-        <div className="bg-black/30 w-[95%] rounded-full py-[3px] flex items-center justify-center border border-white/10 shadow-sm">
+        <div className="bg-black/30 w-[95%] rounded-full py-[5px] flex items-center justify-center border border-white/10 shadow-sm">
           <h2
             style={{
               fontFamily: effectiveTitleFont || 'inherit',
@@ -86,13 +87,13 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                 >
                   <span className="font-bold uppercase whitespace-nowrap">{match.time} • {formatShortDate(match.date)}</span>
                 </div>
-                
+
                 {/* Match traditional print row */}
                 <div className="flex items-center gap-[2px] w-full mt-[1px]">
                   {/* Left Code */}
                   <div className="w-[34px] flex-shrink-0 flex items-center justify-center overflow-visible">
-                    <span 
-                      style={{ 
+                    <span
+                      style={{
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: '10px',
                         transformOrigin: 'center',
@@ -103,23 +104,23 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
                       {homePlaceholder}
                     </span>
                   </div>
-                  
+
                   {/* Home Team Input */}
-                  <div className="flex-1 h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20" />
-                  
+                  <div className={`flex-1 ${boxHeight} bg-white/90 rounded-[5px] shadow-inner border border-black/20`} />
+
                   {/* Home Goal Input */}
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
-                  
+                  <div className={`w-[18px] ${boxHeight} bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0`} />
+
                   {/* Away Goal Input */}
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
-                  
+                  <div className={`w-[18px] ${boxHeight} bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0`} />
+
                   {/* Away Team Input */}
-                  <div className="flex-1 h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20" />
-                  
+                  <div className={`flex-1 ${boxHeight} bg-white/90  rounded-[5px] shadow-inner border border-black/20`} />
+
                   {/* Right Code */}
                   <div className="w-[34px] flex-shrink-0 flex items-center justify-center overflow-visible">
-                    <span 
-                      style={{ 
+                    <span
+                      style={{
                         color: effectiveBodyColor || '#ffffff',
                         fontSize: '10px',
                         transformOrigin: 'center',
@@ -142,7 +143,7 @@ export const PlayoffCard: React.FC<PlayoffCardProps> = ({ phase, config, type })
       {/* Footer Branding */}
       <div className="shrink-0 mt-auto flex items-end justify-center pt-1" style={{ maxHeight: '40px' }}>
         {config.showBrandingCards !== false && (
-          <div className="scale-75 origin-bottom">
+          <div className="scale-[0.60] origin-bottom shrink-0">
             <BrandingPlaceholder
               brandSignature={config.brandSignature}
               brandLogoUrl={config.brandLogoUrl}

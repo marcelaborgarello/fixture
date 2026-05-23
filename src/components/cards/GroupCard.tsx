@@ -77,16 +77,6 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
           const homeFlag = isHomeStr ? 'TBD' : (match.homeTeam as any).flagCode;
           const awayFlag = isAwayStr ? 'TBD' : (match.awayTeam as any).flagCode;
 
-          // Compute size classes dynamic sizing with scale
-          const getBaseSize = (name: string, useFifa: boolean) => {
-            if (useFifa) return 10;
-            if (name.length > 12) return 8;
-            if (name.length > 8) return 9;
-            return 10;
-          };
-
-          const homeFontSize = getBaseSize(homeName, useFifaCode) * (config.fontSizeScale || 1.0);
-          const awayFontSize = getBaseSize(awayName, useFifaCode) * (config.fontSizeScale || 1.0);
 
           return (
             <div
@@ -121,9 +111,9 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
                     style={{
                       fontFamily: effectiveBodyFont || 'inherit',
                       color: isHomeStr ? undefined : (effectiveBodyColor || '#ffffff'),
-                      fontSize: `${isHomeStr ? 9 * (config.fontSizeScale || 1.0) : homeFontSize}px`,
+                      fontSize: '5.5px',
                     }}
-                    className={`truncate select-none leading-none ${isHomeStr
+                    className={`truncate select-none leading-tight ${isHomeStr
                       ? 'text-white/40 italic font-normal'
                       : 'font-medium'
                       }`}
@@ -135,8 +125,8 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
 
                 {/* Score Boxes (Playable print inputs) */}
                 <div className="flex items-center gap-[2px] px-[2px] shrink-0 select-none">
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
-                  <div className="w-[14px] h-[14px] bg-white/90 rounded-[1.5px] shadow-inner border border-black/20 shrink-0" />
+                  <div className="w-[18px] h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0" />
+                  <div className="w-[18px] h-[18px] bg-white/90 rounded-[5px] shadow-inner border border-black/20 shrink-0" />
                 </div>
 
                 {/* Away Team */}
@@ -146,9 +136,9 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group, config }) => {
                     style={{
                       fontFamily: effectiveBodyFont || 'inherit',
                       color: isAwayStr ? undefined : (effectiveBodyColor || '#ffffff'),
-                      fontSize: `${isAwayStr ? 9 * (config.fontSizeScale || 1.0) : awayFontSize}px`,
+                      fontSize: '5.5px',
                     }}
-                    className={`truncate select-none leading-none ${isAwayStr
+                    className={`truncate select-none leading-tight ${isAwayStr
                       ? 'text-white/40 italic font-normal'
                       : 'font-medium'
                       }`}
