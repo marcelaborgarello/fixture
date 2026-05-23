@@ -451,9 +451,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
 
               {/* Show Year and Fifa text */}
-              <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-2">
+              <div className="space-y-3 border-t border-white/5 pt-2">
+                {/* 26 Watermark */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-white/70">Marca de Año "26"</span>
+                  <span className="text-[10px] font-bold text-white/70">Marca de Año "26"</span>
                   <input
                     type="checkbox"
                     checked={config.showCoverYear ?? true}
@@ -461,8 +462,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-3.5 h-3.5 accent-[#ffd700]"
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-white/70">Texto "FIFA"</span>
+                {(config.showCoverYear ?? true) && (
+                  <div className="pl-2 border-l border-[#15462E] space-y-2">
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Color</label>
+                        <input type="color" value={config.coverYearColor || '#ffffff'} onChange={(e) => updateConfig('coverYearColor', e.target.value)} className="w-full h-6 border-0 bg-transparent cursor-pointer rounded" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Opacidad ({Math.round((config.coverYearOpacity ?? 1) * 100)}%)</label>
+                        <input type="range" min="0" max="100" value={Math.round((config.coverYearOpacity ?? 1) * 100)} onChange={(e) => updateConfig('coverYearOpacity', parseInt(e.target.value)/100)} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Escala ({config.coverYearScale ?? 100}%)</label>
+                        <input type="range" min="10" max="300" value={config.coverYearScale ?? 100} onChange={(e) => updateConfig('coverYearScale', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Pos. X ({config.coverYearX ?? 0}px)</label>
+                        <input type="range" min="-200" max="200" value={config.coverYearX ?? 0} onChange={(e) => updateConfig('coverYearX', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Pos. Y ({config.coverYearY ?? 0}px)</label>
+                        <input type="range" min="-200" max="200" value={config.coverYearY ?? 0} onChange={(e) => updateConfig('coverYearY', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* FIFA Text */}
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                  <span className="text-[10px] font-bold text-white/70">Texto "FIFA"</span>
                   <input
                     type="checkbox"
                     checked={config.showCoverFifaText ?? true}
@@ -470,6 +503,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-3.5 h-3.5 accent-[#ffd700]"
                   />
                 </div>
+                {(config.showCoverFifaText ?? true) && (
+                  <div className="pl-2 border-l border-[#15462E] space-y-2">
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Color</label>
+                        <input type="color" value={config.coverFifaColor || '#ffffff'} onChange={(e) => updateConfig('coverFifaColor', e.target.value)} className="w-full h-6 border-0 bg-transparent cursor-pointer rounded" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Opacidad ({Math.round((config.coverFifaOpacity ?? 1) * 100)}%)</label>
+                        <input type="range" min="0" max="100" value={Math.round((config.coverFifaOpacity ?? 1) * 100)} onChange={(e) => updateConfig('coverFifaOpacity', parseInt(e.target.value)/100)} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Escala ({config.coverFifaScale ?? 100}%)</label>
+                        <input type="range" min="10" max="300" value={config.coverFifaScale ?? 100} onChange={(e) => updateConfig('coverFifaScale', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Pos. X ({config.coverFifaX ?? 0}px)</label>
+                        <input type="range" min="-200" max="200" value={config.coverFifaX ?? 0} onChange={(e) => updateConfig('coverFifaX', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-[9px] text-white/40 uppercase">Pos. Y ({config.coverFifaY ?? 0}px)</label>
+                        <input type="range" min="-200" max="200" value={config.coverFifaY ?? 0} onChange={(e) => updateConfig('coverFifaY', parseInt(e.target.value))} className="w-full h-1 bg-[#15462E] rounded-lg appearance-none cursor-pointer accent-[#ffd700]" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

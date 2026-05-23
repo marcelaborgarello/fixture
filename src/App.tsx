@@ -250,6 +250,14 @@ export const App: React.FC = () => {
           backs.push('export-card-dorso');
         }
 
+        // Si es simple faz, llenamos la última hoja (8 cartas) con reversos
+        if (!(config.pliegoDoubleSided ?? true)) {
+          for (let i = 0; i < 8; i++) {
+            fronts.push('export-card-dorso');
+            backs.push('export-card-dorso');
+          }
+        }
+
         const pdf = await exportPliegoA4Pdf(
           fronts,
           backs,
@@ -292,6 +300,14 @@ export const App: React.FC = () => {
 
         while (backs.length < fronts.length) {
           backs.push('export-card-dorso');
+        }
+
+        // Si es simple faz, llenamos la última hoja (2 cartas) con reversos
+        if (!(config.pliegoDoubleSided ?? true)) {
+          for (let i = 0; i < 2; i++) {
+            fronts.push('export-card-dorso');
+            backs.push('export-card-dorso');
+          }
         }
 
         const pdf = await exportPliegoA5Pdf(

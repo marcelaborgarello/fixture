@@ -74,7 +74,18 @@ export interface DesignConfig {
 
   // Toggles for FIFA and 26 graphics
   showCoverYear?: boolean;
+  coverYearColor?: string;
+  coverYearOpacity?: number;
+  coverYearScale?: number;
+  coverYearX?: number;
+  coverYearY?: number;
+
   showCoverFifaText?: boolean;
+  coverFifaColor?: string;
+  coverFifaOpacity?: number;
+  coverFifaScale?: number;
+  coverFifaX?: number;
+  coverFifaY?: number;
 
   // Format mode toggle (now exclusively cards, MVP mode)
   formatMode?: "cards";

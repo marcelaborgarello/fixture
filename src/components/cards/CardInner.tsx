@@ -6,7 +6,6 @@ interface CardInnerProps {
   children: React.ReactNode;
   className?: string;
   isCoverOrBack?: boolean;
-  showWatermark?: boolean;
 }
 
 export const CardInner: React.FC<CardInnerProps> = ({
@@ -14,7 +13,6 @@ export const CardInner: React.FC<CardInnerProps> = ({
   children,
   className = '',
   isCoverOrBack = false,
-  showWatermark = false,
 }) => {
   // Determine background style
   const bgStyle: React.CSSProperties = {
@@ -103,14 +101,7 @@ export const CardInner: React.FC<CardInnerProps> = ({
         />
       )}
 
-      {/* Watermark 2026 centered absolutely at root level */}
-      {showWatermark && (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0 select-none pointer-events-none">
-          <div className="text-[120px] font-black text-white/[0.04] tracking-tighter leading-none">
-            2026
-          </div>
-        </div>
-      )}
+
 
       {/* Content wrapper with internal padding */}
       <div className={`relative z-10 w-full h-full flex flex-col justify-between box-border p-3 ${config.bindingMargin === 'top' ? 'pt-[12mm]' : ''} ${config.bindingMargin === 'left' ? 'pl-[12mm]' : ''}`}>

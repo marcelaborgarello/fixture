@@ -18,7 +18,6 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
     <CardInner
       config={config}
       isCoverOrBack={true}
-      showWatermark={config.showCoverYear}
       className="relative select-none text-center"
     >
       {/*
@@ -50,21 +49,54 @@ export const CoverCard: React.FC<CoverCardProps> = ({ config }) => {
         </div>
       )}
 
+      {/* ── MARCA DE AGUA 26 ── */}
+      {config.showCoverYear && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[15] flex items-center justify-center pointer-events-none bg-transparent"
+          style={{
+            transform: `scale(${(config.coverYearScale ?? 100) / 100}) translate(${config.coverYearX ?? 0}px, ${config.coverYearY ?? 0}px)`,
+            opacity: config.coverYearOpacity ?? 1.0,
+            transition: 'transform 0.2s ease-out',
+            transformOrigin: 'center center',
+          }}
+        >
+          <span 
+             style={{ color: config.coverYearColor || 'rgba(255, 255, 255, 0.04)' }}
+             className="text-[120px] font-black tracking-tighter leading-none"
+          >
+            26
+          </span>
+        </div>
+      )}
+
+      {/* ── LOGO FIFA ── */}
+      {config.showCoverFifaText && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[15] flex items-center justify-center pointer-events-none bg-transparent"
+          style={{
+            transform: `scale(${(config.coverFifaScale ?? 100) / 100}) translate(${config.coverFifaX ?? 0}px, ${config.coverFifaY ?? 0}px)`,
+            opacity: config.coverFifaOpacity ?? 1.0,
+            transition: 'transform 0.2s ease-out',
+            transformOrigin: 'center center',
+          }}
+        >
+          <span 
+             style={{ color: config.coverFifaColor || 'rgba(255, 255, 255, 0.6)' }}
+             className="text-[30px] tracking-[0.3em] font-bold uppercase"
+          >
+            FIFA
+          </span>
+        </div>
+      )}
+
       {/* ── LAYOUT VERTICAL: header top, branding bottom ── */}
       {/* z-20 flota sobre el trofeo. bg-transparent garantiza ningún fondo. */}
       <div className="relative z-20 w-full h-full flex flex-col justify-between items-center py-5 px-5 bg-transparent">
 
         {/* ── HEADER: FIFA / Título / Subtítulo — sin fondo, sin blur ── */}
         <div className="flex flex-col items-center w-full shrink-0 bg-transparent">
-          {config.showCoverFifaText && (
-            <span
-              style={{ fontSize: `${10 * (config.fontSizeScale || 1.0)}px` }}
-              className="tracking-[0.3em] text-white/60 font-bold uppercase mb-1"
-            >
-              FIFA
-            </span>
-          )}
-
           <h1
             style={{
               fontFamily:
